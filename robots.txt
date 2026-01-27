@@ -1,0 +1,11 @@
+# robots.txt for Hong Kong IVA Centre
+# https://horizontohk.github.io/hongkongiva.org/
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://horizontohk.github.io/hongkongiva.org/sitemap.xml
+
+# Crawl-delay (optional, for politeness)
+Crawl-delay: 10
