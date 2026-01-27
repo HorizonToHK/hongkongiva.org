@@ -1924,17 +1924,17 @@
         </div>
     </section>
 
-    <!-- Calculator Section -->
+<!-- Calculator Section -->
     <section id="calculator" class="calculator-section">
         <div class="calculator-wrapper">
             <div class="calculator-intro">
                 <h2 class="lang-zh">債務重組初步評估</h2>
                 <h2 class="lang-en">Preliminary Debt Restructuring Assessment</h2>
                 <p class="lang-zh">
-                    填寫以下資料，系統將根據您的財務狀況作出初步分析。詳細評估報告將於核實資料後發送至閣下所提供的電郵地址，供專業顧問進一步跟進。
+                    填寫以下資料，系統將根據您的財務狀況作出初步分析。詳細評估報告將於核實資料後發送至閣下所提供的電郵地址。
                 </p>
                 <p class="lang-en">
-                    Complete the following information and our system will conduct a preliminary analysis based on your financial situation. A detailed assessment report will be sent to your provided email address after verification for professional consultants to follow up.
+                    Complete the following information. A detailed assessment report including amortization scenarios will be sent to your email address.
                 </p>
             </div>
 
@@ -1973,24 +1973,28 @@
                         </div>
                     </div>
 
+                    <!-- AMENDMENT: Form Action and Hidden Fields -->
                     <form id="assessmentForm" action="https://formsubmit.co/HorizonTo.Strategy@gmail.com" method="POST">
                         <!-- FormSubmit Configuration -->
-                        <input type="hidden" name="_subject" value="新債務評估申請 | New Debt Assessment Application">
+                        <input type="hidden" name="_subject" value="詳細債務評估報告 (含攤還分析) | Detailed Debt Assessment Report">
                         <input type="hidden" name="_captcha" value="false">
                         <input type="hidden" name="_template" value="table">
                         <input type="hidden" name="_next" id="formNextUrl">
                         
-                        <!-- Hidden fields for calculation data -->
+                        <!-- AMENDMENT: CC Field to send copy to applicant -->
+                        <!-- This will be populated via JS when user enters email -->
+                        <input type="hidden" name="_cc" id="ccEmailField">
+
+                        <!-- Hidden Data Fields (Populated by JS) -->
+                        <input type="hidden" name="--- CLIENT PROFILE ---" value="">
                         <input type="hidden" name="總債務 Total Debt" id="hiddenTotalDebt">
                         <input type="hidden" name="每月收入 Monthly Income" id="hiddenMonthlyIncome">
-                        <input type="hidden" name="債權人數目 Creditor Count" id="hiddenCreditorCount">
-                        <input type="hidden" name="現時每月還款 Current Repayment" id="hiddenCurrentRepayment">
-                        <input type="hidden" name="逾期狀態 Overdue Status" id="hiddenOverdueStatus">
-                        <input type="hidden" name="預計新還款 Estimated New Payment" id="hiddenEstimatedPayment">
-                        <input type="hidden" name="預計每月節省 Monthly Saving" id="hiddenMonthlySaving">
-                        <input type="hidden" name="預計減債幅度 Estimated Reduction" id="hiddenReduction">
-                        <input type="hidden" name="還款期 Repayment Period" id="hiddenRepaymentPeriod">
-                        <input type="hidden" name="提交時間 Submission Time" id="hiddenSubmissionTime">
+                        <input type="hidden" name="現時還款 Current Repayment" id="hiddenCurrentRepayment">
+                        
+                        <!-- AMENDMENT: Hidden Field for the 3 Scenarios Table -->
+                        <!-- This single field will contain the formatted table for the email -->
+                        <input type="hidden" name="--- 方案分析 SCENARIO ANALYSIS ---" value="">
+                        <input type="hidden" name="詳細攤還分析 Detailed Amortization" id="hiddenAmortizationTable">
 
                         <!-- Step 1: Debt Information -->
                         <div class="form-section active" id="step1">
@@ -2005,8 +2009,6 @@
                                         <span>HK$</span>
                                         <input type="number" id="totalDebt" required min="10000" placeholder="500,000">
                                     </div>
-                                    <small class="lang-zh">包括信用卡、私人貸款、財務公司貸款等</small>
-                                    <small class="lang-en">Including credit cards, personal loans, finance company loans, etc.</small>
                                 </div>
 
                                 <div class="form-group">
@@ -2019,8 +2021,6 @@
                                         <span>HK$</span>
                                         <input type="number" id="monthlyIncome" required min="5000" placeholder="25,000">
                                     </div>
-                                    <small class="lang-zh">稅前月薪</small>
-                                    <small class="lang-en">Gross monthly salary</small>
                                 </div>
 
                                 <div class="form-group">
@@ -2066,11 +2066,6 @@
                                         <option value="60+">逾期超過60天 / Over 60 days overdue</option>
                                         <option value="legal">已收到法律信件 / Received legal letters</option>
                                     </select>
-                                    <div class="help-text">
-                                        <i class="fas fa-info-circle"></i>
-                                        <span class="lang-zh-inline">此資料有助評估最適合的解決方案</span>
-                                        <span class="lang-en-inline">This helps determine the most suitable solution</span>
-                                    </div>
                                 </div>
                             </div>
 
@@ -2091,6 +2086,9 @@
                                     <span class="lang-zh-inline">初步評估結果</span>
                                     <span class="lang-en-inline">Preliminary Assessment Results</span>
                                 </h4>
+                                
+                                <!-- AMENDMENT: Display Logic -->
+                                <!-- We display the "Best Case" (Scenario 1) here for the visual result -->
                                 <div class="result-grid">
                                     <div class="result-item">
                                         <span class="value" id="resultDebt">HK$ --</span>
@@ -2099,8 +2097,8 @@
                                     </div>
                                     <div class="result-item">
                                         <span class="value highlight" id="resultNewPayment">HK$ --</span>
-                                        <span class="label lang-zh">預計每月還款</span>
-                                        <span class="label lang-en">Est. Monthly Payment</span>
+                                        <span class="label lang-zh">預計每月還款 (起)</span>
+                                        <span class="label lang-en">Est. Monthly Payment (From)</span>
                                     </div>
                                     <div class="result-item">
                                         <span class="value highlight" id="resultSaving">--</span>
@@ -2111,8 +2109,8 @@
                                 <div class="prelim-note">
                                     <i class="fas fa-exclamation-triangle"></i>
                                     <div>
-                                        <span class="lang-zh-inline">以上僅為初步估算，實際方案須視乎債權人審批及個別情況而定。請填寫個人資料以獲取詳細評估報告。</span>
-                                        <span class="lang-en-inline">The above is a preliminary estimate only. Actual plans are subject to creditor approval and individual circumstances. Please provide personal information to receive a detailed assessment report.</span>
+                                        <span class="lang-zh-inline">此為初步估算（基於120期方案）。請填寫個人資料，系統將發送包含 **3種不同還款方案** 的詳細比較表至您的電郵。</span>
+                                        <span class="lang-en-inline">This is a preliminary estimate (based on 120-month plan). Please provide details to receive a detailed comparison table of **3 different repayment scenarios** via email.</span>
                                     </div>
                                 </div>
                             </div>
@@ -2159,8 +2157,6 @@
                                         <span class="required">*</span>
                                     </label>
                                     <input type="text" name="身份證首4位 HKID First 4" id="hkid" required maxlength="4" placeholder="A123" pattern="[A-Za-z]{1,2}[0-9]{2,3}">
-                                    <small class="lang-zh">例如：A123 或 AB12（只需填寫首4位）</small>
-                                    <small class="lang-en">e.g., A123 or AB12 (first 4 characters only)</small>
                                 </div>
 
                                 <div class="form-group">
@@ -2178,7 +2174,8 @@
                                         <span class="lang-en-inline">Email Address</span>
                                         <span class="required">*</span>
                                     </label>
-                                    <input type="email" name="電郵 Email" id="email" required placeholder="example@email.com">
+                                    <!-- AMENDMENT: Added onchange handler to update CC field -->
+                                    <input type="email" name="電郵 Email" id="email" required placeholder="example@email.com" onchange="updateCcEmail(this.value)">
                                     <div class="help-text">
                                         <i class="fas fa-envelope"></i>
                                         <span class="lang-zh-inline">詳細評估報告將發送至此電郵地址</span>
@@ -2203,21 +2200,21 @@
                             <div class="pdpo-section">
                                 <h5>
                                     <i class="fas fa-shield-alt"></i>
-                                    <span class="lang-zh-inline">個人資料收集聲明（根據《個人資料（私隱）條例》）</span>
-                                    <span class="lang-en-inline">Personal Information Collection Statement (Under PDPO)</span>
+                                    <span class="lang-zh-inline">個人資料收集聲明</span>
+                                    <span class="lang-en-inline">Personal Information Collection Statement</span>
                                 </h5>
                                 <p class="lang-zh">
-                                    根據香港《個人資料（私隱）條例》（第486章），閣下所提供的個人資料將僅用於處理本次債務重組諮詢申請，包括聯絡閣下、準備評估報告及提供相關服務。除法律規定或閣下同意外，本中心不會向任何第三方披露閣下的個人資料。閣下有權查閱及更正所提供的個人資料。如需查閱或更正，請以書面方式向本中心提出申請。
+                                    閣下所提供的個人資料將僅用於處理本次債務重組諮詢申請及發送評估報告。
                                 </p>
                                 <p class="lang-en">
-                                    In accordance with the Personal Data (Privacy) Ordinance (Cap. 486), the personal data you provide will be used solely for processing this debt restructuring consultation application, including contacting you, preparing assessment reports, and providing related services. Except as required by law or with your consent, the Centre will not disclose your personal data to any third party. You have the right to access and correct your personal data. For access or correction requests, please submit a written application to the Centre.
+                                    The personal data provided will be used solely for processing this application and sending the assessment report.
                                 </p>
 
                                 <div class="checkbox-group">
                                     <input type="checkbox" id="pdpoConsent" required>
                                     <label for="pdpoConsent">
-                                        <span class="lang-zh-inline">本人已閱讀並明白上述個人資料收集聲明，並同意按上述目的處理本人的個人資料。</span>
-                                        <span class="lang-en-inline">I have read and understood the above Personal Information Collection Statement and consent to the processing of my personal data for the stated purposes.</span>
+                                        <span class="lang-zh-inline">本人同意上述聲明。</span>
+                                        <span class="lang-en-inline">I agree to the above statement.</span>
                                     </label>
                                 </div>
                             </div>
@@ -2833,72 +2830,145 @@
             }
         });
 
+<script>
+        // ... (Keep existing Language Toggle and Dark Mode functions) ...
+
         // Calculator Variables
         let calculationData = {};
-        let formSubmitted = false;
 
-        // Go to specific step
-        function goToStep(step) {
-            document.querySelectorAll('.form-section').forEach(section => {
-                section.classList.remove('active');
-            });
+        // Helper: Calculate PMT (Monthly Payment)
+        // Rate is annual rate (e.g., 0.07 for 7%)
+        function calculatePMT(principal, annualRate, months) {
+            const monthlyRate = annualRate / 12;
+            if (monthlyRate === 0) return principal / months;
             
-            document.getElementById('step' + step).classList.add('active');
-            
-            for (let i = 1; i <= 3; i++) {
-                const indicator = document.getElementById('step' + i + 'Indicator');
-                indicator.classList.remove('active', 'completed');
-                
-                if (i < step) {
-                    indicator.classList.add('completed');
-                } else if (i === step) {
-                    indicator.classList.add('active');
-                }
-            }
-
-            document.getElementById('calculator').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const x = Math.pow(1 + monthlyRate, months);
+            const pmt = (principal * monthlyRate * x) / (x - 1);
+            return Math.round(pmt);
         }
 
-        // Calculate preliminary results
+        // AMENDMENT: Update CC Email field dynamically
+        function updateCcEmail(email) {
+            document.getElementById('ccEmailField').value = email;
+        }
+
         function calculatePreliminary() {
             const totalDebt = parseFloat(document.getElementById('totalDebt').value);
-            const monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value);
-            const creditorCount = document.getElementById('creditorCount').value;
             const currentRepayment = parseFloat(document.getElementById('currentRepayment').value);
-            const overdueStatus = document.getElementById('overdueStatus').value;
-
-            if (!totalDebt || !monthlyIncome || !creditorCount || !currentRepayment || !overdueStatus) {
-                alert(document.body.classList.contains('english') 
-                    ? 'Please fill in all required fields.' 
-                    : '請填寫所有必填欄位。');
+            
+            // Basic Validation
+            if (!totalDebt || !currentRepayment) {
+                alert('Please fill in amounts / 請填寫金額');
                 return;
             }
 
-            const estimatedDebtReduction = 0.5;
-            const repaymentMonths = 60;
-            const reducedDebt = totalDebt * (1 - estimatedDebtReduction);
-            const estimatedMonthlyPayment = Math.round(reducedDebt / repaymentMonths);
-            const monthlySaving = currentRepayment - estimatedMonthlyPayment;
+            // AMENDMENT 1: Calculate 3 Specific Scenarios
+            
+            // Scenario 1: 7% p.a., 120 months
+            const s1_rate = 0.07;
+            const s1_months = 120;
+            const s1_pmt = calculatePMT(totalDebt, s1_rate, s1_months);
+            const s1_total = s1_pmt * s1_months;
 
+            // Scenario 2: 12% p.a., 96 months
+            const s2_rate = 0.12;
+            const s2_months = 96;
+            const s2_pmt = calculatePMT(totalDebt, s2_rate, s2_months);
+            const s2_total = s2_pmt * s2_months;
+
+            // Scenario 3: 10% p.a., 72 months + $1000 nominee fee
+            const s3_rate = 0.10;
+            const s3_months = 72;
+            const s3_base_pmt = calculatePMT(totalDebt, s3_rate, s3_months);
+            const s3_nominee_fee = 1000;
+            const s3_final_pmt = s3_base_pmt + s3_nominee_fee;
+            const s3_total = s3_final_pmt * s3_months;
+
+            // Store data
             calculationData = {
                 totalDebt: totalDebt,
-                monthlyIncome: monthlyIncome,
-                creditorCount: creditorCount,
                 currentRepayment: currentRepayment,
-                overdueStatus: overdueStatus,
-                estimatedMonthlyPayment: estimatedMonthlyPayment,
-                monthlySaving: monthlySaving,
-                reducedDebt: reducedDebt,
-                estimatedDebtReduction: estimatedDebtReduction * 100,
-                repaymentMonths: repaymentMonths
+                s1: { pmt: s1_pmt, months: s1_months, rate: '7%', total: s1_total },
+                s2: { pmt: s2_pmt, months: s2_months, rate: '12%', total: s2_total },
+                s3: { pmt: s3_final_pmt, months: s3_months, rate: '10% + Fee', total: s3_total }
             };
 
+            // AMENDMENT 1.4: UI Display
+            // We use Scenario 1 (Lowest Payment) for the visual preview
+            // No detailed calculation shown here, just the summary
             document.getElementById('resultDebt').textContent = 'HK$ ' + totalDebt.toLocaleString();
-            document.getElementById('resultNewPayment').textContent = 'HK$ ' + estimatedMonthlyPayment.toLocaleString();
-            document.getElementById('resultSaving').textContent = 'HK$ ' + monthlySaving.toLocaleString();
+            document.getElementById('resultNewPayment').textContent = 'HK$ ' + s1_pmt.toLocaleString();
+            
+            const saving = currentRepayment - s1_pmt;
+            document.getElementById('resultSaving').textContent = 'HK$ ' + (saving > 0 ? saving.toLocaleString() : 0);
 
             goToStep(2);
         }
+
+        // Form Submission
+        document.getElementById('assessmentForm').addEventListener('submit', function(e) {
+            const consent = document.getElementById('pdpoConsent').checked;
+            if (!consent) {
+                e.preventDefault();
+                alert('Please agree to terms / 請同意條款');
+                return;
+            }
+
+            // 1. Populate Basic Hidden Fields
+            document.getElementById('hiddenTotalDebt').value = 'HK$ ' + calculationData.totalDebt.toLocaleString();
+            document.getElementById('hiddenCurrentRepayment').value = 'HK$ ' + calculationData.currentRepayment.toLocaleString();
+            document.getElementById('hiddenMonthlyIncome').value = 'HK$ ' + parseFloat(document.getElementById('monthlyIncome').value).toLocaleString();
+
+            // AMENDMENT 2: Generate Amortization Table for Email
+            // We format this as a string block to look like a table in the email body
+            const tableString = `
+================================================
+          PRELIMINARY AMORTIZATION ANALYSIS
+          初步攤還分析方案
+================================================
+
+[ PLAN A - Long Term / 長期方案 ]
+------------------------------------------------
+Interest Rate (p.a.) : 7%
+Duration             : 120 Months (10 Years)
+Monthly Installment  : HK$ ${calculationData.s1.pmt.toLocaleString()}
+Total Repayment      : HK$ ${calculationData.s1.total.toLocaleString()}
+------------------------------------------------
+
+[ PLAN B - Medium Term / 中期方案 ]
+------------------------------------------------
+Interest Rate (p.a.) : 12%
+Duration             : 96 Months (8 Years)
+Monthly Installment  : HK$ ${calculationData.s2.pmt.toLocaleString()}
+Total Repayment      : HK$ ${calculationData.s2.total.toLocaleString()}
+------------------------------------------------
+
+[ PLAN C - Short Term / 短期方案 ]
+------------------------------------------------
+Interest Rate (p.a.) : 10%
+Nominee Fee          : +HK$ 1,000/mo
+Duration             : 72 Months (6 Years)
+Monthly Installment  : HK$ ${calculationData.s3.pmt.toLocaleString()}
+Total Repayment      : HK$ ${calculationData.s3.total.toLocaleString()}
+------------------------------------------------
+
+* Note: The above figures are preliminary estimates.
+* 註：以上數字僅為初步估算，最終方案須視乎債權人審批。
+`;
+
+            // Set the hidden field value
+            document.getElementById('hiddenAmortizationTable').value = tableString;
+
+            // Ensure CC email is set
+            const userEmail = document.getElementById('email').value;
+            document.getElementById('ccEmailField').value = userEmail;
+
+            // Show loading state
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.classList.add('loading');
+            
+            // Allow form to submit naturally to FormSubmit.co
+        });
 
         // Form submission handler
         document.getElementById('assessmentForm').addEventListener('submit', function(e) {
