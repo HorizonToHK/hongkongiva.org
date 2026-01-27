@@ -16,25 +16,25 @@
     <meta name="geo.region" content="HK">
     <meta name="geo.placename" content="Hong Kong">
     
-    <!-- Canonical URL - Replace with your actual domain -->
-    <link rel="canonical" href="https://yourusername.github.io/your-repo-name/">
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://horizontohk.github.io/hongkongiva.org/">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yourusername.github.io/your-repo-name/">
+    <meta property="og:url" content="https://horizontohk.github.io/hongkongiva.org/">
     <meta property="og:title" content="香港債務重組咨詢中心 | Hong Kong IVA Centre">
     <meta property="og:description" content="專業IVA個人自願安排、DRP債務紓緩計劃諮詢服務。根據《破產條例》第6章，協助債務人避免破產，重建財務穩定。免費債務評估。">
-    <meta property="og:image" content="https://yourusername.github.io/your-repo-name/og-image.png">
+    <meta property="og:image" content="https://horizontohk.github.io/hongkongiva.org/og-image.png">
     <meta property="og:locale" content="zh_HK">
     <meta property="og:locale:alternate" content="en_HK">
     <meta property="og:site_name" content="香港債務重組咨詢中心">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://yourusername.github.io/your-repo-name/">
+    <meta property="twitter:url" content="https://horizontohk.github.io/hongkongiva.org/">
     <meta property="twitter:title" content="香港債務重組咨詢中心 | Hong Kong IVA Centre">
     <meta property="twitter:description" content="專業IVA個人自願安排、DRP債務紓緩計劃諮詢服務。免費債務評估，專業團隊處理。">
-    <meta property="twitter:image" content="https://yourusername.github.io/your-repo-name/og-image.png">
+    <meta property="twitter:image" content="https://horizontohk.github.io/hongkongiva.org/og-image.png">
     
     <!-- Structured Data / JSON-LD -->
     <script type="application/ld+json">
@@ -44,8 +44,8 @@
         "name": "香港債務重組咨詢中心",
         "alternateName": "Hong Kong IVA Centre",
         "description": "提供專業IVA個人自願安排、DRP債務紓緩計劃諮詢服務，協助債務人避免破產，重建財務穩定。",
-        "url": "https://yourusername.github.io/your-repo-name/",
-        "logo": "https://yourusername.github.io/your-repo-name/logo.png",
+        "url": "https://horizontohk.github.io/hongkongiva.org/",
+        "logo": "https://horizontohk.github.io/hongkongiva.org/logo.png",
         "areaServed": {
             "@type": "Place",
             "name": "Hong Kong"
@@ -58,6 +58,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@300;400;500;700&family=Noto+Serif+HK:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
             --gov-blue: #003d73;
@@ -891,7 +892,7 @@
             color: var(--gov-gold);
         }
 
-        /* Preliminary Result */
+        /* Preliminary Result - 3 Scenarios */
         .prelim-result {
             background: linear-gradient(135deg, var(--bg-primary) 0%, #e8f4e8 100%);
             border: 2px solid var(--success);
@@ -912,7 +913,7 @@
         .prelim-result h4 {
             color: var(--gov-blue);
             font-size: 1.15rem;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -926,39 +927,122 @@
             color: var(--success);
         }
 
-        .result-grid {
+        /* Three Scenario Cards */
+        .scenarios-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            gap: 16px;
+            margin-bottom: 20px;
         }
 
-        .result-item {
+        .scenario-card {
             background: var(--bg-secondary);
+            border-radius: 12px;
             padding: 20px;
-            border-radius: 8px;
             text-align: center;
-            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--border-color);
+            transition: all 0.3s;
         }
 
-        .result-item .value {
+        .scenario-card:hover {
+            border-color: var(--gov-gold);
+            box-shadow: var(--shadow);
+        }
+
+        .scenario-card.recommended {
+            border-color: var(--gov-gold);
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        }
+
+        body.dark-mode .scenario-card.recommended {
+            background: linear-gradient(135deg, #2e2a1a 0%, #3d3520 100%);
+        }
+
+        .scenario-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .scenario-card:nth-child(1) .scenario-badge {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        body.dark-mode .scenario-card:nth-child(1) .scenario-badge {
+            background: #1e3a5f;
+            color: #93c5fd;
+        }
+
+        .scenario-card:nth-child(2) .scenario-badge {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        body.dark-mode .scenario-card:nth-child(2) .scenario-badge {
+            background: #78350f;
+            color: #fcd34d;
+        }
+
+        .scenario-card:nth-child(3) .scenario-badge {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        body.dark-mode .scenario-card:nth-child(3) .scenario-badge {
+            background: #064e3b;
+            color: #6ee7b7;
+        }
+
+        .scenario-title {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .scenario-rate {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .scenario-term {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .scenario-payment {
             font-family: 'Noto Serif HK', serif;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
             color: var(--gov-blue);
+            margin-bottom: 4px;
         }
 
-        body.dark-mode .result-item .value {
+        body.dark-mode .scenario-payment {
             color: var(--gov-gold-light);
         }
 
-        .result-item .value.highlight {
-            color: var(--success);
+        .scenario-payment-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
         }
 
-        .result-item .label {
+        .scenario-total {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
             font-size: 0.85rem;
             color: var(--text-secondary);
-            margin-top: 4px;
+        }
+
+        .scenario-total strong {
+            color: var(--text-primary);
         }
 
         .prelim-note {
@@ -1610,6 +1694,10 @@
             .footer-main {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .scenarios-container {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1651,10 +1739,6 @@
 
             .form-group.full-width {
                 grid-column: span 1;
-            }
-
-            .result-grid {
-                grid-template-columns: 1fr;
             }
 
             .resources-grid {
@@ -1924,17 +2008,17 @@
         </div>
     </section>
 
-<!-- Calculator Section -->
+    <!-- Calculator Section -->
     <section id="calculator" class="calculator-section">
         <div class="calculator-wrapper">
             <div class="calculator-intro">
                 <h2 class="lang-zh">債務重組初步評估</h2>
                 <h2 class="lang-en">Preliminary Debt Restructuring Assessment</h2>
                 <p class="lang-zh">
-                    填寫以下資料，系統將根據您的財務狀況作出初步分析。詳細評估報告將於核實資料後發送至閣下所提供的電郵地址。
+                    填寫以下資料，系統將根據您的財務狀況作出初步分析。詳細評估報告（包含還款攤分表）將發送至閣下及本中心電郵。
                 </p>
                 <p class="lang-en">
-                    Complete the following information. A detailed assessment report including amortization scenarios will be sent to your email address.
+                    Complete the following information. A detailed assessment report including amortization tables will be sent to both your email and our centre.
                 </p>
             </div>
 
@@ -1973,29 +2057,7 @@
                         </div>
                     </div>
 
-                    <!-- AMENDMENT: Form Action and Hidden Fields -->
-                    <form id="assessmentForm" action="https://formsubmit.co/HorizonTo.Strategy@gmail.com" method="POST">
-                        <!-- FormSubmit Configuration -->
-                        <input type="hidden" name="_subject" value="詳細債務評估報告 (含攤還分析) | Detailed Debt Assessment Report">
-                        <input type="hidden" name="_captcha" value="false">
-                        <input type="hidden" name="_template" value="table">
-                        <input type="hidden" name="_next" id="formNextUrl">
-                        
-                        <!-- AMENDMENT: CC Field to send copy to applicant -->
-                        <!-- This will be populated via JS when user enters email -->
-                        <input type="hidden" name="_cc" id="ccEmailField">
-
-                        <!-- Hidden Data Fields (Populated by JS) -->
-                        <input type="hidden" name="--- CLIENT PROFILE ---" value="">
-                        <input type="hidden" name="總債務 Total Debt" id="hiddenTotalDebt">
-                        <input type="hidden" name="每月收入 Monthly Income" id="hiddenMonthlyIncome">
-                        <input type="hidden" name="現時還款 Current Repayment" id="hiddenCurrentRepayment">
-                        
-                        <!-- AMENDMENT: Hidden Field for the 3 Scenarios Table -->
-                        <!-- This single field will contain the formatted table for the email -->
-                        <input type="hidden" name="--- 方案分析 SCENARIO ANALYSIS ---" value="">
-                        <input type="hidden" name="詳細攤還分析 Detailed Amortization" id="hiddenAmortizationTable">
-
+                    <form id="assessmentForm">
                         <!-- Step 1: Debt Information -->
                         <div class="form-section active" id="step1">
                             <div class="form-grid">
@@ -2009,6 +2071,8 @@
                                         <span>HK$</span>
                                         <input type="number" id="totalDebt" required min="10000" placeholder="500,000">
                                     </div>
+                                    <small class="lang-zh">包括信用卡、私人貸款、財務公司貸款等</small>
+                                    <small class="lang-en">Including credit cards, personal loans, finance company loans, etc.</small>
                                 </div>
 
                                 <div class="form-group">
@@ -2021,6 +2085,8 @@
                                         <span>HK$</span>
                                         <input type="number" id="monthlyIncome" required min="5000" placeholder="25,000">
                                     </div>
+                                    <small class="lang-zh">稅前月薪</small>
+                                    <small class="lang-en">Gross monthly salary</small>
                                 </div>
 
                                 <div class="form-group">
@@ -2066,6 +2132,11 @@
                                         <option value="60+">逾期超過60天 / Over 60 days overdue</option>
                                         <option value="legal">已收到法律信件 / Received legal letters</option>
                                     </select>
+                                    <div class="help-text">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span class="lang-zh-inline">此資料有助評估最適合的解決方案</span>
+                                        <span class="lang-en-inline">This helps determine the most suitable solution</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -2078,39 +2149,106 @@
                             </div>
                         </div>
 
-                        <!-- Step 2: Preliminary Results -->
+                        <!-- Step 2: Preliminary Results with 3 Scenarios -->
                         <div class="form-section" id="step2">
                             <div class="prelim-result show" id="prelimResult">
                                 <h4>
                                     <i class="fas fa-chart-line"></i>
-                                    <span class="lang-zh-inline">初步評估結果</span>
-                                    <span class="lang-en-inline">Preliminary Assessment Results</span>
+                                    <span class="lang-zh-inline">初步評估結果 - 三種還款方案比較</span>
+                                    <span class="lang-en-inline">Preliminary Results - 3 Repayment Scenarios</span>
                                 </h4>
                                 
-                                <!-- AMENDMENT: Display Logic -->
-                                <!-- We display the "Best Case" (Scenario 1) here for the visual result -->
-                                <div class="result-grid">
-                                    <div class="result-item">
-                                        <span class="value" id="resultDebt">HK$ --</span>
-                                        <span class="label lang-zh">總債務</span>
-                                        <span class="label lang-en">Total Debt</span>
+                                <div class="scenarios-container">
+                                    <!-- Scenario 1: 7% / 120 months -->
+                                    <div class="scenario-card">
+                                        <span class="scenario-badge">
+                                            <span class="lang-zh-inline">方案 A</span>
+                                            <span class="lang-en-inline">Plan A</span>
+                                        </span>
+                                        <div class="scenario-title">
+                                            <span class="lang-zh-inline">結餘轉戶</span>
+                                            <span class="lang-en-inline">Consolidation</span>
+                                        </div>
+                                        <div class="scenario-rate">7% p.a.</div>
+                                        <div class="scenario-term">120 
+                                            <span class="lang-zh-inline">期</span>
+                                            <span class="lang-en-inline">months</span>
+                                        </div>
+                                        <div class="scenario-payment" id="scenario1Payment">HK$ --</div>
+                                        <div class="scenario-payment-label">
+                                            <span class="lang-zh-inline">每月還款</span>
+                                            <span class="lang-en-inline">Monthly</span>
+                                        </div>
+                                        <div class="scenario-total">
+                                            <span class="lang-zh-inline">總還款：</span>
+                                            <span class="lang-en-inline">Total: </span>
+                                            <strong id="scenario1Total">HK$ --</strong>
+                                        </div>
                                     </div>
-                                    <div class="result-item">
-                                        <span class="value highlight" id="resultNewPayment">HK$ --</span>
-                                        <span class="label lang-zh">預計每月還款 (起)</span>
-                                        <span class="label lang-en">Est. Monthly Payment (From)</span>
+
+                                    <!-- Scenario 2: 12% / 96 months -->
+                                    <div class="scenario-card">
+                                        <span class="scenario-badge">
+                                            <span class="lang-zh-inline">方案 B</span>
+                                            <span class="lang-en-inline">Plan B</span>
+                                        </span>
+                                        <div class="scenario-title">
+                                            <span class="lang-zh-inline">債務紓緩 DRP</span>
+                                            <span class="lang-en-inline">DRP</span>
+                                        </div>
+                                        <div class="scenario-rate">12% p.a.</div>
+                                        <div class="scenario-term">96 
+                                            <span class="lang-zh-inline">期</span>
+                                            <span class="lang-en-inline">months</span>
+                                        </div>
+                                        <div class="scenario-payment" id="scenario2Payment">HK$ --</div>
+                                        <div class="scenario-payment-label">
+                                            <span class="lang-zh-inline">每月還款</span>
+                                            <span class="lang-en-inline">Monthly</span>
+                                        </div>
+                                        <div class="scenario-total">
+                                            <span class="lang-zh-inline">總還款：</span>
+                                            <span class="lang-en-inline">Total: </span>
+                                            <strong id="scenario2Total">HK$ --</strong>
+                                        </div>
                                     </div>
-                                    <div class="result-item">
-                                        <span class="value highlight" id="resultSaving">--</span>
-                                        <span class="label lang-zh">預計每月節省</span>
-                                        <span class="label lang-en">Est. Monthly Savings</span>
+
+                                    <!-- Scenario 3: 10% / 72 months + $1000 fee -->
+                                    <div class="scenario-card recommended">
+                                        <span class="scenario-badge">
+                                            <span class="lang-zh-inline">方案 C (IVA)</span>
+                                            <span class="lang-en-inline">Plan C (IVA)</span>
+                                        </span>
+                                        <div class="scenario-title">
+                                            <span class="lang-zh-inline">個人自願安排</span>
+                                            <span class="lang-en-inline">IVA</span>
+                                        </div>
+                                        <div class="scenario-rate">10% p.a. + $1,000 
+                                            <span class="lang-zh-inline">代名人費</span>
+                                            <span class="lang-en-inline">nominee fee</span>
+                                        </div>
+                                        <div class="scenario-term">72 
+                                            <span class="lang-zh-inline">期</span>
+                                            <span class="lang-en-inline">months</span>
+                                        </div>
+                                        <div class="scenario-payment" id="scenario3Payment">HK$ --</div>
+                                        <div class="scenario-payment-label">
+                                            <span class="lang-zh-inline">每月還款</span>
+                                            <span class="lang-en-inline">Monthly</span>
+                                        </div>
+                                        <div class="scenario-total">
+                                            <span class="lang-zh-inline">總還款：</span>
+                                            <span class="lang-en-inline">Total: </span>
+                                            <strong id="scenario3Total">HK$ --</strong>
+                                        </div>
                                     </div>
                                 </div>
+
                                 <div class="prelim-note">
                                     <i class="fas fa-exclamation-triangle"></i>
                                     <div>
-                                        <span class="lang-zh-inline">此為初步估算（基於120期方案）。請填寫個人資料，系統將發送包含 **3種不同還款方案** 的詳細比較表至您的電郵。</span>
-                                        <span class="lang-en-inline">This is a preliminary estimate (based on 120-month plan). Please provide details to receive a detailed comparison table of **3 different repayment scenarios** via email.</span>
+                                        <span class="lang-zh-inline">以上僅為初步估算，實際方案須視乎債權人審批及個別情況而定。請填寫個人資料，系統將發送包含詳細還款攤分表的評估報告至您的電郵。</span>
+                                        <span class="lang-en-inline">The above are preliminary estimates only. Actual plans are subject to creditor approval and individual circumstances. Please provide personal details to receive a detailed assessment report with amortization tables via email.</span>
                                     </div>
                                 </div>
                             </div>
@@ -2138,7 +2276,7 @@
                                         <span class="lang-en-inline">Chinese Name</span>
                                         <span class="required">*</span>
                                     </label>
-                                    <input type="text" name="中文姓名 Chinese Name" id="chineseName" required placeholder="陳大文">
+                                    <input type="text" id="chineseName" required placeholder="陳大文">
                                 </div>
 
                                 <div class="form-group">
@@ -2147,7 +2285,7 @@
                                         <span class="lang-en-inline">English Name</span>
                                         <span class="required">*</span>
                                     </label>
-                                    <input type="text" name="英文姓名 English Name" id="englishName" required placeholder="CHAN Tai Man">
+                                    <input type="text" id="englishName" required placeholder="CHAN Tai Man">
                                 </div>
 
                                 <div class="form-group">
@@ -2156,7 +2294,9 @@
                                         <span class="lang-en-inline">HKID (First 4 Characters)</span>
                                         <span class="required">*</span>
                                     </label>
-                                    <input type="text" name="身份證首4位 HKID First 4" id="hkid" required maxlength="4" placeholder="A123" pattern="[A-Za-z]{1,2}[0-9]{2,3}">
+                                    <input type="text" id="hkid" required maxlength="4" placeholder="A123" pattern="[A-Za-z]{1,2}[0-9]{2,3}">
+                                    <small class="lang-zh">例如：A123 或 AB12（只需填寫首4位）</small>
+                                    <small class="lang-en">e.g., A123 or AB12 (first 4 characters only)</small>
                                 </div>
 
                                 <div class="form-group">
@@ -2165,7 +2305,7 @@
                                         <span class="lang-en-inline">Contact Number</span>
                                         <span class="required">*</span>
                                     </label>
-                                    <input type="tel" name="聯絡電話 Phone" id="phone" required placeholder="9XXX XXXX" pattern="[0-9]{8}">
+                                    <input type="tel" id="phone" required placeholder="9XXX XXXX" pattern="[0-9]{8}">
                                 </div>
 
                                 <div class="form-group full-width">
@@ -2174,12 +2314,11 @@
                                         <span class="lang-en-inline">Email Address</span>
                                         <span class="required">*</span>
                                     </label>
-                                    <!-- AMENDMENT: Added onchange handler to update CC field -->
-                                    <input type="email" name="電郵 Email" id="email" required placeholder="example@email.com" onchange="updateCcEmail(this.value)">
+                                    <input type="email" id="email" required placeholder="example@email.com">
                                     <div class="help-text">
                                         <i class="fas fa-envelope"></i>
-                                        <span class="lang-zh-inline">詳細評估報告將發送至此電郵地址</span>
-                                        <span class="lang-en-inline">Detailed assessment report will be sent to this email</span>
+                                        <span class="lang-zh-inline">詳細評估報告（包含還款攤分表）將發送至此電郵地址</span>
+                                        <span class="lang-en-inline">Detailed assessment report with amortization tables will be sent to this email</span>
                                     </div>
                                 </div>
 
@@ -2188,7 +2327,7 @@
                                         <span class="lang-zh-inline">方便聯絡時間</span>
                                         <span class="lang-en-inline">Preferred Contact Time</span>
                                     </label>
-                                    <select name="聯絡時間 Preferred Time" id="preferredTime">
+                                    <select id="preferredTime">
                                         <option value="任何時間 Anytime">任何時間 / Anytime</option>
                                         <option value="上午 Morning 9:00-12:00">上午 9:00-12:00 / Morning</option>
                                         <option value="下午 Afternoon 12:00-18:00">下午 12:00-18:00 / Afternoon</option>
@@ -2259,46 +2398,16 @@
                 </div>
                 <div class="card-body">
                     <ul>
-                        <li class="lang-zh">
-                            <i class="fas fa-check"></i>
-                            <span>債務可獲全數豁免</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-check"></i>
-                            <span>Debts may be fully discharged</span>
-                        </li>
-                        <li class="lang-zh">
-                            <i class="fas fa-xmark"></i>
-                            <span>破產期4年，紀錄保留8年</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-xmark"></i>
-                            <span>4-year bankruptcy, 8-year record</span>
-                        </li>
-                        <li class="lang-zh">
-                            <i class="fas fa-xmark"></i>
-                            <span>不得擔任公司董事</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-xmark"></i>
-                            <span>Cannot act as company director</span>
-                        </li>
-                        <li class="lang-zh">
-                            <i class="fas fa-xmark"></i>
-                            <span>從事部分行業受限</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-xmark"></i>
-                            <span>Career restrictions apply</span>
-                        </li>
-                        <li class="lang-zh">
-                            <i class="fas fa-xmark"></i>
-                            <span>資產或被變賣</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-xmark"></i>
-                            <span>Assets may be liquidated</span>
-                        </li>
+                        <li class="lang-zh"><i class="fas fa-check"></i><span>債務可獲全數豁免</span></li>
+                        <li class="lang-en"><i class="fas fa-check"></i><span>Debts may be fully discharged</span></li>
+                        <li class="lang-zh"><i class="fas fa-xmark"></i><span>破產期4年，紀錄保留8年</span></li>
+                        <li class="lang-en"><i class="fas fa-xmark"></i><span>4-year bankruptcy, 8-year record</span></li>
+                        <li class="lang-zh"><i class="fas fa-xmark"></i><span>不得擔任公司董事</span></li>
+                        <li class="lang-en"><i class="fas fa-xmark"></i><span>Cannot act as company director</span></li>
+                        <li class="lang-zh"><i class="fas fa-xmark"></i><span>從事部分行業受限</span></li>
+                        <li class="lang-en"><i class="fas fa-xmark"></i><span>Career restrictions apply</span></li>
+                        <li class="lang-zh"><i class="fas fa-xmark"></i><span>資產或被變賣</span></li>
+                        <li class="lang-en"><i class="fas fa-xmark"></i><span>Assets may be liquidated</span></li>
                     </ul>
                 </div>
             </div>
@@ -2312,46 +2421,16 @@
                 </div>
                 <div class="card-body">
                     <ul>
-                        <li class="lang-zh">
-                            <i class="fas fa-check"></i>
-                            <span>避免破產紀錄</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-check"></i>
-                            <span>Avoid bankruptcy record</span>
-                        </li>
-                        <li class="lang-zh">
-                            <i class="fas fa-check"></i>
-                            <span>債務可大幅削減30-70%</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-check"></i>
-                            <span>Debts reduced by 30-70%</span>
-                        </li>
-                        <li class="lang-zh">
-                            <i class="fas fa-check"></i>
-                            <span>可保留工作及專業資格</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-check"></i>
-                            <span>Keep job & qualifications</span>
-                        </li>
-                        <li class="lang-zh">
-                            <i class="fas fa-check"></i>
-                            <span>法庭認可，具法律約束力</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-check"></i>
-                            <span>Court-approved, legally binding</span>
-                        </li>
-                        <li class="lang-zh">
-                            <i class="fas fa-check"></i>
-                            <span>統一處理所有債權人</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-check"></i>
-                            <span>All creditors handled together</span>
-                        </li>
+                        <li class="lang-zh"><i class="fas fa-check"></i><span>避免破產紀錄</span></li>
+                        <li class="lang-en"><i class="fas fa-check"></i><span>Avoid bankruptcy record</span></li>
+                        <li class="lang-zh"><i class="fas fa-check"></i><span>債務可大幅削減30-70%</span></li>
+                        <li class="lang-en"><i class="fas fa-check"></i><span>Debts reduced by 30-70%</span></li>
+                        <li class="lang-zh"><i class="fas fa-check"></i><span>可保留工作及專業資格</span></li>
+                        <li class="lang-en"><i class="fas fa-check"></i><span>Keep job & qualifications</span></li>
+                        <li class="lang-zh"><i class="fas fa-check"></i><span>法庭認可，具法律約束力</span></li>
+                        <li class="lang-en"><i class="fas fa-check"></i><span>Court-approved, legally binding</span></li>
+                        <li class="lang-zh"><i class="fas fa-check"></i><span>統一處理所有債權人</span></li>
+                        <li class="lang-en"><i class="fas fa-check"></i><span>All creditors handled together</span></li>
                     </ul>
                 </div>
             </div>
@@ -2365,46 +2444,16 @@
                 </div>
                 <div class="card-body">
                     <ul>
-                        <li class="lang-zh">
-                            <i class="fas fa-check"></i>
-                            <span>無需法庭程序</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-check"></i>
-                            <span>No court proceedings</span>
-                        </li>
-                        <li class="lang-zh">
-                            <i class="fas fa-check"></i>
-                            <span>處理時間較快（1-2個月）</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-check"></i>
-                            <span>Faster processing (1-2 months)</span>
-                        </li>
-                        <li class="lang-zh">
-                            <i class="fas fa-check"></i>
-                            <span>費用較低</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-check"></i>
-                            <span>Lower cost</span>
-                        </li>
-                        <li class="lang-zh">
-                            <i class="fas fa-xmark"></i>
-                            <span>需逐一與債權人協商</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-xmark"></i>
-                            <span>Negotiate with each creditor</span>
-                        </li>
-                        <li class="lang-zh">
-                            <i class="fas fa-xmark"></i>
-                            <span>不具法律強制約束力</span>
-                        </li>
-                        <li class="lang-en">
-                            <i class="fas fa-xmark"></i>
-                            <span>Not legally binding</span>
-                        </li>
+                        <li class="lang-zh"><i class="fas fa-check"></i><span>無需法庭程序</span></li>
+                        <li class="lang-en"><i class="fas fa-check"></i><span>No court proceedings</span></li>
+                        <li class="lang-zh"><i class="fas fa-check"></i><span>處理時間較快（1-2個月）</span></li>
+                        <li class="lang-en"><i class="fas fa-check"></i><span>Faster processing (1-2 months)</span></li>
+                        <li class="lang-zh"><i class="fas fa-check"></i><span>費用較低</span></li>
+                        <li class="lang-en"><i class="fas fa-check"></i><span>Lower cost</span></li>
+                        <li class="lang-zh"><i class="fas fa-xmark"></i><span>需逐一與債權人協商</span></li>
+                        <li class="lang-en"><i class="fas fa-xmark"></i><span>Negotiate with each creditor</span></li>
+                        <li class="lang-zh"><i class="fas fa-xmark"></i><span>不具法律強制約束力</span></li>
+                        <li class="lang-en"><i class="fas fa-xmark"></i><span>Not legally binding</span></li>
                     </ul>
                 </div>
             </div>
@@ -2424,132 +2473,74 @@
 
         <div class="resources-grid">
             <div class="resource-card">
-                <div class="card-icon">
-                    <i class="fas fa-landmark"></i>
-                </div>
+                <div class="card-icon"><i class="fas fa-landmark"></i></div>
                 <h3 class="lang-zh">破產管理署</h3>
                 <h3 class="lang-en">Official Receiver's Office</h3>
                 <p class="lang-zh">負責處理個人破產及公司清盤事宜的政府部門，提供破產程序相關資訊。</p>
-                <p class="lang-en">Government department handling personal bankruptcy and company winding-up matters, providing information on bankruptcy procedures.</p>
+                <p class="lang-en">Government department handling personal bankruptcy and company winding-up matters.</p>
                 <div class="contact-info">
-                    <div>
-                        <i class="fas fa-globe"></i>
-                        <a href="https://www.oro.gov.hk" target="_blank">www.oro.gov.hk</a>
-                    </div>
-                    <div>
-                        <i class="fas fa-phone"></i>
-                        <span>2867 2448</span>
-                    </div>
-                    <div>
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span class="lang-zh-inline">香港金鐘道66號金鐘道政府合署高座10樓</span>
-                        <span class="lang-en-inline">10/F, High Block, Queensway Government Offices, 66 Queensway, HK</span>
-                    </div>
+                    <div><i class="fas fa-globe"></i><a href="https://www.oro.gov.hk" target="_blank">www.oro.gov.hk</a></div>
+                    <div><i class="fas fa-phone"></i><span>2867 2448</span></div>
                 </div>
             </div>
 
             <div class="resource-card">
-                <div class="card-icon">
-                    <i class="fas fa-gavel"></i>
-                </div>
+                <div class="card-icon"><i class="fas fa-gavel"></i></div>
                 <h3 class="lang-zh">香港高等法院</h3>
                 <h3 class="lang-en">High Court of Hong Kong</h3>
                 <p class="lang-zh">處理個人自願安排(IVA)申請的法院，提供法律程序相關資訊。</p>
-                <p class="lang-en">Court handling Individual Voluntary Arrangement (IVA) applications, providing information on legal procedures.</p>
+                <p class="lang-en">Court handling Individual Voluntary Arrangement (IVA) applications.</p>
                 <div class="contact-info">
-                    <div>
-                        <i class="fas fa-globe"></i>
-                        <a href="https://www.judiciary.hk" target="_blank">www.judiciary.hk</a>
-                    </div>
-                    <div>
-                        <i class="fas fa-phone"></i>
-                        <span>2869 0869</span>
-                    </div>
-                    <div>
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span class="lang-zh-inline">香港金鐘道38號高等法院</span>
-                        <span class="lang-en-inline">38 Queensway, Hong Kong</span>
-                    </div>
+                    <div><i class="fas fa-globe"></i><a href="https://www.judiciary.hk" target="_blank">www.judiciary.hk</a></div>
+                    <div><i class="fas fa-phone"></i><span>2869 0869</span></div>
                 </div>
             </div>
 
             <div class="resource-card">
-                <div class="card-icon">
-                    <i class="fas fa-hands-helping"></i>
-                </div>
+                <div class="card-icon"><i class="fas fa-hands-helping"></i></div>
                 <h3 class="lang-zh">明愛向晴軒</h3>
                 <h3 class="lang-en">Caritas Family Crisis Support Centre</h3>
                 <p class="lang-zh">提供危機介入、情緒支援及債務輔導服務的非牟利機構。</p>
-                <p class="lang-en">Non-profit organization providing crisis intervention, emotional support, and debt counseling services.</p>
+                <p class="lang-en">Non-profit organization providing crisis intervention and debt counseling.</p>
                 <div class="contact-info">
-                    <div>
-                        <i class="fas fa-phone"></i>
-                        <span>18288 (24小時熱線 / 24-hour hotline)</span>
-                    </div>
-                    <div>
-                        <i class="fas fa-globe"></i>
-                        <a href="https://fcsc.caritas.org.hk" target="_blank">fcsc.caritas.org.hk</a>
-                    </div>
+                    <div><i class="fas fa-phone"></i><span>18288 (24小時熱線 / 24-hour)</span></div>
+                    <div><i class="fas fa-globe"></i><a href="https://fcsc.caritas.org.hk" target="_blank">fcsc.caritas.org.hk</a></div>
                 </div>
             </div>
 
             <div class="resource-card">
-                <div class="card-icon">
-                    <i class="fas fa-balance-scale"></i>
-                </div>
+                <div class="card-icon"><i class="fas fa-balance-scale"></i></div>
                 <h3 class="lang-zh">免費法律諮詢服務</h3>
                 <h3 class="lang-en">Free Legal Advice Service</h3>
                 <p class="lang-zh">由香港律師會及當值律師服務提供的免費法律諮詢。</p>
-                <p class="lang-en">Free legal advice provided by The Law Society of Hong Kong and Duty Lawyer Service.</p>
+                <p class="lang-en">Free legal advice by The Law Society of Hong Kong and Duty Lawyer Service.</p>
                 <div class="contact-info">
-                    <div>
-                        <i class="fas fa-phone"></i>
-                        <span>2835 2500 (當值律師服務)</span>
-                    </div>
-                    <div>
-                        <i class="fas fa-globe"></i>
-                        <a href="https://www.dutylawyer.org.hk" target="_blank">www.dutylawyer.org.hk</a>
-                    </div>
+                    <div><i class="fas fa-phone"></i><span>2835 2500</span></div>
+                    <div><i class="fas fa-globe"></i><a href="https://www.dutylawyer.org.hk" target="_blank">www.dutylawyer.org.hk</a></div>
                 </div>
             </div>
 
             <div class="resource-card">
-                <div class="card-icon">
-                    <i class="fas fa-users"></i>
-                </div>
+                <div class="card-icon"><i class="fas fa-users"></i></div>
                 <h3 class="lang-zh">社會福利署</h3>
                 <h3 class="lang-en">Social Welfare Department</h3>
                 <p class="lang-zh">提供綜合家庭服務及經濟援助計劃資訊。</p>
-                <p class="lang-en">Provides information on integrated family services and financial assistance schemes.</p>
+                <p class="lang-en">Provides information on integrated family services and financial assistance.</p>
                 <div class="contact-info">
-                    <div>
-                        <i class="fas fa-phone"></i>
-                        <span>2343 2255</span>
-                    </div>
-                    <div>
-                        <i class="fas fa-globe"></i>
-                        <a href="https://www.swd.gov.hk" target="_blank">www.swd.gov.hk</a>
-                    </div>
+                    <div><i class="fas fa-phone"></i><span>2343 2255</span></div>
+                    <div><i class="fas fa-globe"></i><a href="https://www.swd.gov.hk" target="_blank">www.swd.gov.hk</a></div>
                 </div>
             </div>
 
             <div class="resource-card">
-                <div class="card-icon">
-                    <i class="fas fa-heart"></i>
-                </div>
+                <div class="card-icon"><i class="fas fa-heart"></i></div>
                 <h3 class="lang-zh">撒瑪利亞防止自殺會</h3>
                 <h3 class="lang-en">The Samaritans</h3>
                 <p class="lang-zh">提供24小時情緒支援熱線服務。</p>
                 <p class="lang-en">Provides 24-hour emotional support hotline services.</p>
                 <div class="contact-info">
-                    <div>
-                        <i class="fas fa-phone"></i>
-                        <span>2389 2222 (24小時 / 24-hour)</span>
-                    </div>
-                    <div>
-                        <i class="fas fa-globe"></i>
-                        <a href="https://www.samaritans.org.hk" target="_blank">www.samaritans.org.hk</a>
-                    </div>
+                    <div><i class="fas fa-phone"></i><span>2389 2222 (24小時 / 24-hour)</span></div>
+                    <div><i class="fas fa-globe"></i><a href="https://www.samaritans.org.hk" target="_blank">www.samaritans.org.hk</a></div>
                 </div>
             </div>
         </div>
@@ -2602,7 +2593,7 @@
                 <div class="faq-answer">
                     <div class="faq-answer-content">
                         <p class="lang-zh">申請IVA的基本條件包括：(1) 必須有穩定的收入來源；(2) 無力按現有條款償還債務；(3) 需獲得持有75%或以上債務金額的債權人同意；(4) 需委任合資格的代名人處理申請。申請人需向法庭提交建議書，說明還款計劃及理由，經債權人會議投票通過後，法庭會頒布命令使計劃具法律約束力。</p>
-                        <p class="lang-en">Basic requirements for IVA include: (1) Must have stable income source; (2) Unable to repay debts under current terms; (3) Requires approval from creditors holding 75% or more of the debt; (4) Must appoint a qualified nominee to handle the application. Applicants must submit a proposal to the court explaining the repayment plan, which becomes legally binding after creditor meeting vote approval and court order.</p>
+                        <p class="lang-en">Basic requirements for IVA include: (1) Must have stable income source; (2) Unable to repay debts under current terms; (3) Requires approval from creditors holding 75% or more of the debt; (4) Must appoint a qualified nominee to handle the application.</p>
                     </div>
                 </div>
             </div>
@@ -2616,7 +2607,7 @@
                 <div class="faq-answer">
                     <div class="faq-answer-content">
                         <p class="lang-zh">選擇取決於個別情況：(1) DRP適合債權人數目較少（通常1-3個）的情況，可較快完成；(2) IVA適合債權人較多、債務金額較大的情況，提供法律保障；(3) DRP無需法庭程序，費用較低但不具法律約束力；(4) IVA經法庭認可，一旦通過所有債權人均受約束。建議先進行評估，由專業顧問根據您的情況提供建議。</p>
-                        <p class="lang-en">The choice depends on individual circumstances: (1) DRP suits cases with fewer creditors (usually 1-3), faster completion; (2) IVA suits cases with more creditors and larger debts, provides legal protection; (3) DRP requires no court proceedings, lower cost but not legally binding; (4) IVA is court-approved, once passed all creditors are bound. Recommend assessment first, with professional consultants providing advice based on your situation.</p>
+                        <p class="lang-en">The choice depends on individual circumstances: (1) DRP suits cases with fewer creditors (usually 1-3), faster completion; (2) IVA suits cases with more creditors and larger debts, provides legal protection; (3) DRP requires no court proceedings, lower cost but not legally binding; (4) IVA is court-approved, once passed all creditors are bound.</p>
                     </div>
                 </div>
             </div>
@@ -2632,86 +2623,42 @@
                         <span class="lang-zh-inline">香港債務重組咨詢中心</span>
                         <span class="lang-en-inline">Hong Kong IVA Centre</span>
                     </h3>
-                    <p class="lang-zh">
-                        本中心致力提供專業、可靠的債務重組資訊服務，協助有需要人士了解法例賦予的權利及可行方案，在合法框架下解決財務困難。
-                    </p>
-                    <p class="lang-en">
-                        The Centre is dedicated to providing professional and reliable debt restructuring information services, helping those in need understand their legal rights and available options to resolve financial difficulties within the legal framework.
-                    </p>
+                    <p class="lang-zh">本中心致力提供專業、可靠的債務重組資訊服務，協助有需要人士了解法例賦予的權利及可行方案，在合法框架下解決財務困難。</p>
+                    <p class="lang-en">The Centre is dedicated to providing professional and reliable debt restructuring information services, helping those in need understand their legal rights and available options.</p>
                 </div>
                 <div class="footer-links">
-                    <h4>
-                        <span class="lang-zh-inline">網站導覽</span>
-                        <span class="lang-en-inline">Site Map</span>
-                    </h4>
+                    <h4><span class="lang-zh-inline">網站導覽</span><span class="lang-en-inline">Site Map</span></h4>
                     <ul>
-                        <li><a href="#services">
-                            <span class="lang-zh-inline">服務概覽</span>
-                            <span class="lang-en-inline">Services</span>
-                        </a></li>
-                        <li><a href="#calculator">
-                            <span class="lang-zh-inline">債務評估</span>
-                            <span class="lang-en-inline">Assessment</span>
-                        </a></li>
-                        <li><a href="#comparison">
-                            <span class="lang-zh-inline">方案比較</span>
-                            <span class="lang-en-inline">Comparison</span>
-                        </a></li>
-                        <li><a href="#resources">
-                            <span class="lang-zh-inline">公共資源</span>
-                            <span class="lang-en-inline">Resources</span>
-                        </a></li>
+                        <li><a href="#services"><span class="lang-zh-inline">服務概覽</span><span class="lang-en-inline">Services</span></a></li>
+                        <li><a href="#calculator"><span class="lang-zh-inline">債務評估</span><span class="lang-en-inline">Assessment</span></a></li>
+                        <li><a href="#comparison"><span class="lang-zh-inline">方案比較</span><span class="lang-en-inline">Comparison</span></a></li>
+                        <li><a href="#resources"><span class="lang-zh-inline">公共資源</span><span class="lang-en-inline">Resources</span></a></li>
                     </ul>
                 </div>
                 <div class="footer-links">
-                    <h4>
-                        <span class="lang-zh-inline">相關法例</span>
-                        <span class="lang-en-inline">Related Legislation</span>
-                    </h4>
+                    <h4><span class="lang-zh-inline">相關法例</span><span class="lang-en-inline">Related Legislation</span></h4>
                     <ul>
-                        <li><a href="https://www.elegislation.gov.hk/hk/cap6" target="_blank">
-                            <span class="lang-zh-inline">《破產條例》(第6章)</span>
-                            <span class="lang-en-inline">Bankruptcy Ordinance (Cap. 6)</span>
-                        </a></li>
-                        <li><a href="https://www.elegislation.gov.hk/hk/cap486" target="_blank">
-                            <span class="lang-zh-inline">《個人資料(私隱)條例》</span>
-                            <span class="lang-en-inline">PDPO (Cap. 486)</span>
-                        </a></li>
+                        <li><a href="https://www.elegislation.gov.hk/hk/cap6" target="_blank"><span class="lang-zh-inline">《破產條例》(第6章)</span><span class="lang-en-inline">Bankruptcy Ordinance (Cap. 6)</span></a></li>
+                        <li><a href="https://www.elegislation.gov.hk/hk/cap486" target="_blank"><span class="lang-zh-inline">《個人資料(私隱)條例》</span><span class="lang-en-inline">PDPO (Cap. 486)</span></a></li>
                     </ul>
                 </div>
                 <div class="footer-links">
-                    <h4>
-                        <span class="lang-zh-inline">官方機構</span>
-                        <span class="lang-en-inline">Official Bodies</span>
-                    </h4>
+                    <h4><span class="lang-zh-inline">官方機構</span><span class="lang-en-inline">Official Bodies</span></h4>
                     <ul>
-                        <li><a href="https://www.oro.gov.hk" target="_blank">
-                            <span class="lang-zh-inline">破產管理署</span>
-                            <span class="lang-en-inline">Official Receiver's Office</span>
-                        </a></li>
-                        <li><a href="https://www.judiciary.hk" target="_blank">
-                            <span class="lang-zh-inline">香港司法機構</span>
-                            <span class="lang-en-inline">HK Judiciary</span>
-                        </a></li>
+                        <li><a href="https://www.oro.gov.hk" target="_blank"><span class="lang-zh-inline">破產管理署</span><span class="lang-en-inline">Official Receiver's Office</span></a></li>
+                        <li><a href="https://www.judiciary.hk" target="_blank"><span class="lang-zh-inline">香港司法機構</span><span class="lang-en-inline">HK Judiciary</span></a></li>
                     </ul>
                 </div>
             </div>
 
             <div class="footer-disclaimer">
-                <p class="lang-zh">
-                    <strong>免責聲明：</strong>本網站所載資料僅供一般參考之用，並不構成法律意見。每宗個案的情況各有不同，讀者不應視本網站內容為專業意見，亦不應倚賴本網站內容作出任何決定。在作出任何決定前，建議諮詢專業法律及財務顧問。本中心對使用或依據本網站資料而引致的任何損失或損害概不負責。
-                </p>
-                <p class="lang-en">
-                    <strong>Disclaimer:</strong> The information contained in this website is for general reference only and does not constitute legal advice. Each case has different circumstances, and readers should not regard the content of this website as professional advice or rely on it to make any decisions. Before making any decision, it is recommended to consult professional legal and financial advisors. The Centre accepts no liability for any loss or damage arising from the use of or reliance on the information on this website.
-                </p>
+                <p class="lang-zh"><strong>免責聲明：</strong>本網站所載資料僅供一般參考之用，並不構成法律意見。每宗個案的情況各有不同，讀者不應視本網站內容為專業意見，亦不應倚賴本網站內容作出任何決定。在作出任何決定前，建議諮詢專業法律及財務顧問。本中心對使用或依據本網站資料而引致的任何損失或損害概不負責。</p>
+                <p class="lang-en"><strong>Disclaimer:</strong> The information contained in this website is for general reference only and does not constitute legal advice. Each case has different circumstances, and readers should not regard the content of this website as professional advice or rely on it to make any decisions. Before making any decision, it is recommended to consult professional legal and financial advisors. The Centre accepts no liability for any loss or damage arising from the use of or reliance on the information on this website.</p>
             </div>
 
             <div class="footer-bottom">
                 <p>&copy; 2024 Hong Kong IVA Centre 香港債務重組咨詢中心</p>
-                <p>
-                    <span class="lang-zh-inline">服務範圍僅限於香港特別行政區</span>
-                    <span class="lang-en-inline">Services Limited to Hong Kong SAR</span>
-                </p>
+                <p><span class="lang-zh-inline">服務範圍僅限於香港特別行政區</span><span class="lang-en-inline">Services Limited to Hong Kong SAR</span></p>
             </div>
         </div>
     </footer>
@@ -2738,12 +2685,8 @@
             </div>
             <h3 class="lang-zh">申請已成功提交</h3>
             <h3 class="lang-en">Application Submitted Successfully</h3>
-            <p class="lang-zh">
-                感謝閣下的查詢。本中心已收到您的債務評估申請，詳細評估報告將於1-2個工作天內發送至您所提供的電郵地址。如有需要，我們的專業顧問將按您提供的聯絡方式與您聯繫。
-            </p>
-            <p class="lang-en">
-                Thank you for your enquiry. The Centre has received your debt assessment application. A detailed assessment report will be sent to your provided email address within 1-2 working days. If necessary, our professional consultants will contact you using the contact information you provided.
-            </p>
+            <p class="lang-zh">感謝閣下的查詢。本中心已收到您的債務評估申請，詳細評估報告（包含還款攤分表）將於1-2個工作天內發送至您所提供的電郵地址。如有需要，我們的專業顧問將按您提供的聯絡方式與您聯繫。</p>
+            <p class="lang-en">Thank you for your enquiry. The Centre has received your debt assessment application. A detailed assessment report with amortization tables will be sent to your provided email address within 1-2 working days. If necessary, our professional consultants will contact you.</p>
             <button class="modal-close" onclick="closeModal()">
                 <span class="lang-zh-inline">確定</span>
                 <span class="lang-en-inline">OK</span>
@@ -2752,6 +2695,12 @@
     </div>
 
     <script>
+        // Initialize EmailJS - You need to sign up at https://www.emailjs.com/
+        // Replace with your actual EmailJS credentials
+        (function(){
+            emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // Replace this
+        })();
+
         // Dark Mode Toggle
         function toggleDarkMode() {
             const body = document.body;
@@ -2799,7 +2748,6 @@
 
         // Load saved preferences
         document.addEventListener('DOMContentLoaded', function() {
-            // Load dark mode preference
             const darkMode = localStorage.getItem('darkMode');
             if (darkMode === 'enabled') {
                 document.body.classList.add('dark-mode');
@@ -2810,172 +2758,182 @@
                 document.getElementById('themeLabelEn').textContent = 'Light';
             }
             
-            // Load language preference
             const savedLang = localStorage.getItem('preferredLanguage');
             if (savedLang) {
                 setLanguage(savedLang);
             }
-
-            // Set form redirect URL
-            const currentUrl = window.location.href.split('?')[0];
-            document.getElementById('formNextUrl').value = currentUrl + '?submitted=true';
-
-            // Check if form was submitted
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('submitted') === 'true') {
-                showSuccessModal();
-                showWhatsAppButton();
-                // Clean URL
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
         });
-
-<script>
-        // ... (Keep existing Language Toggle and Dark Mode functions) ...
 
         // Calculator Variables
         let calculationData = {};
 
-        // Helper: Calculate PMT (Monthly Payment)
-        // Rate is annual rate (e.g., 0.07 for 7%)
-        function calculatePMT(principal, annualRate, months) {
-            const monthlyRate = annualRate / 12;
+        // Calculate monthly payment with interest
+        function calculateMonthlyPayment(principal, annualRate, months) {
+            const monthlyRate = annualRate / 12 / 100;
             if (monthlyRate === 0) return principal / months;
+            const payment = principal * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+            return payment;
+        }
+
+        // Generate amortization table
+        function generateAmortizationTable(principal, annualRate, months, nomineeFee = 0) {
+            const monthlyRate = annualRate / 12 / 100;
+            let balance = principal;
+            const table = [];
+            const monthlyPayment = calculateMonthlyPayment(principal, annualRate, months);
             
-            const x = Math.pow(1 + monthlyRate, months);
-            const pmt = (principal * monthlyRate * x) / (x - 1);
-            return Math.round(pmt);
+            for (let i = 1; i <= months; i++) {
+                const interestPayment = balance * monthlyRate;
+                const principalPayment = monthlyPayment - interestPayment;
+                balance = Math.max(0, balance - principalPayment);
+                
+                table.push({
+                    month: i,
+                    payment: monthlyPayment + nomineeFee,
+                    principal: principalPayment,
+                    interest: interestPayment,
+                    nomineeFee: nomineeFee,
+                    balance: balance
+                });
+            }
+            
+            return table;
         }
 
-        // AMENDMENT: Update CC Email field dynamically
-        function updateCcEmail(email) {
-            document.getElementById('ccEmailField').value = email;
+        // Go to specific step
+        function goToStep(step) {
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            document.getElementById('step' + step).classList.add('active');
+            
+            for (let i = 1; i <= 3; i++) {
+                const indicator = document.getElementById('step' + i + 'Indicator');
+                indicator.classList.remove('active', 'completed');
+                
+                if (i < step) {
+                    indicator.classList.add('completed');
+                } else if (i === step) {
+                    indicator.classList.add('active');
+                }
+            }
+
+            document.getElementById('calculator').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
+        // Calculate preliminary results with 3 scenarios
         function calculatePreliminary() {
             const totalDebt = parseFloat(document.getElementById('totalDebt').value);
+            const monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value);
+            const creditorCount = document.getElementById('creditorCount').value;
             const currentRepayment = parseFloat(document.getElementById('currentRepayment').value);
-            
-            // Basic Validation
-            if (!totalDebt || !currentRepayment) {
-                alert('Please fill in amounts / 請填寫金額');
+            const overdueStatus = document.getElementById('overdueStatus').value;
+
+            if (!totalDebt || !monthlyIncome || !creditorCount || !currentRepayment || !overdueStatus) {
+                alert(document.body.classList.contains('english') 
+                    ? 'Please fill in all required fields.' 
+                    : '請填寫所有必填欄位。');
                 return;
             }
 
-            // AMENDMENT 1: Calculate 3 Specific Scenarios
-            
             // Scenario 1: 7% p.a., 120 months
-            const s1_rate = 0.07;
-            const s1_months = 120;
-            const s1_pmt = calculatePMT(totalDebt, s1_rate, s1_months);
-            const s1_total = s1_pmt * s1_months;
+            const payment1 = calculateMonthlyPayment(totalDebt, 7, 120);
+            const total1 = payment1 * 120;
 
             // Scenario 2: 12% p.a., 96 months
-            const s2_rate = 0.12;
-            const s2_months = 96;
-            const s2_pmt = calculatePMT(totalDebt, s2_rate, s2_months);
-            const s2_total = s2_pmt * s2_months;
+            const payment2 = calculateMonthlyPayment(totalDebt, 12, 96);
+            const total2 = payment2 * 96;
 
             // Scenario 3: 10% p.a., 72 months + $1000 nominee fee
-            const s3_rate = 0.10;
-            const s3_months = 72;
-            const s3_base_pmt = calculatePMT(totalDebt, s3_rate, s3_months);
-            const s3_nominee_fee = 1000;
-            const s3_final_pmt = s3_base_pmt + s3_nominee_fee;
-            const s3_total = s3_final_pmt * s3_months;
+            const payment3Base = calculateMonthlyPayment(totalDebt, 10, 72);
+            const payment3 = payment3Base + 1000;
+            const total3 = payment3 * 72;
 
-            // Store data
+            // Store calculation data
             calculationData = {
                 totalDebt: totalDebt,
+                monthlyIncome: monthlyIncome,
+                creditorCount: creditorCount,
                 currentRepayment: currentRepayment,
-                s1: { pmt: s1_pmt, months: s1_months, rate: '7%', total: s1_total },
-                s2: { pmt: s2_pmt, months: s2_months, rate: '12%', total: s2_total },
-                s3: { pmt: s3_final_pmt, months: s3_months, rate: '10% + Fee', total: s3_total }
+                overdueStatus: overdueStatus,
+                scenario1: { payment: payment1, total: total1, rate: 7, months: 120, nomineeFee: 0 },
+                scenario2: { payment: payment2, total: total2, rate: 12, months: 96, nomineeFee: 0 },
+                scenario3: { payment: payment3, total: total3, rate: 10, months: 72, nomineeFee: 1000, basePayment: payment3Base }
             };
 
-            // AMENDMENT 1.4: UI Display
-            // We use Scenario 1 (Lowest Payment) for the visual preview
-            // No detailed calculation shown here, just the summary
-            document.getElementById('resultDebt').textContent = 'HK$ ' + totalDebt.toLocaleString();
-            document.getElementById('resultNewPayment').textContent = 'HK$ ' + s1_pmt.toLocaleString();
-            
-            const saving = currentRepayment - s1_pmt;
-            document.getElementById('resultSaving').textContent = 'HK$ ' + (saving > 0 ? saving.toLocaleString() : 0);
+            // Update display
+            document.getElementById('scenario1Payment').textContent = 'HK$ ' + Math.round(payment1).toLocaleString();
+            document.getElementById('scenario1Total').textContent = 'HK$ ' + Math.round(total1).toLocaleString();
+
+            document.getElementById('scenario2Payment').textContent = 'HK$ ' + Math.round(payment2).toLocaleString();
+            document.getElementById('scenario2Total').textContent = 'HK$ ' + Math.round(total2).toLocaleString();
+
+            document.getElementById('scenario3Payment').textContent = 'HK$ ' + Math.round(payment3).toLocaleString();
+            document.getElementById('scenario3Total').textContent = 'HK$ ' + Math.round(total3).toLocaleString();
 
             goToStep(2);
         }
 
-        // Form Submission
-        document.getElementById('assessmentForm').addEventListener('submit', function(e) {
-            const consent = document.getElementById('pdpoConsent').checked;
-            if (!consent) {
-                e.preventDefault();
-                alert('Please agree to terms / 請同意條款');
-                return;
+        // Format amortization table for email (yearly summary)
+        function formatAmortizationForEmail(table, planName, rate, months, nomineeFee = 0) {
+            let html = `<h3>${planName}</h3>`;
+            html += `<p>利率 Interest Rate: ${rate}% p.a. | 期數 Term: ${months} 個月/months`;
+            if (nomineeFee > 0) {
+                html += ` | 代名人費 Nominee Fee: HK$ ${nomineeFee.toLocaleString()}/月`;
+            }
+            html += `</p>`;
+            html += `<table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%; margin-bottom: 20px;">`;
+            html += `<tr style="background-color: #003d73; color: white;">
+                <th>年份 Year</th>
+                <th>年度還款 Annual Payment</th>
+                <th>本金 Principal</th>
+                <th>利息 Interest</th>
+                <th>餘額 Balance</th>
+            </tr>`;
+
+            // Group by year
+            for (let year = 1; year <= Math.ceil(months / 12); year++) {
+                const startMonth = (year - 1) * 12;
+                const endMonth = Math.min(year * 12, months);
+                const yearData = table.slice(startMonth, endMonth);
+                
+                const yearPayment = yearData.reduce((sum, m) => sum + m.payment, 0);
+                const yearPrincipal = yearData.reduce((sum, m) => sum + m.principal, 0);
+                const yearInterest = yearData.reduce((sum, m) => sum + m.interest, 0);
+                const endBalance = yearData[yearData.length - 1].balance;
+
+                html += `<tr>
+                    <td style="text-align: center;">${year}</td>
+                    <td style="text-align: right;">HK$ ${Math.round(yearPayment).toLocaleString()}</td>
+                    <td style="text-align: right;">HK$ ${Math.round(yearPrincipal).toLocaleString()}</td>
+                    <td style="text-align: right;">HK$ ${Math.round(yearInterest).toLocaleString()}</td>
+                    <td style="text-align: right;">HK$ ${Math.round(endBalance).toLocaleString()}</td>
+                </tr>`;
             }
 
-            // 1. Populate Basic Hidden Fields
-            document.getElementById('hiddenTotalDebt').value = 'HK$ ' + calculationData.totalDebt.toLocaleString();
-            document.getElementById('hiddenCurrentRepayment').value = 'HK$ ' + calculationData.currentRepayment.toLocaleString();
-            document.getElementById('hiddenMonthlyIncome').value = 'HK$ ' + parseFloat(document.getElementById('monthlyIncome').value).toLocaleString();
+            const totalPayment = table.reduce((sum, m) => sum + m.payment, 0);
+            const totalPrincipal = table.reduce((sum, m) => sum + m.principal, 0);
+            const totalInterest = table.reduce((sum, m) => sum + m.interest, 0);
 
-            // AMENDMENT 2: Generate Amortization Table for Email
-            // We format this as a string block to look like a table in the email body
-            const tableString = `
-================================================
-          PRELIMINARY AMORTIZATION ANALYSIS
-          初步攤還分析方案
-================================================
+            html += `<tr style="background-color: #f0f0f0; font-weight: bold;">
+                <td style="text-align: center;">總計 Total</td>
+                <td style="text-align: right;">HK$ ${Math.round(totalPayment).toLocaleString()}</td>
+                <td style="text-align: right;">HK$ ${Math.round(totalPrincipal).toLocaleString()}</td>
+                <td style="text-align: right;">HK$ ${Math.round(totalInterest).toLocaleString()}</td>
+                <td style="text-align: right;">HK$ 0</td>
+            </tr>`;
+            html += `</table>`;
 
-[ PLAN A - Long Term / 長期方案 ]
-------------------------------------------------
-Interest Rate (p.a.) : 7%
-Duration             : 120 Months (10 Years)
-Monthly Installment  : HK$ ${calculationData.s1.pmt.toLocaleString()}
-Total Repayment      : HK$ ${calculationData.s1.total.toLocaleString()}
-------------------------------------------------
+            return html;
+        }
 
-[ PLAN B - Medium Term / 中期方案 ]
-------------------------------------------------
-Interest Rate (p.a.) : 12%
-Duration             : 96 Months (8 Years)
-Monthly Installment  : HK$ ${calculationData.s2.pmt.toLocaleString()}
-Total Repayment      : HK$ ${calculationData.s2.total.toLocaleString()}
-------------------------------------------------
-
-[ PLAN C - Short Term / 短期方案 ]
-------------------------------------------------
-Interest Rate (p.a.) : 10%
-Nominee Fee          : +HK$ 1,000/mo
-Duration             : 72 Months (6 Years)
-Monthly Installment  : HK$ ${calculationData.s3.pmt.toLocaleString()}
-Total Repayment      : HK$ ${calculationData.s3.total.toLocaleString()}
-------------------------------------------------
-
-* Note: The above figures are preliminary estimates.
-* 註：以上數字僅為初步估算，最終方案須視乎債權人審批。
-`;
-
-            // Set the hidden field value
-            document.getElementById('hiddenAmortizationTable').value = tableString;
-
-            // Ensure CC email is set
-            const userEmail = document.getElementById('email').value;
-            document.getElementById('ccEmailField').value = userEmail;
-
-            // Show loading state
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.classList.add('loading');
-            
-            // Allow form to submit naturally to FormSubmit.co
-        });
-
-        // Form submission handler
+        // Form submission
         document.getElementById('assessmentForm').addEventListener('submit', function(e) {
-            const consent = document.getElementById('pdpoConsent').checked;
+            e.preventDefault();
 
+            const consent = document.getElementById('pdpoConsent').checked;
             if (!consent) {
-                e.preventDefault();
                 alert(document.body.classList.contains('english')
                     ? 'Please agree to the Personal Information Collection Statement.'
                     : '請同意個人資料收集聲明。');
@@ -2985,30 +2943,197 @@ Total Repayment      : HK$ ${calculationData.s3.total.toLocaleString()}
             const hkid = document.getElementById('hkid').value.toUpperCase();
             const hkidPattern = /^[A-Z]{1,2}[0-9]{2,3}$/;
             if (!hkidPattern.test(hkid)) {
-                e.preventDefault();
                 alert(document.body.classList.contains('english')
                     ? 'Please enter valid HKID format (e.g., A123 or AB12).'
                     : '請輸入正確的身份證格式（例如：A123 或 AB12）。');
                 return;
             }
 
-            // Fill hidden fields with calculation data
-            document.getElementById('hiddenTotalDebt').value = 'HK$ ' + calculationData.totalDebt.toLocaleString();
-            document.getElementById('hiddenMonthlyIncome').value = 'HK$ ' + calculationData.monthlyIncome.toLocaleString();
-            document.getElementById('hiddenCreditorCount').value = calculationData.creditorCount;
-            document.getElementById('hiddenCurrentRepayment').value = 'HK$ ' + calculationData.currentRepayment.toLocaleString();
-            document.getElementById('hiddenOverdueStatus').value = calculationData.overdueStatus;
-            document.getElementById('hiddenEstimatedPayment').value = 'HK$ ' + calculationData.estimatedMonthlyPayment.toLocaleString();
-            document.getElementById('hiddenMonthlySaving').value = 'HK$ ' + calculationData.monthlySaving.toLocaleString();
-            document.getElementById('hiddenReduction').value = calculationData.estimatedDebtReduction + '%';
-            document.getElementById('hiddenRepaymentPeriod').value = calculationData.repaymentMonths + ' months';
-            document.getElementById('hiddenSubmissionTime').value = new Date().toLocaleString('zh-HK', { timeZone: 'Asia/Hong_Kong' });
-
-            // Show loading
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+
+            // Collect form data
+            const chineseName = document.getElementById('chineseName').value;
+            const englishName = document.getElementById('englishName').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const preferredTime = document.getElementById('preferredTime').value;
+            const submissionTime = new Date().toLocaleString('zh-HK', { timeZone: 'Asia/Hong_Kong' });
+
+            // Generate amortization tables
+            const table1 = generateAmortizationTable(calculationData.totalDebt, 7, 120, 0);
+            const table2 = generateAmortizationTable(calculationData.totalDebt, 12, 96, 0);
+            const table3 = generateAmortizationTable(calculationData.totalDebt, 10, 72, 1000);
+
+            const amortization1 = formatAmortizationForEmail(table1, '方案 A - 結餘轉戶 Consolidation', 7, 120);
+            const amortization2 = formatAmortizationForEmail(table2, '方案 B - 債務紓緩 DRP', 12, 96);
+            const amortization3 = formatAmortizationForEmail(table3, '方案 C - 個人自願安排 IVA', 10, 72, 1000);
+
+            // Email content
+            const emailContent = `
+                <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto;">
+                    <div style="background: #003d73; color: white; padding: 20px; text-align: center;">
+                        <h1>香港債務重組咨詢中心</h1>
+                        <h2>Hong Kong IVA Centre</h2>
+                        <p>債務評估詳細報告 Debt Assessment Report</p>
+                    </div>
+                    
+                    <div style="padding: 20px; background: #f8f9fa;">
+                        <h2>申請人資料 Applicant Information</h2>
+                        <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%; margin-bottom: 20px;">
+                            <tr><td><strong>中文姓名</strong></td><td>${chineseName}</td></tr>
+                            <tr><td><strong>英文姓名</strong></td><td>${englishName}</td></tr>
+                            <tr><td><strong>身份證首4位</strong></td><td>${hkid}</td></tr>
+                            <tr><td><strong>聯絡電話</strong></td><td>${phone}</td></tr>
+                            <tr><td><strong>電郵</strong></td><td>${email}</td></tr>
+                            <tr><td><strong>聯絡時間</strong></td><td>${preferredTime}</td></tr>
+                            <tr><td><strong>提交時間</strong></td><td>${submissionTime}</td></tr>
+                        </table>
+
+                        <h2>債務資料 Debt Information</h2>
+                        <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%; margin-bottom: 20px;">
+                            <tr><td><strong>總債務</strong></td><td>HK$ ${calculationData.totalDebt.toLocaleString()}</td></tr>
+                            <tr><td><strong>每月收入</strong></td><td>HK$ ${calculationData.monthlyIncome.toLocaleString()}</td></tr>
+                            <tr><td><strong>債權人數目</strong></td><td>${calculationData.creditorCount}</td></tr>
+                            <tr><td><strong>現時每月還款</strong></td><td>HK$ ${calculationData.currentRepayment.toLocaleString()}</td></tr>
+                            <tr><td><strong>逾期狀態</strong></td><td>${calculationData.overdueStatus}</td></tr>
+                        </table>
+
+                        <h2>還款方案比較 Repayment Plan Comparison</h2>
+                        <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%; margin-bottom: 20px;">
+                            <tr style="background: #003d73; color: white;">
+                                <th>方案 Plan</th>
+                                <th>利率 Rate</th>
+                                <th>期數 Term</th>
+                                <th>每月還款 Monthly</th>
+                                <th>總還款 Total</th>
+                            </tr>
+                            <tr>
+                                <td>A - 結餘轉戶</td>
+                                <td>7% p.a.</td>
+                                <td>120期</td>
+                                <td>HK$ ${Math.round(calculationData.scenario1.payment).toLocaleString()}</td>
+                                <td>HK$ ${Math.round(calculationData.scenario1.total).toLocaleString()}</td>
+                            </tr>
+                            <tr>
+                                <td>B - DRP</td>
+                                <td>12% p.a.</td>
+                                <td>96期</td>
+                                <td>HK$ ${Math.round(calculationData.scenario2.payment).toLocaleString()}</td>
+                                <td>HK$ ${Math.round(calculationData.scenario2.total).toLocaleString()}</td>
+                            </tr>
+                            <tr style="background: #fef3c7;">
+                                <td>C - IVA</td>
+                                <td>10% p.a. + $1000代名人費</td>
+                                <td>72期</td>
+                                <td>HK$ ${Math.round(calculationData.scenario3.payment).toLocaleString()}</td>
+                                <td>HK$ ${Math.round(calculationData.scenario3.total).toLocaleString()}</td>
+                            </tr>
+                        </table>
+
+                        <h2>詳細還款攤分表 Detailed Amortization Tables</h2>
+                        ${amortization1}
+                        ${amortization2}
+                        ${amortization3}
+
+                        <div style="background: #fff8e6; border: 1px solid #aa8a00; padding: 15px; margin-top: 20px; border-radius: 8px;">
+                            <p><strong>免責聲明 Disclaimer:</strong></p>
+                            <p style="font-size: 12px;">以上僅為初步估算，實際方案須視乎債權人審批及個別情況而定。本報告內容僅供參考，並不構成法律或財務意見。</p>
+                            <p style="font-size: 12px;">The above are preliminary estimates only. Actual plans are subject to creditor approval and individual circumstances. This report is for reference only and does not constitute legal or financial advice.</p>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 30px; padding: 20px; background: #003d73; color: white;">
+                            <p>香港債務重組咨詢中心 Hong Kong IVA Centre</p>
+                            <p>WhatsApp: +852 9532 7249</p>
+                            <p>網站: https://horizontohk.github.io/hongkongiva.org/</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Using EmailJS to send to both admin and applicant
+            // You need to set up EmailJS with two templates or use CC feature
             
-            formSubmitted = true;
+            // For now, using FormSubmit.co as fallback (sends to admin, then EmailJS for applicant)
+            
+            // Send to admin via FormSubmit
+            const formData = new FormData();
+            formData.append('_subject', `新債務評估申請 - ${chineseName} | New Debt Assessment`);
+            formData.append('_template', 'table');
+            formData.append('_captcha', 'false');
+            formData.append('中文姓名', chineseName);
+            formData.append('英文姓名', englishName);
+            formData.append('身份證首4位', hkid);
+            formData.append('電話', phone);
+            formData.append('電郵', email);
+            formData.append('聯絡時間', preferredTime);
+            formData.append('總債務', 'HK$ ' + calculationData.totalDebt.toLocaleString());
+            formData.append('每月收入', 'HK$ ' + calculationData.monthlyIncome.toLocaleString());
+            formData.append('債權人數目', calculationData.creditorCount);
+            formData.append('現時還款', 'HK$ ' + calculationData.currentRepayment.toLocaleString());
+            formData.append('逾期狀態', calculationData.overdueStatus);
+            formData.append('方案A每月還款', 'HK$ ' + Math.round(calculationData.scenario1.payment).toLocaleString());
+            formData.append('方案B每月還款', 'HK$ ' + Math.round(calculationData.scenario2.payment).toLocaleString());
+            formData.append('方案C每月還款', 'HK$ ' + Math.round(calculationData.scenario3.payment).toLocaleString());
+            formData.append('提交時間', submissionTime);
+
+            // Send to admin
+            fetch('https://formsubmit.co/ajax/HorizonTo.Strategy@gmail.com', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Admin email sent:', data);
+            })
+            .catch(error => {
+                console.error('Error sending admin email:', error);
+            });
+
+            // Send to applicant using EmailJS
+            // You need to configure EmailJS with your service ID and template ID
+            // Template should include the full amortization tables
+            
+            const emailJSParams = {
+                to_email: email,
+                to_name: chineseName,
+                chinese_name: chineseName,
+                english_name: englishName,
+                total_debt: 'HK$ ' + calculationData.totalDebt.toLocaleString(),
+                scenario1_payment: 'HK$ ' + Math.round(calculationData.scenario1.payment).toLocaleString(),
+                scenario1_total: 'HK$ ' + Math.round(calculationData.scenario1.total).toLocaleString(),
+                scenario2_payment: 'HK$ ' + Math.round(calculationData.scenario2.payment).toLocaleString(),
+                scenario2_total: 'HK$ ' + Math.round(calculationData.scenario2.total).toLocaleString(),
+                scenario3_payment: 'HK$ ' + Math.round(calculationData.scenario3.payment).toLocaleString(),
+                scenario3_total: 'HK$ ' + Math.round(calculationData.scenario3.total).toLocaleString(),
+                amortization_tables: amortization1 + amortization2 + amortization3,
+                submission_time: submissionTime
+            };
+
+            // Uncomment and configure when EmailJS is set up
+            /*
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', emailJSParams)
+                .then(function(response) {
+                    console.log('Applicant email sent:', response);
+                }, function(error) {
+                    console.log('Error sending applicant email:', error);
+                });
+            */
+
+            // For demo - simulate success after delay
+            setTimeout(function() {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                showSuccessModal();
+                showWhatsAppButton();
+                
+                // Log the email content that would be sent
+                console.log('=== EMAIL CONTENT FOR APPLICANT ===');
+                console.log('To:', email);
+                console.log('Content:', emailContent);
+                console.log('===================================');
+            }, 2000);
         });
 
         function showSuccessModal() {
