@@ -55,9 +55,12 @@
             transition: background 0.3s, color 0.3s;
         }
 
+        /* Language Toggle */
+        .lang-zh { display: block; }
         .lang-en { display: none; }
         body.en .lang-zh { display: none; }
         body.en .lang-en { display: block; }
+        
         .lang-zh-i { display: inline; }
         .lang-en-i { display: none; }
         body.en .lang-zh-i { display: none; }
@@ -122,11 +125,7 @@
             gap: 16px;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
+        .logo { display: flex; align-items: center; gap: 14px; }
 
         .logo-icon {
             width: 50px;
@@ -406,9 +405,7 @@
             gap: 14px;
         }
 
-        body.dark .calc-header {
-            background: linear-gradient(135deg, #2d1b4e, #7c3aed);
-        }
+        body.dark .calc-header { background: linear-gradient(135deg, #2d1b4e, #7c3aed); }
 
         .calc-header .emblem {
             width: 46px;
@@ -511,9 +508,7 @@
         }
 
         body.dark .form-group input:focus,
-        body.dark .form-group select:focus {
-            border-color: #7c3aed;
-        }
+        body.dark .form-group select:focus { border-color: #7c3aed; }
 
         .input-prefix { position: relative; }
         .input-prefix input { padding-left: 48px; }
@@ -527,22 +522,6 @@
         }
 
         .form-group small { display: block; margin-top: 5px; color: var(--text-muted); font-size: 0.85rem; }
-
-        .help-box {
-            background: var(--bg);
-            padding: 10px 12px;
-            border-radius: 6px;
-            margin-top: 8px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .help-box i { color: var(--primary); }
-
-        body.dark .help-box i { color: #7c3aed; }
 
         /* Results */
         .results {
@@ -721,10 +700,7 @@
 
         .amort-table tfoot tr { background: var(--bg); font-weight: 600; }
 
-        .amort-table-scroll {
-            max-height: 300px;
-            overflow-y: auto;
-        }
+        .amort-table-scroll { max-height: 300px; overflow-y: auto; }
 
         .result-note {
             background: #fff8e6;
@@ -880,7 +856,7 @@
 
         .compare-card li:last-child { border-bottom: none; }
 
-        .compare-card li i { margin-top: 3px; }
+        .compare-card li i { margin-top: 3px; flex-shrink: 0; }
 
         .compare-card li i.fa-check { color: var(--success); }
 
@@ -1241,10 +1217,10 @@
             <div class="stats-box">
                 <h3><span class="lang-zh-i">IVA 關鍵數據</span><span class="lang-en-i">IVA Key Statistics</span></h3>
                 <div class="stats-grid">
-                    <div class="stat"><span class="num">75%</span><span class="label lang-zh">債權人票數</span><span class="label lang-en">Creditor Votes</span></div>
-                    <div class="stat"><span class="num">4-6</span><span class="label lang-zh">年還款期</span><span class="label lang-en">Years Term</span></div>
-                    <div class="stat"><span class="num">30-70%</span><span class="label lang-zh">減債幅度</span><span class="label lang-en">Debt Reduction</span></div>
-                    <div class="stat"><span class="num">0</span><span class="label lang-zh">破產記錄</span><span class="label lang-en">Bankruptcy Record</span></div>
+                    <div class="stat"><span class="num">75%</span><span class="label"><span class="lang-zh-i">債權人票數</span><span class="lang-en-i">Creditor Votes</span></span></div>
+                    <div class="stat"><span class="num">4-6</span><span class="label"><span class="lang-zh-i">年還款期</span><span class="lang-en-i">Years Term</span></span></div>
+                    <div class="stat"><span class="num">30-70%</span><span class="label"><span class="lang-zh-i">減債幅度</span><span class="lang-en-i">Debt Reduction</span></span></div>
+                    <div class="stat"><span class="num">0</span><span class="label"><span class="lang-zh-i">破產記錄</span><span class="lang-en-i">Bankruptcy Record</span></span></div>
                 </div>
             </div>
         </div>
@@ -1262,22 +1238,19 @@
         <div class="services-grid">
             <div class="service-card">
                 <div class="icon"><i class="fas fa-file-signature"></i></div>
-                <h3 class="lang-zh">個人自願安排 (IVA)</h3>
-                <h3 class="lang-en">Individual Voluntary Arrangement</h3>
+                <h3><span class="lang-zh-i">個人自願安排 (IVA)</span><span class="lang-en-i">Individual Voluntary Arrangement</span></h3>
                 <p class="lang-zh">根據《破產條例》第6章第20條，債務人可向法院申請臨時命令，在代名人監督下與債權人達成具法律約束力的還款協議。</p>
                 <p class="lang-en">Under Section 20 of Cap. 6, debtors may apply to Court for an interim order and reach a legally binding repayment agreement under nominee supervision.</p>
             </div>
             <div class="service-card">
                 <div class="icon"><i class="fas fa-handshake"></i></div>
-                <h3 class="lang-zh">債務紓緩計劃 (DRP)</h3>
-                <h3 class="lang-en">Debt Relief Plan</h3>
+                <h3><span class="lang-zh-i">債務紓緩計劃 (DRP)</span><span class="lang-en-i">Debt Relief Plan</span></h3>
                 <p class="lang-zh">無需經法庭程序，透過專業顧問直接與個別債權人協商，達成較靈活的還款安排，適用於債務規模較小的情況。</p>
                 <p class="lang-en">Without court proceedings, negotiate directly with creditors through consultants for flexible repayment arrangements, suitable for smaller debts.</p>
             </div>
             <div class="service-card">
                 <div class="icon"><i class="fas fa-balance-scale-right"></i></div>
-                <h3 class="lang-zh">結餘轉戶貸款</h3>
-                <h3 class="lang-en">Debt Consolidation Loan</h3>
+                <h3><span class="lang-zh-i">結餘轉戶貸款</span><span class="lang-en-i">Debt Consolidation Loan</span></h3>
                 <p class="lang-zh">將多項高息債務整合為單一低息貸款，簡化還款安排並降低整體利息支出，適用於信貸評級尚可的債務人。</p>
                 <p class="lang-en">Consolidate multiple high-interest debts into a single low-interest loan, simplifying repayment and reducing interest expenses.</p>
             </div>
@@ -1285,8 +1258,7 @@
         <div class="legal-notice">
             <div class="icon"><i class="fas fa-info-circle"></i></div>
             <div>
-                <h4 class="lang-zh">重要法律資訊</h4>
-                <h4 class="lang-en">Important Legal Information</h4>
+                <h4><span class="lang-zh-i">重要法律資訊</span><span class="lang-en-i">Important Legal Information</span></h4>
                 <p class="lang-zh">根據《破產條例》(第6章)，破產令一經頒布，破產人將受到多項限制，包括不得擔任公司董事、資產可被變賣還債、出入境可能受限等。IVA提供法律認可的替代方案，讓債務人避免上述後果。</p>
                 <p class="lang-en">Under the Bankruptcy Ordinance (Cap. 6), bankruptcy brings various restrictions including prohibition from acting as company director, asset liquidation, and travel restrictions. IVA provides a legally recognized alternative.</p>
             </div>
@@ -1305,10 +1277,8 @@
             <div class="calc-header">
                 <div class="emblem"><i class="fas fa-calculator"></i></div>
                 <div>
-                    <h3 class="lang-zh">債務評估計算機</h3>
-                    <h3 class="lang-en">Debt Assessment Calculator</h3>
-                    <p class="lang-zh">請準確填寫以獲得可靠結果</p>
-                    <p class="lang-en">Please provide accurate information</p>
+                    <h3><span class="lang-zh-i">債務評估計算機</span><span class="lang-en-i">Debt Assessment Calculator</span></h3>
+                    <p><span class="lang-zh-i">請準確填寫以獲得可靠結果</span><span class="lang-en-i">Please provide accurate information</span></p>
                 </div>
             </div>
             <div class="calc-body">
@@ -1474,8 +1444,8 @@
                         </div>
                         <div class="pdpo">
                             <h5><i class="fas fa-shield-alt"></i><span class="lang-zh-i">個人資料收集聲明</span><span class="lang-en-i">Privacy Statement</span></h5>
-                            <p class="lang-zh">閣下所提供的個人資料將僅用於處理本次債務重組諮詢申請。閣下所提供的個人資料，其收集、保留、處理及使用均嚴格遵守**香港法例第486章《個人資料（私隱）條例》之規定。本中心致力按照個人資料私隱專員公署（PCPD）**的指引及保障資料原則，採取一切合理措施保護 閣下的私隱權益。所有資料將僅用於處理 閣下的債務重組諮詢及評估申請，除法律規定外，絕不會在未經同意下向第三方披露。有關條例之詳情，請瀏覽公署網頁：www.pcpd.org.hk。</p>
-                            <p class="lang-en">Personal data provided will be used solely for processing this consultation request.The collection, retention, processing, and use of your personal data are strictly governed by the Personal Data (Privacy) Ordinance (Cap. 486 of the Laws of Hong Kong). We are committed to safeguarding your privacy in full compliance with the regulations and Data Protection Principles set forth by the Office of the Privacy Commissioner for Personal Data (PCPD). All information provided herein will be used solely for the purpose of processing your debt restructuring consultation and assessment. We implement appropriate security measures to protect your data against unauthorized access or usage. For further details regarding the Ordinance, please visit the official PCPD website at www.pcpd.org.hk.</p>
+                            <p class="lang-zh">閣下所提供的個人資料將僅用於處理本次債務重組諮詢申請。</p>
+                            <p class="lang-en">Personal data provided will be used solely for processing this consultation request.</p>
                             <div class="checkbox-row">
                                 <input type="checkbox" id="consent" required>
                                 <label for="consent"><span class="lang-zh-i">本人同意上述聲明</span><span class="lang-en-i">I agree to the above statement</span></label>
@@ -1501,61 +1471,46 @@
         <div class="compare-grid">
             <div class="compare-card">
                 <div class="card-head">
-                    <h3 class="lang-zh">破產</h3><h3 class="lang-en">Bankruptcy</h3>
-                    <span class="lang-zh">Bankruptcy</span><span class="lang-en">破產</span>
+                    <h3><span class="lang-zh-i">破產</span><span class="lang-en-i">Bankruptcy</span></h3>
+                    <span><span class="lang-zh-i">Bankruptcy</span><span class="lang-en-i">破產</span></span>
                 </div>
                 <div class="card-body">
                     <ul>
-                        <li class="lang-zh"><i class="fas fa-check"></i>債務可獲全數豁免</li>
-                        <li class="lang-en"><i class="fas fa-check"></i>Debts may be fully discharged</li>
-                        <li class="lang-zh"><i class="fas fa-xmark"></i>破產期4年，紀錄保留8年</li>
-                        <li class="lang-en"><i class="fas fa-xmark"></i>4-year bankruptcy, 8-year record</li>
-                        <li class="lang-zh"><i class="fas fa-xmark"></i>不得擔任公司董事</li>
-                        <li class="lang-en"><i class="fas fa-xmark"></i>Cannot be company director</li>
-                        <li class="lang-zh"><i class="fas fa-xmark"></i>部分行業受限</li>
-                        <li class="lang-en"><i class="fas fa-xmark"></i>Career restrictions</li>
-                        <li class="lang-zh"><i class="fas fa-xmark"></i>資產或被變賣</li>
-                        <li class="lang-en"><i class="fas fa-xmark"></i>Assets may be sold</li>
+                        <li><i class="fas fa-check"></i><span class="lang-zh-i">債務可獲全數豁免</span><span class="lang-en-i">Debts may be fully discharged</span></li>
+                        <li><i class="fas fa-xmark"></i><span class="lang-zh-i">破產期4年，紀錄保留8年</span><span class="lang-en-i">4-year bankruptcy, 8-year record</span></li>
+                        <li><i class="fas fa-xmark"></i><span class="lang-zh-i">不得擔任公司董事</span><span class="lang-en-i">Cannot be company director</span></li>
+                        <li><i class="fas fa-xmark"></i><span class="lang-zh-i">部分行業受限</span><span class="lang-en-i">Career restrictions</span></li>
+                        <li><i class="fas fa-xmark"></i><span class="lang-zh-i">資產或被變賣</span><span class="lang-en-i">Assets may be sold</span></li>
                     </ul>
                 </div>
             </div>
             <div class="compare-card featured">
                 <div class="card-head">
-                    <h3 class="lang-zh">個人自願安排 (IVA)</h3><h3 class="lang-en">IVA</h3>
-                    <span class="lang-zh">Individual Voluntary Arrangement</span><span class="lang-en">個人自願安排</span>
+                    <h3><span class="lang-zh-i">個人自願安排 (IVA)</span><span class="lang-en-i">IVA</span></h3>
+                    <span><span class="lang-zh-i">Individual Voluntary Arrangement</span><span class="lang-en-i">個人自願安排</span></span>
                 </div>
                 <div class="card-body">
                     <ul>
-                        <li class="lang-zh"><i class="fas fa-check"></i>避免破產紀錄</li>
-                        <li class="lang-en"><i class="fas fa-check"></i>Avoid bankruptcy record</li>
-                        <li class="lang-zh"><i class="fas fa-check"></i>債務可削減30-70%</li>
-                        <li class="lang-en"><i class="fas fa-check"></i>Reduce debt by 30-70%</li>
-                        <li class="lang-zh"><i class="fas fa-check"></i>保留工作及專業資格</li>
-                        <li class="lang-en"><i class="fas fa-check"></i>Keep job & qualifications</li>
-                        <li class="lang-zh"><i class="fas fa-check"></i>法庭認可，具法律約束力</li>
-                        <li class="lang-en"><i class="fas fa-check"></i>Court-approved, binding</li>
-                        <li class="lang-zh"><i class="fas fa-check"></i>統一處理所有債權人</li>
-                        <li class="lang-en"><i class="fas fa-check"></i>All creditors handled</li>
+                        <li><i class="fas fa-check"></i><span class="lang-zh-i">避免破產紀錄</span><span class="lang-en-i">Avoid bankruptcy record</span></li>
+                        <li><i class="fas fa-check"></i><span class="lang-zh-i">債務可削減30-70%</span><span class="lang-en-i">Reduce debt by 30-70%</span></li>
+                        <li><i class="fas fa-check"></i><span class="lang-zh-i">保留工作及專業資格</span><span class="lang-en-i">Keep job & qualifications</span></li>
+                        <li><i class="fas fa-check"></i><span class="lang-zh-i">法庭認可，具法律約束力</span><span class="lang-en-i">Court-approved, binding</span></li>
+                        <li><i class="fas fa-check"></i><span class="lang-zh-i">統一處理所有債權人</span><span class="lang-en-i">All creditors handled</span></li>
                     </ul>
                 </div>
             </div>
             <div class="compare-card">
                 <div class="card-head">
-                    <h3 class="lang-zh">債務紓緩 (DRP)</h3><h3 class="lang-en">DRP</h3>
-                    <span class="lang-zh">Debt Relief Plan</span><span class="lang-en">債務紓緩計劃</span>
+                    <h3><span class="lang-zh-i">債務紓緩 (DRP)</span><span class="lang-en-i">DRP</span></h3>
+                    <span><span class="lang-zh-i">Debt Relief Plan</span><span class="lang-en-i">債務紓緩計劃</span></span>
                 </div>
                 <div class="card-body">
                     <ul>
-                        <li class="lang-zh"><i class="fas fa-check"></i>無需法庭程序</li>
-                        <li class="lang-en"><i class="fas fa-check"></i>No court proceedings</li>
-                        <li class="lang-zh"><i class="fas fa-check"></i>處理較快（1-2個月）</li>
-                        <li class="lang-en"><i class="fas fa-check"></i>Faster (1-2 months)</li>
-                        <li class="lang-zh"><i class="fas fa-check"></i>費用較低</li>
-                        <li class="lang-en"><i class="fas fa-check"></i>Lower cost</li>
-                        <li class="lang-zh"><i class="fas fa-xmark"></i>需逐一與債權人協商</li>
-                        <li class="lang-en"><i class="fas fa-xmark"></i>Negotiate each creditor</li>
-                        <li class="lang-zh"><i class="fas fa-xmark"></i>不具法律強制約束力</li>
-                        <li class="lang-en"><i class="fas fa-xmark"></i>Not legally binding</li>
+                        <li><i class="fas fa-check"></i><span class="lang-zh-i">無需法庭程序</span><span class="lang-en-i">No court proceedings</span></li>
+                        <li><i class="fas fa-check"></i><span class="lang-zh-i">處理較快（1-2個月）</span><span class="lang-en-i">Faster (1-2 months)</span></li>
+                        <li><i class="fas fa-check"></i><span class="lang-zh-i">費用較低</span><span class="lang-en-i">Lower cost</span></li>
+                        <li><i class="fas fa-xmark"></i><span class="lang-zh-i">需逐一與債權人協商</span><span class="lang-en-i">Negotiate each creditor</span></li>
+                        <li><i class="fas fa-xmark"></i><span class="lang-zh-i">不具法律強制約束力</span><span class="lang-en-i">Not legally binding</span></li>
                     </ul>
                 </div>
             </div>
@@ -1570,9 +1525,10 @@
             <h2 class="lang-en">Government & Support Organizations</h2>
         </div>
         <div class="resources-grid">
+            <!-- Government -->
             <div class="resource-card">
                 <div class="card-icon"><i class="fas fa-landmark"></i></div>
-                <h3 class="lang-zh">破產管理署</h3><h3 class="lang-en">Official Receiver's Office</h3>
+                <h3><span class="lang-zh-i">破產管理署</span><span class="lang-en-i">Official Receiver's Office</span></h3>
                 <p class="lang-zh">處理個人破產及公司清盤事宜的政府部門。</p>
                 <p class="lang-en">Government department handling bankruptcy and winding-up matters.</p>
                 <div class="contact">
@@ -1582,7 +1538,7 @@
             </div>
             <div class="resource-card">
                 <div class="card-icon"><i class="fas fa-gavel"></i></div>
-                <h3 class="lang-zh">香港高等法院</h3><h3 class="lang-en">High Court of Hong Kong</h3>
+                <h3><span class="lang-zh-i">香港司法機構</span><span class="lang-en-i">HK Judiciary</span></h3>
                 <p class="lang-zh">處理IVA申請的法院。</p>
                 <p class="lang-en">Court handling IVA applications.</p>
                 <div class="contact">
@@ -1591,28 +1547,8 @@
                 </div>
             </div>
             <div class="resource-card">
-                <div class="card-icon"><i class="fas fa-hands-helping"></i></div>
-                <h3 class="lang-zh">明愛向晴軒</h3><h3 class="lang-en">Caritas Family Crisis Centre</h3>
-                <p class="lang-zh">提供危機介入、情緒支援及債務輔導服務。</p>
-                <p class="lang-en">Crisis intervention, emotional support and debt counseling.</p>
-                <div class="contact">
-                    <div><i class="fas fa-phone"></i>18288 (24小時 / 24-hour)</div>
-                    <div><i class="fas fa-globe"></i><a href="https://fcsc.caritas.org.hk" target="_blank">fcsc.caritas.org.hk</a></div>
-                </div>
-            </div>
-            <div class="resource-card">
-                <div class="card-icon"><i class="fas fa-balance-scale"></i></div>
-                <h3 class="lang-zh">免費法律諮詢服務</h3><h3 class="lang-en">Free Legal Advice</h3>
-                <p class="lang-zh">香港律師會及當值律師服務提供免費法律諮詢。</p>
-                <p class="lang-en">Free legal advice by Law Society and Duty Lawyer Service.</p>
-                <div class="contact">
-                    <div><i class="fas fa-phone"></i>2835 2500</div>
-                    <div><i class="fas fa-globe"></i><a href="https://www.dutylawyer.org.hk" target="_blank">www.dutylawyer.org.hk</a></div>
-                </div>
-            </div>
-            <div class="resource-card">
                 <div class="card-icon"><i class="fas fa-university"></i></div>
-                <h3 class="lang-zh">法律援助署</h3><h3 class="lang-en">Legal Aid Department</h3>
+                <h3><span class="lang-zh-i">法律援助署</span><span class="lang-en-i">Legal Aid Department</span></h3>
                 <p class="lang-zh">為符合資格人士提供法律援助。</p>
                 <p class="lang-en">Legal aid services for eligible persons.</p>
                 <div class="contact">
@@ -1622,27 +1558,17 @@
             </div>
             <div class="resource-card">
                 <div class="card-icon"><i class="fas fa-users"></i></div>
-                <h3 class="lang-zh">社會福利署</h3><h3 class="lang-en">Social Welfare Department</h3>
+                <h3><span class="lang-zh-i">社會福利署</span><span class="lang-en-i">Social Welfare Department</span></h3>
                 <p class="lang-zh">提供綜合家庭服務及經濟援助計劃。</p>
                 <p class="lang-en">Family services and financial assistance schemes.</p>
                 <div class="contact">
-                    <div><i class="fas fa-phone"></i>2343 2255</div>
+                    <div><i class="fas fa-phone"></i>2343 2255 (24<span class="lang-zh-i">小時</span><span class="lang-en-i">hr</span>)</div>
                     <div><i class="fas fa-globe"></i><a href="https://www.swd.gov.hk" target="_blank">www.swd.gov.hk</a></div>
                 </div>
             </div>
             <div class="resource-card">
-                <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
-                <h3 class="lang-zh">消費者委員會</h3><h3 class="lang-en">Consumer Council</h3>
-                <p class="lang-zh">處理消費者投訴及提供消費建議。</p>
-                <p class="lang-en">Consumer complaints and advice.</p>
-                <div class="contact">
-                    <div><i class="fas fa-phone"></i>2929 2222</div>
-                    <div><i class="fas fa-globe"></i><a href="https://www.consumer.org.hk" target="_blank">www.consumer.org.hk</a></div>
-                </div>
-            </div>
-            <div class="resource-card">
                 <div class="card-icon"><i class="fas fa-building"></i></div>
-                <h3 class="lang-zh">香港金融管理局</h3><h3 class="lang-en">HKMA</h3>
+                <h3><span class="lang-zh-i">香港金融管理局</span><span class="lang-en-i">HKMA</span></h3>
                 <p class="lang-zh">監管銀行及處理銀行投訴。</p>
                 <p class="lang-en">Banking supervision and complaints handling.</p>
                 <div class="contact">
@@ -1651,42 +1577,125 @@
                 </div>
             </div>
             <div class="resource-card">
+                <div class="card-icon"><i class="fas fa-balance-scale"></i></div>
+                <h3><span class="lang-zh-i">當值律師服務</span><span class="lang-en-i">Duty Lawyer Service</span></h3>
+                <p class="lang-zh">提供免費法律諮詢服務。</p>
+                <p class="lang-en">Free legal advice services.</p>
+                <div class="contact">
+                    <div><i class="fas fa-phone"></i>2835 2500</div>
+                    <div><i class="fas fa-globe"></i><a href="https://www.dutylawyer.org.hk" target="_blank">www.dutylawyer.org.hk</a></div>
+                </div>
+            </div>
+            <!-- NGOs -->
+            <div class="resource-card">
+                <div class="card-icon"><i class="fas fa-hands-helping"></i></div>
+                <h3><span class="lang-zh-i">明愛向晴軒</span><span class="lang-en-i">Caritas Family Crisis Centre</span></h3>
+                <p class="lang-zh">提供危機介入、情緒支援及債務輔導服務。</p>
+                <p class="lang-en">Crisis intervention, emotional support and debt counseling.</p>
+                <div class="contact">
+                    <div><i class="fas fa-phone"></i>18288 (24<span class="lang-zh-i">小時</span><span class="lang-en-i">hr</span>)</div>
+                    <div><i class="fas fa-globe"></i><a href="https://fcsc.caritas.org.hk" target="_blank">fcsc.caritas.org.hk</a></div>
+                </div>
+            </div>
+            <div class="resource-card">
                 <div class="card-icon"><i class="fas fa-hospital"></i></div>
-                <h3 class="lang-zh">東華三院熱線</h3><h3 class="lang-en">Tung Wah Hotline</h3>
-                <p class="lang-zh">提供輔導及社會服務熱線。</p>
-                <p class="lang-en">Counseling and social services hotline.</p>
+                <h3><span class="lang-zh-i">東華三院</span><span class="lang-en-i">Tung Wah Group</span></h3>
+                <p class="lang-zh">提供輔導及社會服務。</p>
+                <p class="lang-en">Counseling and social services.</p>
                 <div class="contact">
                     <div><i class="fas fa-phone"></i>2548 0010</div>
                     <div><i class="fas fa-globe"></i><a href="https://www.tungwah.org.hk" target="_blank">www.tungwah.org.hk</a></div>
                 </div>
             </div>
             <div class="resource-card">
+                <div class="card-icon"><i class="fas fa-home"></i></div>
+                <h3><span class="lang-zh-i">聖雅各福群會</span><span class="lang-en-i">St. James' Settlement</span></h3>
+                <p class="lang-zh">提供財務輔導及債務支援服務。</p>
+                <p class="lang-en">Financial counseling and debt support services.</p>
+                <div class="contact">
+                    <div><i class="fas fa-phone"></i>2835 4321</div>
+                    <div><i class="fas fa-globe"></i><a href="https://www.sjs.org.hk" target="_blank">www.sjs.org.hk</a></div>
+                </div>
+            </div>
+            <div class="resource-card">
+                <div class="card-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                <h3><span class="lang-zh-i">香港家庭福利會</span><span class="lang-en-i">HK Family Welfare Society</span></h3>
+                <p class="lang-zh">提供家庭服務及財務輔導。</p>
+                <p class="lang-en">Family services and financial counseling.</p>
+                <div class="contact">
+                    <div><i class="fas fa-phone"></i>2527 3171</div>
+                    <div><i class="fas fa-globe"></i><a href="https://www.hkfws.org.hk" target="_blank">www.hkfws.org.hk</a></div>
+                </div>
+            </div>
+            <div class="resource-card">
+                <div class="card-icon"><i class="fas fa-church"></i></div>
+                <h3><span class="lang-zh-i">基督教家庭服務中心</span><span class="lang-en-i">Christian Family Service Centre</span></h3>
+                <p class="lang-zh">提供債務輔導及家庭支援服務。</p>
+                <p class="lang-en">Debt counseling and family support services.</p>
+                <div class="contact">
+                    <div><i class="fas fa-phone"></i>2950 8222</div>
+                    <div><i class="fas fa-globe"></i><a href="https://www.cfsc.org.hk" target="_blank">www.cfsc.org.hk</a></div>
+                </div>
+            </div>
+            <div class="resource-card">
+                <div class="card-icon"><i class="fas fa-cross"></i></div>
+                <h3><span class="lang-zh-i">香港基督教服務處</span><span class="lang-en-i">HK Christian Service</span></h3>
+                <p class="lang-zh">提供綜合家庭及財務支援服務。</p>
+                <p class="lang-en">Integrated family and financial support.</p>
+                <div class="contact">
+                    <div><i class="fas fa-phone"></i>2731 6316</div>
+                    <div><i class="fas fa-globe"></i><a href="https://www.hkcs.org" target="_blank">www.hkcs.org</a></div>
+                </div>
+            </div>
+            <div class="resource-card">
+                <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3><span class="lang-zh-i">救世軍</span><span class="lang-en-i">Salvation Army</span></h3>
+                <p class="lang-zh">提供社會服務及緊急援助。</p>
+                <p class="lang-en">Social services and emergency assistance.</p>
+                <div class="contact">
+                    <div><i class="fas fa-phone"></i>2783 2333</div>
+                    <div><i class="fas fa-globe"></i><a href="https://www.salvation.org.hk" target="_blank">www.salvation.org.hk</a></div>
+                </div>
+            </div>
+            <div class="resource-card">
+                <div class="card-icon"><i class="fas fa-user-friends"></i></div>
+                <h3><span class="lang-zh-i">浸信會愛羣社會服務處</span><span class="lang-en-i">Baptist Oi Kwan Social Service</span></h3>
+                <p class="lang-zh">提供家庭輔導及債務支援。</p>
+                <p class="lang-en">Family counseling and debt support.</p>
+                <div class="contact">
+                    <div><i class="fas fa-phone"></i>2382 0028</div>
+                    <div><i class="fas fa-globe"></i><a href="https://www.bokss.org.hk" target="_blank">www.bokss.org.hk</a></div>
+                </div>
+            </div>
+            <!-- Crisis Hotlines -->
+            <div class="resource-card">
                 <div class="card-icon"><i class="fas fa-heart"></i></div>
-                <h3 class="lang-zh">撒瑪利亞防止自殺會</h3><h3 class="lang-en">The Samaritans</h3>
+                <h3><span class="lang-zh-i">撒瑪利亞防止自殺會</span><span class="lang-en-i">The Samaritans</span></h3>
                 <p class="lang-zh">24小時情緒支援熱線服務。</p>
                 <p class="lang-en">24-hour emotional support hotline.</p>
                 <div class="contact">
-                    <div><i class="fas fa-phone"></i>2389 2222 (24小時)</div>
+                    <div><i class="fas fa-phone"></i>2389 2222 (24<span class="lang-zh-i">小時</span><span class="lang-en-i">hr</span>)</div>
                     <div><i class="fas fa-globe"></i><a href="https://www.samaritans.org.hk" target="_blank">www.samaritans.org.hk</a></div>
                 </div>
             </div>
             <div class="resource-card">
                 <div class="card-icon"><i class="fas fa-phone-alt"></i></div>
-                <h3 class="lang-zh">生命熱線</h3><h3 class="lang-en">Suicide Prevention Hotline</h3>
+                <h3><span class="lang-zh-i">生命熱線</span><span class="lang-en-i">Suicide Prevention Hotline</span></h3>
                 <p class="lang-zh">24小時預防自殺及情緒支援。</p>
-                <p class="lang-en">24-hour suicide prevention and emotional support.</p>
+                <p class="lang-en">24-hour suicide prevention and support.</p>
                 <div class="contact">
-                    <div><i class="fas fa-phone"></i>2382 0000 (24小時)</div>
+                    <div><i class="fas fa-phone"></i>2382 0000 (24<span class="lang-zh-i">小時</span><span class="lang-en-i">hr</span>)</div>
                     <div><i class="fas fa-globe"></i><a href="https://www.sps.org.hk" target="_blank">www.sps.org.hk</a></div>
                 </div>
             </div>
             <div class="resource-card">
                 <div class="card-icon"><i class="fas fa-headset"></i></div>
-                <h3 class="lang-zh">社會福利署熱線</h3><h3 class="lang-en">SWD Hotline</h3>
-                <p class="lang-zh">24小時福利服務熱線。</p>
-                <p class="lang-en">24-hour welfare services hotline.</p>
+                <h3><span class="lang-zh-i">利民會即時通</span><span class="lang-en-i">Richmond Fellowship Hotline</span></h3>
+                <p class="lang-zh">精神健康支援及輔導熱線。</p>
+                <p class="lang-en">Mental health support and counseling.</p>
                 <div class="contact">
-                    <div><i class="fas fa-phone"></i>2343 2255 (24小時)</div>
+                    <div><i class="fas fa-phone"></i>3512 2626</div>
+                    <div><i class="fas fa-globe"></i><a href="https://www.richmond.org.hk" target="_blank">www.richmond.org.hk</a></div>
                 </div>
             </div>
         </div>
@@ -1702,19 +1711,19 @@
         <div class="faq-list">
             <div class="faq-item">
                 <button class="faq-q" onclick="toggleFaq(this)"><span class="lang-zh-i">什麼情況下適合申請IVA？</span><span class="lang-en-i">When is IVA suitable?</span><i class="fas fa-chevron-down"></i></button>
-                <div class="faq-a"><div class="faq-a-inner lang-zh">當債務人：(1) 無力按現有條款償還債務；(2) 有穩定收入；(3) 希望避免破產帶來的職業限制；(4) 債務金額較大或債權人較多。IVA通常可削減30-70%債務。</div><div class="faq-a-inner lang-en">When debtors: (1) Cannot repay under current terms; (2) Have stable income; (3) Wish to avoid career restrictions of bankruptcy; (4) Have larger debt or multiple creditors. IVA typically reduces 30-70% of debt.</div></div>
+                <div class="faq-a"><div class="faq-a-inner"><span class="lang-zh-i">當債務人：(1) 無力按現有條款償還債務；(2) 有穩定收入；(3) 希望避免破產帶來的職業限制；(4) 債務金額較大或債權人較多。IVA通常可削減30-70%債務。</span><span class="lang-en-i">When debtors: (1) Cannot repay under current terms; (2) Have stable income; (3) Wish to avoid career restrictions of bankruptcy; (4) Have larger debt or multiple creditors. IVA typically reduces 30-70% of debt.</span></div></div>
             </div>
             <div class="faq-item">
                 <button class="faq-q" onclick="toggleFaq(this)"><span class="lang-zh-i">IVA與破產有什麼分別？</span><span class="lang-en-i">What's the difference between IVA and bankruptcy?</span><i class="fas fa-chevron-down"></i></button>
-                <div class="faq-a"><div class="faq-a-inner lang-zh">主要分別：(1) 破產紀錄保留8年，IVA無破產紀錄；(2) 破產期間不得擔任董事，IVA無此限制；(3) 破產資產可被變賣，IVA通常可保留資產；(4) 破產期4年，IVA較靈活。</div><div class="faq-a-inner lang-en">Key differences: (1) Bankruptcy record lasts 8 years, IVA has no bankruptcy record; (2) Bankruptcy restricts directorship, IVA doesn't; (3) Bankruptcy may liquidate assets, IVA usually preserves them; (4) Bankruptcy is 4 years, IVA is more flexible.</div></div>
+                <div class="faq-a"><div class="faq-a-inner"><span class="lang-zh-i">主要分別：(1) 破產紀錄保留8年，IVA無破產紀錄；(2) 破產期間不得擔任董事，IVA無此限制；(3) 破產資產可被變賣，IVA通常可保留資產；(4) 破產期4年，IVA較靈活。</span><span class="lang-en-i">Key differences: (1) Bankruptcy record lasts 8 years, IVA has no bankruptcy record; (2) Bankruptcy restricts directorship, IVA doesn't; (3) Bankruptcy may liquidate assets, IVA usually preserves them; (4) Bankruptcy is 4 years, IVA is more flexible.</span></div></div>
             </div>
             <div class="faq-item">
                 <button class="faq-q" onclick="toggleFaq(this)"><span class="lang-zh-i">申請IVA需要什麼條件？</span><span class="lang-en-i">What are the requirements for IVA?</span><i class="fas fa-chevron-down"></i></button>
-                <div class="faq-a"><div class="faq-a-inner lang-zh">基本條件：(1) 有穩定收入；(2) 無力按現有條款還債；(3) 獲75%或以上債務金額的債權人同意；(4) 委任合資格代名人。申請人需向法庭提交建議書，經債權人會議通過後具法律約束力。</div><div class="faq-a-inner lang-en">Requirements: (1) Stable income; (2) Unable to repay under current terms; (3) Approval from creditors holding 75%+ of debt; (4) Appoint qualified nominee. Applicants submit proposal to court, becomes binding after creditor meeting approval.</div></div>
+                <div class="faq-a"><div class="faq-a-inner"><span class="lang-zh-i">基本條件：(1) 有穩定收入；(2) 無力按現有條款還債；(3) 獲75%或以上債務金額的債權人同意；(4) 委任合資格代名人。申請人需向法庭提交建議書，經債權人會議通過後具法律約束力。</span><span class="lang-en-i">Requirements: (1) Stable income; (2) Unable to repay under current terms; (3) Approval from creditors holding 75%+ of debt; (4) Appoint qualified nominee. Applicants submit proposal to court, becomes binding after creditor meeting approval.</span></div></div>
             </div>
             <div class="faq-item">
                 <button class="faq-q" onclick="toggleFaq(this)"><span class="lang-zh-i">IVA和DRP如何選擇？</span><span class="lang-en-i">How to choose between IVA and DRP?</span><i class="fas fa-chevron-down"></i></button>
-                <div class="faq-a"><div class="faq-a-inner lang-zh">選擇取決於：(1) DRP適合債權人少（1-3個），較快完成；(2) IVA適合債權人多、債務大，有法律保障；(3) DRP無需法庭，費用低但無法律約束力；(4) IVA經法庭認可，一旦通過所有債權人受約束。</div><div class="faq-a-inner lang-en">Choice depends on: (1) DRP suits fewer creditors (1-3), faster; (2) IVA suits more creditors/larger debt, legally protected; (3) DRP has no court process, lower cost but not binding; (4) IVA is court-approved, binds all creditors once passed.</div></div>
+                <div class="faq-a"><div class="faq-a-inner"><span class="lang-zh-i">選擇取決於：(1) DRP適合債權人少（1-3個），較快完成；(2) IVA適合債權人多、債務大，有法律保障；(3) DRP無需法庭，費用低但無法律約束力；(4) IVA經法庭認可，一旦通過所有債權人受約束。</span><span class="lang-en-i">Choice depends on: (1) DRP suits fewer creditors (1-3), faster; (2) IVA suits more creditors/larger debt, legally protected; (3) DRP has no court process, lower cost but not binding; (4) IVA is court-approved, binds all creditors once passed.</span></div></div>
             </div>
         </div>
     </section>
@@ -1738,23 +1747,28 @@
                     </ul>
                 </div>
                 <div class="footer-links">
-                    <h4><span class="lang-zh-i">相關法例</span><span class="lang-en-i">Legislation</span></h4>
-                    <ul>
-                        <li><a href="https://www.elegislation.gov.hk/hk/cap6" target="_blank">《破產條例》(第6章)</a></li>
-                        <li><a href="https://www.elegislation.gov.hk/hk/cap486" target="_blank">《私隱條例》(第486章)</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4><span class="lang-zh-i">官方機構</span><span class="lang-en-i">Official Bodies</span></h4>
+                    <h4><span class="lang-zh-i">官方機構</span><span class="lang-en-i">Government</span></h4>
                     <ul>
                         <li><a href="https://www.oro.gov.hk" target="_blank"><span class="lang-zh-i">破產管理署</span><span class="lang-en-i">Official Receiver's Office</span></a></li>
                         <li><a href="https://www.judiciary.hk" target="_blank"><span class="lang-zh-i">香港司法機構</span><span class="lang-en-i">HK Judiciary</span></a></li>
+                        <li><a href="https://www.lad.gov.hk" target="_blank"><span class="lang-zh-i">法律援助署</span><span class="lang-en-i">Legal Aid Dept</span></a></li>
+                        <li><a href="https://www.swd.gov.hk" target="_blank"><span class="lang-zh-i">社會福利署</span><span class="lang-en-i">Social Welfare Dept</span></a></li>
+                        <li><a href="https://www.hkma.gov.hk" target="_blank"><span class="lang-zh-i">金融管理局</span><span class="lang-en-i">HKMA</span></a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4><span class="lang-zh-i">支援機構</span><span class="lang-en-i">Support NGOs</span></h4>
+                    <ul>
+                        <li><a href="https://fcsc.caritas.org.hk" target="_blank"><span class="lang-zh-i">明愛向晴軒</span><span class="lang-en-i">Caritas</span></a></li>
+                        <li><a href="https://www.tungwah.org.hk" target="_blank"><span class="lang-zh-i">東華三院</span><span class="lang-en-i">Tung Wah</span></a></li>
+                        <li><a href="https://www.sjs.org.hk" target="_blank"><span class="lang-zh-i">聖雅各福群會</span><span class="lang-en-i">St. James'</span></a></li>
+                        <li><a href="https://www.samaritans.org.hk" target="_blank"><span class="lang-zh-i">撒瑪利亞防止自殺會</span><span class="lang-en-i">Samaritans</span></a></li>
+                        <li><a href="https://www.sps.org.hk" target="_blank"><span class="lang-zh-i">生命熱線</span><span class="lang-en-i">SPS Hotline</span></a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-disclaimer">
-                <p class="lang-zh"><strong>免責聲明：</strong>本網站資料僅供參考，並不構成法律意見。建議諮詢專業法律及財務顧問。本中心對使用本網站資料而引致的任何損失概不負責。</p>
-                <p class="lang-en"><strong>Disclaimer:</strong> Information is for reference only and does not constitute legal advice. Please consult professional advisors. The Centre accepts no liability for any loss from use of this information.</p>
+                <p><strong><span class="lang-zh-i">免責聲明：</span><span class="lang-en-i">Disclaimer: </span></strong><span class="lang-zh-i">本網站資料僅供參考，並不構成法律意見。建議諮詢專業法律及財務顧問。本中心對使用本網站資料而引致的任何損失概不負責。</span><span class="lang-en-i">Information is for reference only and does not constitute legal advice. Please consult professional advisors. The Centre accepts no liability for any loss from use of this information.</span></p>
             </div>
             <div class="footer-bottom">
                 <p>© 2024 Hong Kong IVA Centre 香港債務重組咨詢中心</p>
@@ -1773,10 +1787,8 @@
     <div class="modal" id="modal">
         <div class="modal-box">
             <div class="modal-icon"><i class="fas fa-check"></i></div>
-            <h3 class="lang-zh">申請已成功提交</h3>
-            <h3 class="lang-en">Application Submitted</h3>
-            <p class="lang-zh">感謝閣下查詢。本中心已收到您的申請，專業顧問將於1-2個工作天內聯絡您。</p>
-            <p class="lang-en">Thank you. We have received your application. Our consultant will contact you within 1-2 working days.</p>
+            <h3><span class="lang-zh-i">申請已成功提交</span><span class="lang-en-i">Application Submitted</span></h3>
+            <p><span class="lang-zh-i">感謝閣下查詢。本中心已收到您的申請，專業顧問將於1-2個工作天內聯絡您。</span><span class="lang-en-i">Thank you. We have received your application. Our consultant will contact you within 1-2 working days.</span></p>
             <button class="modal-close" onclick="closeModal()">OK</button>
         </div>
     </div>
@@ -1819,7 +1831,9 @@
             const r = rate / 12 / 100;
             let balance = principal;
             const payment = calcPayment(principal, rate, months);
-            let html = `<thead><tr><th><span class="lang-zh-i">期數</span><span class="lang-en-i">Month</span></th><th><span class="lang-zh-i">還款</span><span class="lang-en-i">Payment</span></th><th><span class="lang-zh-i">本金</span><span class="lang-en-i">Principal</span></th><th><span class="lang-zh-i">利息</span><span class="lang-en-i">Interest</span></th><th><span class="lang-zh-i">餘額</span><span class="lang-en-i">Balance</span></th></tr></thead><tbody>`;
+            const isZh = !document.body.classList.contains('en');
+            
+            let html = `<thead><tr><th>${isZh ? '期數' : 'Month'}</th><th>${isZh ? '還款' : 'Payment'}</th><th>${isZh ? '本金' : 'Principal'}</th><th>${isZh ? '利息' : 'Interest'}</th><th>${isZh ? '餘額' : 'Balance'}</th></tr></thead><tbody>`;
             
             let totalPayment = 0, totalPrincipal = 0, totalInterest = 0;
             
@@ -1836,7 +1850,7 @@
                 html += `<tr><td>${i}</td><td>$${Math.round(monthlyTotal).toLocaleString()}</td><td>$${Math.round(principalPay).toLocaleString()}</td><td>$${Math.round(interest).toLocaleString()}</td><td>$${Math.round(balance).toLocaleString()}</td></tr>`;
             }
             
-            html += `</tbody><tfoot><tr><td><strong><span class="lang-zh-i">總計</span><span class="lang-en-i">Total</span></strong></td><td><strong>$${Math.round(totalPayment).toLocaleString()}</strong></td><td><strong>$${Math.round(totalPrincipal).toLocaleString()}</strong></td><td><strong>$${Math.round(totalInterest).toLocaleString()}</strong></td><td>-</td></tr></tfoot>`;
+            html += `</tbody><tfoot><tr><td><strong>${isZh ? '總計' : 'Total'}</strong></td><td><strong>$${Math.round(totalPayment).toLocaleString()}</strong></td><td><strong>$${Math.round(totalPrincipal).toLocaleString()}</strong></td><td><strong>$${Math.round(totalInterest).toLocaleString()}</strong></td><td>-</td></tr></tfoot>`;
             
             document.getElementById(tableId).innerHTML = html;
         }
