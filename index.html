@@ -42,7 +42,7 @@
             --text-muted: #a0a0b0;
             --border: #2d2d3d;
             --shadow: 0 4px 6px rgba(0,0,0,0.4);
-            --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);    
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -801,7 +801,7 @@
             border-top-color: white;
             animation: spin 0.8s linear infinite;
         }
-
+        
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .btn-primary.loading .btn-text { display: none; }
@@ -1157,6 +1157,47 @@
             .steps { gap: 4px; }
             .step-line { display: none; }
         }
+/* Login Modal */
+        .login-modal {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.65);
+            z-index: 2000;
+            align-items: center; justify-content: center;
+            padding: 24px;
+        }
+        .login-modal.show { display: flex; }
+        .login-box {
+            background: var(--bg-card);
+            border-radius: 16px;
+            max-width: 380px; width: 100%;
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+        .login-box .login-emoji { text-align: center; font-size: 2.8rem; margin-bottom: 14px; }
+        .login-box h3 {
+            font-family: 'Noto Serif HK', serif;
+            font-size: 1.35rem; color: var(--primary);
+            text-align: center; margin-bottom: 24px;
+        }
+        body.dark .login-box h3 { color: var(--gold-light); }
+        .login-x {
+            position: absolute; top: 16px; right: 18px;
+            background: none; border: none;
+            font-size: 1.2rem; color: var(--text-muted);
+            cursor: pointer; line-height: 1;
+        }
+        .login-x:hover { color: var(--text); }
+        .login-error {
+            display: none;
+            background: #fff0f0; border: 1px solid var(--accent-red);
+            color: var(--accent-red); border-radius: 6px;
+            padding: 10px 14px; font-size: 0.88rem; margin-bottom: 16px;
+        }
+        body.dark .login-error { background: #2d0a0a; }
+        .login-error.show { display: block; }
     </style>
 </head>
 <body>
@@ -1173,6 +1214,8 @@
             <button class="toggle-btn" id="themeBtn" onclick="toggleTheme()">
                 <i class="fas fa-moon" id="themeIcon"></i>
             </button>
+            <button class="toggle-btn" id="loginBtn" onclick="openLogin()">🔐</button>
+            
         </div>
     </div>
 
@@ -1708,6 +1751,43 @@
             <p><span class="lang-zh-i">感謝閣下查詢。本中心已收到您的申請，專業顧問將於1-2個工作天內聯絡您。</span><span class="lang-en-i">Thank you. We have received your application. Our consultant will contact you within 1-2 working days.</span></p>
             <button class="modal-close" onclick="closeModal()">OK</button>
         </div>
+    <!-- Login Modal -->
+<div class="login-modal" id="loginModal">
+    <div class="login-box">
+        <button class="login-x" onclick="closeLogin()">✕</button>
+        <div class="login-emoji">🔐</div>
+        <h3>
+            <span class="lang-zh-i">管理員登入</span>
+            <span class="lang-en-i">Admin Login</span>
+        </h3>
+        <div class="login-error" id="loginError">
+            <i class="fas fa-exclamation-circle"></i>
+            <span class="lang-zh-i"> 帳號或密碼錯誤，請重試。</span>
+            <span class="lang-en-i"> Incorrect credentials, please try again.</span>
+        </div>
+        <div class="form-group">
+            <label>
+                <span class="lang-zh-i">帳號</span>
+                <span class="lang-en-i">Username</span>
+            </label>
+            <input type="text" id="loginUser" placeholder="Username" autocomplete="username">
+        </div>
+        <div class="form-group">
+            <label>
+                <span class="lang-zh-i">密碼</span>
+                <span class="lang-en-i">Password</span>
+            </label>
+            <input type="password" id="loginPass" placeholder="Password"
+                autocomplete="current-password"
+                onkeydown="if(event.key==='Enter') doLogin()">
+        </div>
+        <button class="btn-primary" onclick="doLogin()" style="width:100%; margin-top:10px;">
+            <span class="lang-zh-i">登入</span>
+            <span class="lang-en-i">Login</span>
+            <i class="fas fa-sign-in-alt"></i>
+        </button>
+    </div>
+</div>
     </div>
 
     <!-- Replace the existing form submit JavaScript (at the bottom) with this -->
@@ -1946,6 +2026,34 @@
             }
         });
     });
+    // Login Modal
+function openLogin() {
+    document.getElementById('loginModal').classList.add('show');
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginError').classList.remove('show');
+    setTimeout(() => document.getElementById('loginUser').focus(), 150);
+}
+
+function closeLogin() {
+    document.getElementById('loginModal').classList.remove('show');
+}
+
+function doLogin() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    if (user === 'Qubeley2003' && pass === '93949413') {
+        window.location.href = 'Generator.html';
+    } else {
+        document.getElementById('loginError').classList.add('show');
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginPass').focus();
+    }
+}
+
+document.getElementById('loginModal').addEventListener('click', function(e) {
+    if (e.target === this) closeLogin();
+});
 </script>
 </body>
 </html>
