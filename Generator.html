@@ -1,1 +1,1533 @@
-hello world !
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Qubeley V8 IVA DocGenSys(Math & Target 95% Fix)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+/* ========================================
+  FORMAL COURT DOCUMENT TYPESETTING
+  ========================================
+*/
+@page {
+  size: A4;
+  margin: 2.5cm; /* Standard court margin */
+}
+
+@media print {
+  body { background: white !important; margin: 0; padding: 0; }
+  .no-print { display: none !important; }
+  
+  .legal-page {
+    page-break-after: always;
+    padding: 0 !important; /* Rely on @page margin */
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    min-height: auto !important;
+  }
+  .legal-page:last-child { page-break-after: auto; }
+  
+  /* Remove yellow highlight and dashed lines on print */
+  .editable-highlight {
+    background: transparent !important;
+    border-bottom: none !important;
+  }
+}
+
+.legal-page {
+  background: white;
+  width: 210mm;
+  min-height: 297mm;
+  padding: 2.5cm;
+  margin: 20px auto;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 12pt;
+  line-height: 1.5; /* Formal spacing */
+  color: black;
+  text-align: justify;
+  box-sizing: border-box;
+}
+
+/* Editable field styling (replacing <input> tags for seamless text flow) */
+.editable-highlight {
+  background-color: rgba(253, 224, 71, 0.4); /* subtle yellow */
+  border-bottom: 1px dashed #ca8a04;
+  outline: none;
+  display: inline;
+  min-width: 1.5em;
+  padding: 0 2px;
+  transition: background-color 0.2s;
+}
+.editable-highlight:focus {
+  background-color: rgba(253, 224, 71, 0.8);
+}
+
+/* Typographic Helpers */
+.legal-page .pg-hdr { display: flex; justify-content: space-between; font-size: 11pt; margin-bottom: 6px; }
+.legal-page .court-center { text-align: center; font-weight: bold; line-height: 1.5; margin: 8px 0; }
+.legal-page .case-matter { text-align: center; margin: 6px 0; }
+.legal-page hr.chr { border: none; border-top: 1px solid #000; margin: 12px 40px; }
+.legal-page .stars { text-align: center; font-size: 11pt; margin: 5px 0; letter-spacing: 1px; }
+.legal-page p { margin: 8px 0; text-align: justify; }
+.legal-page .sec-hdr { font-weight: bold; margin: 16px 0 8px; }
+.legal-page .ind1 { margin-left: 1.0cm; }
+.legal-page .ind2 { margin-left: 2.0cm; }
+.legal-page .rule-wrap { display: flex; gap: 8px; margin: 8px 0; }
+.legal-page .rule-lbl { width: 2.5cm; flex-shrink: 0; font-size: 10pt; line-height: 1.4; color: #000; }
+.legal-page .rule-body { flex: 1; min-width: 0; }
+.legal-page table.soa { width: 100%; border-collapse: collapse; font-size: 11pt; margin-top: 12px; }
+.legal-page table.soa td, .legal-page table.soa th { padding: 4px 8px; vertical-align: top; }
+.legal-page table.soa .r { text-align: right; }
+.legal-page table.soa .b { font-weight: bold; }
+.legal-page table.soa .bt { border-top: 1px solid #000; }
+.legal-page table.soa .bb { border-bottom: 1px solid #000; }
+.legal-page .cert { margin-top: 24px; font-size: 11pt; }
+.legal-page .sig { border-bottom: 1px solid #000; width: 6cm; display: inline-block; margin-bottom: 4px; }
+.legal-page .appx-hdr { font-size: 11pt; text-align: right; margin-bottom: 8px; font-weight: bold; }
+.legal-page .appx-court { text-align: center; font-weight: bold; line-height: 1.5; font-size: 12pt; margin: 8px 0; }
+
+/* ========================================
+  UI SYSTEM STYLES (Tabs 1-4)
+  ========================================
+*/
+.tab-active { border-bottom-color: #3b82f6 !important; color: #60a5fa !important; background: rgba(59,130,246,.08); }
+.dark-input { background: #1e293b; border: 1px solid #475569; color: #e2e8f0; border-radius: .375rem; padding: .375rem .625rem; font-size: .875rem; width: 100%; }
+.dark-input:focus { outline: none; box-shadow: 0 0 0 2px #3b82f6; }
+.dark-input[readonly] { background: #0f172a; color: #94a3b8; cursor: default; }
+.dark-select { background: #1e293b; border: 1px solid #475569; color: #e2e8f0; border-radius: .375rem; padding: .375rem .625rem; font-size: .875rem; width: 100%; }
+.dark-label { display: block; font-size: .75rem; font-weight: 500; color: #94a3b8; margin-bottom: .25rem; }
+.dark-card { background: #1e293b; border: 1px solid #334155; border-radius: .75rem; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,.3); }
+.dark-card h3 { font-size: 1rem; font-weight: 700; color: #60a5fa; border-bottom: 1px solid #334155; padding-bottom: .625rem; margin-bottom: .875rem; }
+.dist-table th, .dist-table td { border: 1px solid #cbd5e1; padding: 4px 8px; font-size: 11px; text-align: right; white-space: nowrap; }
+.dist-table th { background: #f1f5f9; font-weight: 600; text-align: center; }
+.dist-table .left { text-align: left; }
+.dist-table .subtotal { background: #f8fafc; font-weight: 700; }
+</style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+<nav class="no-print bg-slate-900 border-b border-slate-700 shrink-0 sticky top-0 z-50">
+  <div class="max-w-screen-2xl mx-auto px-4 flex items-center justify-between h-14">
+    <div class="flex items-center gap-5 overflow-x-auto">
+      <span class="text-blue-400 font-bold text-sm whitespace-nowrap mr-2">IVA Generator v5</span>
+      <button onclick="switchTab(0)" id="tbtn0" class="tab-active text-sm font-medium px-3 py-3 border-b-2 border-transparent whitespace-nowrap transition-all">1. Debtor Info</button>
+      <button onclick="switchTab(1)" id="tbtn1" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">2. Court Fees</button>
+      <button onclick="switchTab(2)" id="tbtn2" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">3. Distribution</button>
+      <button onclick="switchTab(3)" id="tbtn3" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">4. Creditors DB</button>
+      <button onclick="switchTab(4)" id="tbtn4" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">5. Proposal</button>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="resetData()" class="text-xs bg-red-900/50 hover:bg-red-800 text-red-200 px-3 py-1.5 rounded transition">Reset</button>
+      <button onclick="exportJSON()" class="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded transition">Export JSON</button>
+      <label class="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded transition cursor-pointer">
+        Import JSON <input type="file" class="hidden" accept=".json" onchange="importJSON(event)">
+      </label>
+    </div>
+  </div>
+</nav>
+
+<main class="flex-1 overflow-y-auto" id="mainContainer">
+
+<div id="tab0" class="p-4 max-w-screen-2xl mx-auto space-y-4">
+  <h2 class="text-xl font-bold text-blue-400">Tab 1 — Debtor Information Input</h2>
+  <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+
+    <div class="dark-card xl:col-span-2">
+      <h3>A — Case Information, Solicitor &amp; Nominee</h3>
+      <div class="grid grid-cols-2 gap-2 mb-3">
+        <div><label class="dark-label">Court Year</label><input class="dark-input" id="i_courtYear" onchange="U('courtYear',this.value)"></div>
+        <div><label class="dark-label">Statement of Affairs Date</label><input class="dark-input" id="i_soaDate" onchange="U('soaDate',this.value)"></div>
+      </div>
+      <p class="text-xs text-blue-400 font-semibold mb-2 mt-1">Solicitor Details</p>
+      <div class="grid grid-cols-2 gap-2 mb-3">
+        <div class="col-span-2"><label class="dark-label">Firm Name</label><input class="dark-input" id="i_solName" onchange="U('solName',this.value)"></div>
+        <div><label class="dark-label">Address Line 1</label><input class="dark-input" id="i_solAddr1" onchange="U('solAddr1',this.value)"></div>
+        <div><label class="dark-label">Address Line 2</label><input class="dark-input" id="i_solAddr2" onchange="U('solAddr2',this.value)"></div>
+        <div><label class="dark-label">Address Line 3</label><input class="dark-input" id="i_solAddr3" onchange="U('solAddr3',this.value)"></div>
+        <div><label class="dark-label">Tel</label><input class="dark-input" id="i_solTel" onchange="U('solTel',this.value)"></div>
+        <div><label class="dark-label">Fax</label><input class="dark-input" id="i_solFax" onchange="U('solFax',this.value)"></div>
+        <div><label class="dark-label">Reference (e.g. 90xxx/3.7/AL(IN))</label><input class="dark-input" id="i_solRef" onchange="U('solRef',this.value)"></div>
+      </div>
+      <hr class="border-slate-700 my-2">
+      <p class="text-xs text-blue-400 font-semibold mb-2 mt-1">Nominee Details</p>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="dark-label">Full Name</label><input class="dark-input" id="i_nomName" onchange="U('nomName',this.value)"></div>
+        <div><label class="dark-label">Firm / Title</label><input class="dark-input" id="i_nomFirm" onchange="U('nomFirm',this.value)"></div>
+        <div class="col-span-2"><label class="dark-label">Full Address</label><input class="dark-input" id="i_nomAddr" onchange="U('nomAddr',this.value)"></div>
+        <div class="col-span-2"><label class="dark-label">§5.17 Biographical Description</label><textarea class="dark-input" rows="6" id="i_nomDesc" onchange="U('nomDesc',this.value)"></textarea></div>
+      </div>
+    </div>
+
+    <div class="dark-card">
+      <h3>B — Debtor Personal Info</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="dark-label">English Name</label><input class="dark-input" id="i_nameEng" onchange="U('nameEng',this.value); autoShortForm();"></div>
+        <div><label class="dark-label">Chinese Name</label><input class="dark-input" id="i_nameChi" onchange="U('nameChi',this.value)"></div>
+        <div><label class="dark-label">HKID</label><input class="dark-input" id="i_hkid" onchange="U('hkid',this.value)"></div>
+        <div><label class="dark-label">Short Form (auto)</label><input class="dark-input" id="i_shortForm" readonly></div>
+        <div class="col-span-2"><label class="dark-label">Full Address</label><input class="dark-input" id="i_address" onchange="U('address',this.value)"></div>
+      </div>
+    </div>
+
+    <div class="dark-card">
+      <h3>C — Background Description</h3>
+      <div class="space-y-3">
+        <div><label class="dark-label">§2.2 Job Description</label><textarea class="dark-input" rows="5" id="i_jobDesc" onchange="U('jobDesc',this.value)"></textarea></div>
+        <div><label class="dark-label">§2.3 Accommodation</label><textarea class="dark-input" rows="5" id="i_accomDesc" onchange="U('accomDesc',this.value)"></textarea></div>
+      </div>
+    </div>
+
+    <div class="dark-card">
+      <h3>D — Monthly Income</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="dark-label">Salary</label><input type="number" class="dark-input" id="i_salary" onchange="U('salary',+this.value)"></div>
+        <div><label class="dark-label">Commission</label><input type="number" class="dark-input" id="i_commission" onchange="U('commission',+this.value)"></div>
+        <div><label class="dark-label">Overtime</label><input type="number" class="dark-input" id="i_overtime" onchange="U('overtime',+this.value)"></div>
+        <div><label class="dark-label">Other Allowance</label><input type="number" class="dark-input" id="i_otherAllow" onchange="U('otherAllow',+this.value)"></div>
+        <div class="col-span-2 bg-slate-800 rounded p-2">
+          <p class="text-xs text-slate-400">Total Income: <span class="text-emerald-400 font-bold" id="lbl_totalIncome">0</span></p>
+          <p class="text-xs text-slate-400">MPF (5%/max 1,500): <span class="text-amber-400 font-bold" id="lbl_mpf">0</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dark-card">
+      <h3>E — Expenses (Bankruptcy)</h3>
+      <div class="grid grid-cols-2 gap-2 text-xs" id="expBkContainer"></div>
+      <div class="mt-2 bg-slate-800 rounded p-2">
+        <p class="text-xs text-slate-400">Total (BK): <span class="text-red-400 font-bold" id="lbl_totalExpBk">0</span></p>
+        <div class="mt-1"><label class="dark-label">BK Monthly Contribution</label><input type="number" class="dark-input" style="max-width:140px" id="i_bkContrib" onchange="U('bkContrib',+this.value)"></div>
+      </div>
+    </div>
+
+    <div class="dark-card">
+      <h3>F — Expenses (IVA)</h3>
+      <div class="grid grid-cols-2 gap-2 text-xs" id="expIvaContainer"></div>
+      <div class="mt-2 bg-slate-800 rounded p-2">
+        <p class="text-xs text-slate-400">Total (IVA): <span class="text-amber-400 font-bold" id="lbl_totalExpIva">0</span></p>
+        <p class="text-xs text-slate-400">Net Contribution to Creditors: <span class="text-emerald-400 font-bold" id="lbl_netContrib">0</span></p>
+        <p class="text-xs text-slate-400">Gross Contribution (incl. Nominee): <span class="text-blue-400 font-bold" id="lbl_grossContrib">0</span></p>
+      </div>
+    </div>
+
+    <div class="dark-card lg:col-span-2">
+      <h3>G — Assets</h3>
+      <p class="text-xs text-slate-500 mb-2">Bank Accounts</p>
+      <div class="space-y-2" id="bankAccContainer"></div>
+      <hr class="border-slate-700 my-3">
+      <div class="grid grid-cols-2 gap-2 text-xs" id="otherAssetsContainer"></div>
+      <div class="mt-2 bg-slate-800 rounded p-2">
+        <p class="text-xs text-slate-400">Total Assets: <span class="text-emerald-400 font-bold" id="lbl_totalAssets">0</span></p>
+      </div>
+    </div>
+
+    <div class="dark-card">
+      <h3>H — IVA Terms &amp; Fee Structure</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="dark-label">IVA Period (months)</label>
+          <div class="flex gap-1">
+            <input type="number" class="dark-input flex-1" id="i_ivaTerm" onchange="U('ivaTerm',+this.value)">
+            <button onclick="autoTargetTerm()" title="Auto-calculate term to recover ~95% of Unsecured Debt" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-1 rounded text-xs transition">Target 95%</button>
+          </div>
+        </div>
+        <div><label class="dark-label">Interest Rate (%)</label><input type="number" step="0.1" class="dark-input" id="i_interestRate" onchange="U('interestRate',+this.value)"></div>
+        <div><label class="dark-label">Nominee Monthly Fee (HK$)</label><input type="number" class="dark-input" id="i_nomMonthly" onchange="U('nomMonthly',+this.value)"></div>
+        <div><label class="dark-label">IVA Period (years, auto)</label><input class="dark-input" id="i_ivaYears" readonly></div>
+        <div><label class="dark-label">Solicitor's Fee for IVA (HK$)</label><input type="number" class="dark-input" id="i_solFeeIVA" onchange="U('solFeeIVA',+this.value)"></div>
+        <div><label class="dark-label">Implementation Charges (HK$)</label><input type="number" class="dark-input" id="i_implCharges" onchange="U('implCharges',+this.value)"></div>
+        <div class="col-span-2"><label class="dark-label">Asset Complexity</label>
+          <select class="dark-select" id="i_assetComplexity" onchange="U('assetComplexity',this.value)">
+            <option value="simple">Simple</option>
+            <option value="moderate">Moderate</option>
+            <option value="complex">Complex</option>
+          </select>
+        </div>
+        <div class="col-span-2 bg-slate-800 rounded p-2 space-y-1">
+          <p class="text-xs text-slate-400 flex justify-between"><span>Nominee Fees Total:</span> <span class="text-blue-400 font-bold" id="lbl_nomLumpSum">0</span></p>
+          <p class="text-xs text-slate-400 flex justify-between"><span>Accountant Fee:</span> <span class="text-amber-400 font-bold" id="lbl_accountantFee">0</span></p>
+          <p class="text-xs text-slate-400 flex justify-between"><span>Implementation Fees Total:</span> <span class="text-amber-400 font-bold" id="lbl_implTotal">0</span></p>
+          <hr class="border-slate-700 my-1">
+          <p class="text-xs text-slate-300 flex justify-between">
+            <span>Recovery Rate (Principal only):</span> 
+            <span class="font-bold" id="lbl_recoveryRate">0%</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dark-card lg:col-span-2 xl:col-span-3">
+      <h3>I — Unsecured Creditors (max 10)</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs">
+          <thead><tr class="text-slate-400 border-b border-slate-700">
+            <th class="text-left py-1 w-8">#</th>
+            <th class="text-left py-1">Creditor</th>
+            <th class="text-left py-1" style="min-width:200px">Nature</th>
+            <th class="text-right py-1" style="min-width:130px">Amount (HK$)</th>
+          </tr></thead>
+          <tbody id="creditorRows"></tbody>
+          <tfoot><tr class="border-t border-slate-600 text-sm">
+            <td colspan="3" class="py-2 text-right text-slate-400 font-bold">Total Unsecured Liabilities:</td>
+            <td class="py-2 text-right text-red-400 font-bold" id="lbl_totalUnsec">0</td>
+          </tr></tfoot>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="tab1" class="hidden p-4 max-w-3xl mx-auto space-y-4">
+  <h2 class="text-xl font-bold text-blue-400">Tab 2 — Court Fees &amp; Cost Architecture</h2>
+  <div class="dark-card">
+    <h3>IVA Cost Layers</h3>
+    <table class="w-full text-sm">
+      <tbody>
+        <tr class="border-b border-slate-700"><td class="py-2 text-slate-400">Unsecured Liabilities</td><td class="py-2 text-right font-mono text-emerald-400" id="fee_unsec">0</td></tr>
+        <tr class="border-b border-slate-700"><td class="py-2 text-slate-400 pl-4">Court Fee — 1.5% on first HK$100,000</td><td class="py-2 text-right font-mono" id="fee_tier1">0</td></tr>
+        <tr class="border-b border-slate-700"><td class="py-2 text-slate-400 pl-4">Court Fee — 0.75% on remainder</td><td class="py-2 text-right font-mono" id="fee_tier2">0</td></tr>
+        <tr class="border-b border-slate-600 bg-slate-800"><td class="py-2 text-blue-300 font-semibold pl-4">→ Court Fees under IVA</td><td class="py-2 text-right font-mono text-blue-300 font-bold" id="fee_court">0</td></tr>
+        <tr class="border-b border-slate-700"><td class="py-2 text-slate-400">Nominee's fees</td><td class="py-2 text-right font-mono" id="fee_nomLump">0</td></tr>
+        <tr class="border-b border-slate-700"><td class="py-2 text-slate-400">Solicitor's fees for IVA</td><td class="py-2 text-right font-mono" id="fee_sol">0</td></tr>
+        <tr class="border-b border-slate-700"><td class="py-2 text-slate-400">Statutory advertising &amp; misc (fixed 2,200)</td><td class="py-2 text-right font-mono" id="fee_adv">0</td></tr>
+        <tr class="border-b border-slate-700"><td class="py-2 text-slate-300 pl-4">Implementation charges</td><td class="py-2 text-right font-mono" id="fee_implCharges">0</td></tr>
+        <tr class="border-b border-slate-700"><td class="py-2 text-slate-300 pl-4">Accountant's fees</td><td class="py-2 text-right font-mono" id="fee_accountant">0</td></tr>
+        <tr class="border-b border-slate-600 bg-slate-800"><td class="py-2 text-blue-300 font-semibold pl-4">→ Implementation fees under IVA</td><td class="py-2 text-right font-mono text-blue-300 font-bold" id="fee_impl">0</td></tr>
+        <tr class="border-t-2 border-blue-500 bg-slate-800"><td class="py-3 text-lg font-bold text-blue-400">TOTAL IVA Costs &amp; Expenses</td><td class="py-3 text-right text-lg font-bold font-mono text-blue-300" id="fee_total">0</td></tr>
+        <tr><td colspan="2" class="py-2"></td></tr>
+        <tr class="border-b border-slate-700"><td class="py-2 text-slate-400">Costs for bankruptcy proceedings</td><td class="py-2 text-right font-mono" id="fee_bkProc">12,000.00</td></tr>
+        <tr class="border-b border-slate-600 bg-slate-800"><td class="py-2 text-slate-300 font-semibold">Trustee's fees &amp; disbursements</td><td class="py-2 text-right font-mono text-slate-300" id="fee_trustee">14,400.00</td></tr>
+        <tr class="border-t-2 border-slate-600 bg-slate-800"><td class="py-3 font-bold text-slate-300">TOTAL BK Costs</td><td class="py-3 text-right font-bold font-mono text-slate-300">26,400.00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="dark-card">
+    <h3>Deposit Coverage Check</h3>
+    <table class="w-full text-sm">
+      <tbody><tr class="border-b border-slate-700"><td class="py-2 text-slate-400">Deposit Held</td><td class="py-2 text-right font-mono" id="fee_deposit">0</td></tr>
+      <tr class="border-b border-slate-700"><td class="py-2 text-slate-400">Pre-meeting Costs</td><td class="py-2 text-right font-mono" id="fee_preMeeting">0</td></tr>
+      <tr><td class="py-2 text-slate-400">Shortfall / Surplus</td><td class="py-2 text-right font-mono" id="fee_shortfall">0</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<div id="tab2" class="hidden p-4 max-w-screen-2xl mx-auto">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold text-slate-800">Tab 3 — Estimated Distribution of IVA Dividends</h2>
+  </div>
+  <div class="bg-white rounded-xl shadow-lg p-4 overflow-x-auto text-slate-800">
+    <p class="text-xs text-slate-500 mb-2" id="dist_rateNote"></p>
+    <table class="dist-table w-full" id="distTable"></table>
+  </div>
+</div>
+
+<div id="tab3" class="hidden p-4 max-w-5xl mx-auto space-y-4">
+  <h2 class="text-xl font-bold text-blue-400">Tab 4 — Creditors Database</h2>
+  
+  <div class="dark-card mb-4">
+    <h3>Add New Creditor</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div><input type="text" id="new_cred_short" class="dark-input" placeholder="Short Name (e.g. HSBC)"></div>
+      <div class="md:col-span-2 flex gap-2">
+        <input type="text" id="new_cred_full" class="dark-input flex-1" placeholder="Full Legal Name & Address">
+        <button onclick="addCreditor()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-medium">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dark-card">
+    <h3>Standard Hong Kong Creditors (<span id="credDbCount">0</span> entries)</h3>
+    <input class="dark-input mb-3" placeholder="Search creditors..." oninput="filterCredDb(this.value)">
+    <div class="overflow-y-auto" style="max-height:50vh">
+      <table class="w-full text-xs">
+        <thead><tr class="text-slate-400 border-b border-slate-700 sticky top-0 bg-slate-900">
+          <th class="text-left py-2 w-8">#</th><th class="text-left py-2" style="min-width:120px">Short Name</th><th class="text-left py-2">Full Legal Name &amp; Address</th><th class="text-right py-2 w-16">Action</th>
+        </tr></thead>
+        <tbody id="credDbBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="tab4" class="hidden">
+  <div class="no-print p-4 max-w-4xl mx-auto flex justify-between items-center">
+    <h2 class="text-xl font-bold text-blue-400">Tab 5 — Generated Proposal (53 Pages)</h2>
+    <div class="flex gap-2">
+      <button onclick="renderProposal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow">Generate / Refresh</button>
+      <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow">Print / PDF</button>
+    </div>
+  </div>
+  <div class="no-print text-center text-xs text-slate-400 mb-4">Highlighted text fields below are editable directly. Adjustments won't persist if you click 'Refresh'.</div>
+  
+  <div class="proposal-container max-w-4xl mx-auto pb-8 px-4" id="proposalOut">
+    <p class="text-slate-500 text-center py-20">Click "Generate / Refresh" to build the print-ready proposal document.</p>
+  </div>
+</div>
+
+</main>
+
+<script>
+const DEFAULT_CDB=[
+{s:"AEON",f:'Aeon Credit Service (Asia) Co. Limited of 20/F., Mira Place Tower A, 132 Nathan Road, Tsim Sha Tsui, Kowloon, Hong Kong (\u201CAEON\u201D)'},
+{s:"Airstar",f:'Airstar Bank Limited of Room 3201-07, 32/F, Tower 5, Gateway Tower, Harbour City, Tsim Sha Tsui, Kowloon, Hong Kong (\u201CAirstar\u201D)'},
+{s:"AE",f:'American Express International Incorporation of 18/F, Citiplaza Phase 4, 12 Tai Koo Wan Road, Quarry Bay, Hong Kong (\u201CAE\u201D)'},
+{s:"Ant Bank",f:'Ant Bank (Hong Kong) Limited of Suites 2312-13, 23/F, Tower One, Times Square, 1 Matheson Street, Causeway Bay, Hong Kong (\u201CANT\u201D)'},
+{s:"BOC",f:'Bank of China (Hong Kong) Limited of Bank of China Tower 1, Garden Road, Central, Hong Kong (\u201CBOC\u201D)'},
+{s:"BOCOM",f:'Bank of Communications (Hong Kong) Limited of 20 Pedder Street, Central, Hong Kong (\u201CBOCOM\u201D)'},
+{s:"BOC Credit Card",f:'BOC Credit Card (International) Limited of 20/F., BOC Credit Card Centre, 68 Connaught Road West, Hong Kong (\u201CBOC Credit Card\u201D)'},
+{s:"Cashing Pro",f:'Cashing Pro Limited of Flat 1114, 11/F., Peninsula Centre, 67 Mody Road, Tsim Sha Tsui, Kowloon, Hong Kong (\u201CCashing Pro\u201D)'},
+{s:"China CITIC",f:'China CITIC Bank International Limited of Room 202 & 207, 2/F, CITIC Tower, 1 Tim Mei Avenue, Central, Hong Kong (\u201CChina CITIC\u201D)'},
+{s:"CCB",f:'China Construction Bank (Asia) Corporation Limited of 19/F., CCB Centre, 18 Wang Chiu Road, Kowloon Bay, Kowloon, Hong Kong (\u201CCCB\u201D)'},
+{s:"CITI",f:'Citibank (Hong Kong) Limited of Citi Tower, One Bay East, 83 Hoi Bun Road, Kwun Tong, Hong Kong (\u201CCITI\u201D)'},
+{s:"CMBWL",f:'CMB Wing Lung Bank Limited of 45 Des Voeux Road Central, Central, Hong Kong (\u201CCMBWL\u201D)'},
+{s:"Credit Station",f:'Credit Station Limited of Room 809, 8/F., Nam Fung Centre, Tsuen Wan, Hong Kong (\u201CCredit Station\u201D)'},
+{s:"Dah Sing",f:'Dah Sing Bank Limited of GPO Box 20255, Hennessy Road Post Office, Hong Kong (\u201CDah Sing\u201D)'},
+{s:"DBS",f:'DBS Bank (Hong Kong) Limited of 6/F, Two Harbour Square, 180 Wai Yip Street, Kwun Tong, Kowloon, Hong Kong (\u201CDBS\u201D)'},
+{s:"EasyLend",f:'EasyLend Finance Company Limited of Rooms 1602-03, New East Ocean Center, 9 Science Museum Road, Tsim Sha Tsui, Kowloon, Hong Kong (\u201CEasyLend\u201D)'},
+{s:"Finance One",f:'Finance One Limited of Room 2605, 26/F., Hopewell Centre, 183 Queen\'s Road East, Wan Chai, Hong Kong (\u201CFinance One\u201D)'},
+{s:"FUBON",f:'Fubon Bank (Hong Kong) Limited of Fubon Bank Building, 38 Des Voeux Road Central, Hong Kong (\u201CFUBON\u201D)'},
+{s:"Funki Finance",f:'Funki Finance Limited of Room 1807, West Tower, 168-200 Connaught Rd Central, Sheung Wan, Hong Kong (\u201CFunki Finance\u201D)'},
+{s:"Fusion",f:'Fusion Bank Limited of 2/F., InnoCentre, 72 Tat Chee Avenue, Kowloon Tong, Kowloon, Hong Kong (\u201CFusion\u201D)'},
+{s:"Hang Seng",f:'Hang Seng Bank Limited of 11/F., Hang Seng 113, 113 Argyle Street, Mongkok, Kowloon, Hong Kong (\u201CHS\u201D)'},
+{s:"HY Credit",f:'HY Credit Company Limited of Room 1509-1512, 15/F., Tai Yau Plaza, No.181 Johnston Road, Wan Chai, Hong Kong (\u201CHY Credit\u201D)'},
+{s:"K Cash",f:'K Cash Limited of 17/F., Wheelock House, No. 20 Pedder Street, Central, Hong Kong (\u201CK CASH\u201D)'},
+{s:"KM International",f:'KM International (Asia) Co., Limited of Room 1013, 10/F., East Peninsula Centre, 67 Mody Road, Tsim Sha Tsui, Kowloon, Hong Kong (\u201CKM\u201D)'},
+{s:"Livi",f:'Livi Bank Limited of 28/F, Oxford House, 979 King\'s Road, Taikoo Place, Quarry Bay, Hong Kong (\u201CLIVI\u201D)'},
+{s:"Mox",f:'Mox Bank Limited of 39/F., Oxford House, 979 King\'s Road Taikoo Place, Quarry Bay, Hong Kong (\u201CMOX\u201D)'},
+{s:"OCBC-WH",f:'OCBC Wing Hang Bank Limited of G/F., 161 Queen\'s Road, Central, Hong Kong (\u201COCBC-WH\u201D)'},
+{s:"OK",f:'OK Finance Limited of Flat 2205, 22/F., Causeway Bay Plaza 1, 489 Hennessy Road, Causeway Bay, Hong Kong (\u201COK\u201D)'},
+{s:"ORIX",f:'ORIX Finance Services Hong Kong Limited of 25th Floor, Two Exchange Square, 8 Connaught Place, Central, Hong Kong (\u201CORIX\u201D)'},
+{s:"PrimeCredit",f:'Prime Credit Limited of 20/F., Dominion Centre, 43 Queen\'s Road East, Wan Chai, Hong Kong (\u201CPrimeCredit\u201D)'},
+{s:"PROMISE",f:'Promise (Hong Kong) Co. Limited of 16/F., 88 Gloucester Road, Wanchai, Hong Kong (\u201CPROMISE\u201D)'},
+{s:"PublicFinance",f:'Public Finance Limited of 11/F., JCG Building, 16 Mongkok Road, Kowloon, Hong Kong (\u201CPublicFinance\u201D)'},
+{s:"SC",f:'Standard Chartered Bank (Hong Kong) Limited of 39/F, Oxford house, 979 King\'s Road Taikoo Place, Quarry Bay, Hong Kong (\u201CSC\u201D)'},
+{s:"BEA",f:'The Bank of East Asia Limited of 32/F, BEA Tower, MC 5, 418 Kwun Tong Road, Kwun Tong, Kowloon, Hong Kong (\u201CBEA\u201D)'},
+{s:"HSBC",f:'The Hongkong and Shanghai Banking Corporation Limited of 5/F., Tower 3, HSBC Centre, No.1 Sham Mong Road, Tai Kok Tsui, Kowloon, Hong Kong (\u201CHSBC\u201D)'},
+{s:"Tiptop",f:'Tiptop Credit Limited of 2/F., Hua Chiao Commercial Centre, 678 Nathan Road, Mong Kok, Kowloon, Hong Kong (\u201CTiptop\u201D)'},
+{s:"UA",f:'United Asia Finance Limited of 21/F., Allied Kajima Building, 138 Gloucester Road, Wanchai, Hong Kong (\u201CUA\u201D)'},
+{s:"WeLab",f:'WeLab Bank of K11 Atelier, 728 King\'s Rd, Quarry Bay (\u201CWeLab\u201D)'},
+{s:"WELEND",f:'Welend Limited of Unit 05-12, Level 22, K11 Atelier King\'s Road, 728 King\'s Road, Quarry Bay, Hong Kong (\u201CWELEND\u201D)'},
+{s:"WFSFAA",f:'Working Family and Student Financial Assistance Agency of 11/F, Cheung Sha Wan Government Offices, 303 Cheung Sha Wan Road, Kowloon, Hong Kong (\u201CWFSFAA\u201D)'},
+{s:"ZA",f:'ZA Bank Limited of Unit 1301, Level 13, IT Street, Cyberport 3, 100 Cyberport Road, Hong Kong (\u201CZA\u201D)'},
+{s:"ZERO",f:'Zero Finance Hong Kong Limited of Unit 201, 2/F, No.1 Rumsey St, Sheung Wan, Hong Kong (\u201CZERO\u201D)'}
+];
+
+const EXPCATS=['Housing','Govt Rent & Rates','Property Mgmt Fee','Water/Elec/Gas','Phones & Internet','Transportation','Food & Groceries','Dependant (Mother)','Dependant (Father)','Dependant (Others)','Children Education','Household Expenses','Life Insurance','Clothing/Personal Care','Others'];
+const NATURES=['Due under personal loan','Due under credit card','Due under personal loan and credit card'];
+
+// Default State (Adjusted term to 33, creating ~96.8% return rate for $238,629 debt)
+const DEFAULT_STATE = {
+  courtYear:'2026', soaDate:'12th March 2026',
+  solName:'LIMS Solicitors',
+  solAddr1:'8/F., Pilkem Commercial Centre', solAddr2:'8 Pilkem Street, Jordan', solAddr3:'Kowloon, Hong Kong',
+  solTel:'3428 2973', solFax:'2730 0875', solRef:'90xxx/3.7/AL(IN)',
+  nomName:'LIM CHI YU ALVIN', nomFirm:'Solicitor of LIMS SOLICITORS',
+  nomAddr:'8/F., Pilkem Commercial Centre, 8 Pilkem Street, Jordan, Kowloon, Hong Kong',
+  nomDesc:'It is proposed that LIM CHI YU ALVIN (the \u201cIntended Nominee\u201d) of LIMS SOLICITORS of 8th Floor, Pilkem Commercial Centre, 8 Pilkem Street, Jordan, Kowloon, Hong Kong, should act as Nominee of my IVA. LIM CHI YU ALVIN who acts as the Intended Nominee in respect of this Proposal is the Principal of LIMS SOLICITORS, a Solicitors firm of Hong Kong SAR. The Intended Nominee is a Solicitor of the High Court of Hong Kong with Practicing Certificate to practice in Hong Kong with 19 years of experience in bankruptcy and insolvency matters. He has been entrusted to act for debtors or creditors in a number of non-summary cases, including Re: Rehm Suneast International Limited (HCCW 60/2009), Re: Sit Kwong Lam (HCB 6051/2018) and Re: Brightoil Petroleum (Holdings) Limited (HCCW 147/2019). The Intended Nominee is covered by professional indemnity insurance arranged by him under the name of LIMS SOLICITORS. The Intended Nominee confirms that he is prepared to act as my Nominee if appointed to do so. If appointed as Nominee, the Intended Nominee will exercise the functions set out in the Ordinance and Rules and as set out in this Proposal. In the premises, I hereby confirm that the Intended Nominee is experienced and qualified, so far as I am aware, to act as nominee and not trustee in relation to the voluntary arrangement for the purpose of supervising its implementation. No assets will vest in LIM CHI YU ALVIN. No liability will fall upon him and he will not enter into any contract or other arrangement in a position so as to incur any personal liability. I confirm that the Intended Nominee is experienced and qualified to act as Nominee in relation to my voluntary arrangement.',
+  nameEng:'CHAN TAI MAN',nameChi:'陳大文',hkid:'Z123456(7)',shortForm:'CTM',address:'Flat A, 1/F., Block 1, Sunshine City, Ma On Shan, N.T.',
+  jobDesc:'I am now 25 years old and I was separated. I am working as a Waiter in Watami (China) Company Limited since May 2018. Meanwhile, I am also working as a part-time Financial Strategist in Dynasty Financial Group Limited since April 2017.',
+  accomDesc:'I am living with my parents at an accommodation situated at First Floor, No. 59 Leng Pei Tsuen, Fanling, New Territories, Hong Kong. The accommodation is rented by my parents while the monthly rental fee is shared by me and my father who is working as a Shop Assistant with a monthly salary around HK$10,000. My mother is a housewife.',
+  salary:23150,commission:0,overtime:0,otherAllow:0, /* Setup exactly for Net Contrib = 7000 */
+  bkContrib:8000,
+  bank:[{name:'',ac:'',bal:0,ex:true},{name:'',ac:'',bal:0,ex:false},{name:'',ac:'',bal:0,ex:false}],
+  deposit:126000,investments:0,lifeIns:0,debtRec:0,vehicles:0,equip:0,jewelry:0,mpf:0,land:0,otherAsset:0,
+  ivaTerm:33,interestRate:7,nomMonthly:1000, /* Term adjusted for sensible recovery rate */
+  solFeeIVA:4000, implCharges:22000, assetComplexity:'simple',
+  cred:[ /* Sum exactly to 238,629 */
+    {key:'AEON', nature:2, amount: 44792},
+    {key:'BOC Credit Card', nature:2, amount: 55000},
+    {key:'CCB', nature:2, amount: 45000},
+    {key:'DBS', nature:2, amount: 35000},
+    {key:'Hang Seng', nature:2, amount: 30000},
+    {key:'PrimeCredit', nature:2, amount: 28837},
+    {key:'', nature:2, amount: 0},
+    {key:'', nature:2, amount: 0},
+    {key:'', nature:2, amount: 0},
+    {key:'', nature:2, amount: 0}
+  ],
+  cdb: [...DEFAULT_CDB]
+};
+
+// Initialize Expenses in Default State
+EXPCATS.forEach((_,i) => { DEFAULT_STATE[`bk_${i}`]=0; DEFAULT_STATE[`iva_${i}`]=0; });
+DEFAULT_STATE.bk_0=7000; DEFAULT_STATE.bk_3=850; DEFAULT_STATE.bk_4=1000; DEFAULT_STATE.bk_5=1300; DEFAULT_STATE.bk_6=8000; DEFAULT_STATE.bk_11=4500; DEFAULT_STATE.bk_12=3540; DEFAULT_STATE.bk_13=2950;
+DEFAULT_STATE.iva_0=7000; DEFAULT_STATE.iva_3=850; DEFAULT_STATE.iva_4=500; DEFAULT_STATE.iva_5=750; DEFAULT_STATE.iva_6=4000; DEFAULT_STATE.iva_13=1800; DEFAULT_STATE.mpf=118591.70;
+
+let S = JSON.parse(JSON.stringify(DEFAULT_STATE));
+
+// LocalStorage Persistence
+function saveData() { localStorage.setItem('iva_state_v5', JSON.stringify(S)); }
+function loadData() {
+  const saved = localStorage.getItem('iva_state_v5');
+  if (saved) {
+    try { 
+      const parsed = JSON.parse(saved);
+      S = { ...DEFAULT_STATE, ...parsed };
+      if (!S.cdb || S.cdb.length === 0) S.cdb = [...DEFAULT_CDB];
+    } catch(e) { console.error('Failed to load saved data', e); }
+  }
+}
+function resetData() {
+  if(confirm("Are you sure you want to reset all data? This cannot be undone.")){
+    S = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    saveData();
+    renderAll();
+  }
+}
+
+// JSON Import/Export
+function exportJSON() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(S));
+  const downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href", dataStr);
+  downloadAnchorNode.setAttribute("download", `iva_data_${new Date().toISOString().slice(0,10)}.json`);
+  document.body.appendChild(downloadAnchorNode);
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+}
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if(parsed && typeof parsed === 'object') {
+        S = { ...DEFAULT_STATE, ...parsed };
+        saveData();
+        renderAll();
+        alert("Data imported successfully.");
+      }
+    } catch (err) { alert("Invalid JSON file"); }
+  };
+  reader.readAsText(file);
+}
+
+// Target 95% Calculation
+function autoTargetTerm() {
+  const c = C();
+  if(c.netContrib > 0 && c.totalUnsec > 0) {
+      const targetDebt = c.totalUnsec * 0.95;
+      const optimizedTerm = Math.round(targetDebt / c.netContrib);
+      if(optimizedTerm > 0) {
+          U('ivaTerm', optimizedTerm);
+          alert(`Term automatically adjusted to ${optimizedTerm} months to target ~95% debt recovery.`);
+      }
+  } else {
+      alert("Unable to target. Make sure Monthly Income, Expenses, and Unsecured Creditors are filled correctly.");
+  }
+}
+
+// Calculations Engine
+function C(){
+  const totalInc = S.salary + S.commission + S.overtime + S.otherAllow;
+  const mpf = totalInc >= 7100 ? Math.min(1500, Math.round(totalInc * 0.05 * 100) / 100) : 0;
+  
+  let totalExpBk = 0, totalExpIva = 0;
+  EXPCATS.forEach((_,i) => { totalExpBk += (S[`bk_${i}`]||0); totalExpIva += (S[`iva_${i}`]||0); });
+  
+  const netDisposalBk = totalInc - mpf;
+  const netDisposalIva = totalInc - mpf - S.nomMonthly;
+  const netContrib = netDisposalIva - totalExpIva;
+  const grossContrib = netContrib + S.nomMonthly;
+  
+  const totalBankBal = S.bank.reduce((a,b) => a + (b.bal||0), 0);
+  const totalAssets = totalBankBal + S.deposit + S.investments + S.lifeIns + S.debtRec + S.vehicles + S.equip + S.jewelry + S.mpf + S.land + S.otherAsset;
+  
+  const creds = S.cred.filter(c => c.key && c.amount > 0);
+  const totalUnsec = creds.reduce((a,c) => a + c.amount, 0);
+  
+  const courtTier1 = Math.min(100000, totalUnsec) * 0.015;
+  const courtTier2 = Math.max(0, totalUnsec - 100000) * 0.0075;
+  const courtFee = Math.ceil(courtTier1 + courtTier2);
+  
+  const nomLumpSum = S.nomMonthly * S.ivaTerm;
+  
+  // Accountant fee lookup using Total Liabilities (totalUnsec)
+  const ac = S.assetComplexity;
+  let accountantFee;
+  if (totalUnsec <= 800000) accountantFee = ac==='complex' ? 8000 : ac==='moderate' ? 6000 : 4500;
+  else if (totalUnsec <= 2000000) accountantFee = ac==='complex' ? 9500 : ac==='moderate' ? 7000 : 5500;
+  else if (totalUnsec <= 5000000) accountantFee = ac==='complex' ? 12000 : ac==='moderate' ? 9000 : 7500;
+  else accountantFee = ac==='complex' ? 15000 : ac==='moderate' ? 12000 : 10000;
+  
+  const advFeeFixed = 2200;
+  const implementationFeesIVA = accountantFee + S.implCharges;
+  const bkProceedingsCost = 12000, trusteeFeesCost = 14400;
+  const totalCostsIVA = nomLumpSum + S.solFeeIVA + courtFee + advFeeFixed + implementationFeesIVA;
+  const totalCostsBK = bkProceedingsCost + trusteeFeesCost;
+  
+  const totalVoluntary = grossContrib * S.ivaTerm;
+  const totalRealIVA = S.deposit + totalVoluntary;
+  const ivaAvailable = totalRealIVA - totalCostsIVA;
+  
+  const bkReal = S.bkContrib * 48;
+  const bkAvailable = bkReal - totalCostsBK;
+  const bkDiv = totalUnsec > 0 ? Math.round(bkAvailable / totalUnsec * 100) : 0;
+  
+  const ivaSurplus = ivaAvailable - totalUnsec;
+  const ivaDiv = totalUnsec > 0 ? Math.min(100, Math.round(ivaAvailable / totalUnsec * 100)) : 0; // Capped for display in Appx
+  
+  const preMeeting = nomLumpSum + S.solFeeIVA + courtFee + advFeeFixed;
+  const shortfall = S.deposit - preMeeting;
+  
+  return {
+    totalInc, mpf, totalExpBk, totalExpIva, netDisposalBk, netDisposalIva, netContrib, grossContrib,
+    totalBankBal, totalAssets, creds, totalUnsec, courtTier1, courtTier2, courtFee,
+    nomLumpSum, accountantFee, advFeeFixed, implementationFeesIVA, bkProceedingsCost, trusteeFeesCost,
+    totalCostsIVA, totalCostsBK, totalVoluntary, totalRealIVA, ivaAvailable,
+    bkReal, bkAvailable, bkDiv, ivaSurplus, ivaDiv, preMeeting, shortfall
+  };
+}
+
+const F = n => (n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const F0 = n => Math.round(n||0).toLocaleString('en-US');
+function getCredFull(key) { const c = S.cdb.find(d => d.s === key); return c ? c.f : key; }
+
+function autoShortForm() {
+  if(S.nameEng) {
+    S.shortForm = S.nameEng.split(' ').map(w=>w[0]||'').join('').toUpperCase();
+    document.getElementById('i_shortForm').value = S.shortForm;
+    saveData();
+  }
+}
+
+function U(k,v) {
+  if(k.startsWith('bank_')){ const[,i,f]=k.split('_'); S.bank[+i][f] = f==='bal' ? +v : v; }
+  else if(k.startsWith('cred_')){ const[,i,f]=k.split('_'); if(f==='amount') S.cred[+i].amount=+v; else if(f==='nature') S.cred[+i].nature=+v; else S.cred[+i].key=v; }
+  else S[k]=v;
+  saveData();
+  renderAll();
+}
+
+// Render Engine
+function renderAll() {
+  const c = C();
+  
+  // Tab 1 UI
+  const strFields = ['courtYear','soaDate','solName','solAddr1','solAddr2','solAddr3','solTel','solFax','solRef','nomName','nomFirm','nomAddr','nameEng','nameChi','hkid','shortForm','address','jobDesc','accomDesc','salary','commission','overtime','otherAllow','bkContrib','ivaTerm','interestRate','nomMonthly','solFeeIVA','implCharges','nomDesc','assetComplexity'];
+  strFields.forEach(k => { const el=document.getElementById('i_'+k); if(el) el.value=S[k]; });
+  
+  document.getElementById('i_ivaYears').value = (S.ivaTerm/12).toFixed(1);
+  document.getElementById('lbl_totalIncome').textContent = 'HK$ ' + F(c.totalInc);
+  document.getElementById('lbl_mpf').textContent = 'HK$ ' + F(c.mpf);
+  document.getElementById('lbl_totalExpBk').textContent = 'HK$ ' + F(c.totalExpBk);
+  document.getElementById('lbl_totalExpIva').textContent = 'HK$ ' + F(c.totalExpIva);
+  document.getElementById('lbl_netContrib').textContent = 'HK$ ' + F(c.netContrib);
+  document.getElementById('lbl_grossContrib').textContent = 'HK$ ' + F(c.grossContrib);
+  document.getElementById('lbl_totalAssets').textContent = 'HK$ ' + F(c.totalAssets);
+  document.getElementById('lbl_totalUnsec').textContent = 'HK$ ' + F(c.totalUnsec);
+  document.getElementById('lbl_nomLumpSum').textContent = 'HK$ ' + F(c.nomLumpSum);
+  document.getElementById('lbl_accountantFee').textContent = 'HK$ ' + F(c.accountantFee);
+  document.getElementById('lbl_implTotal').textContent = 'HK$ ' + F(c.implementationFeesIVA);
+
+  // Live Recovery Rate Monitor
+  const lblRec = document.getElementById('lbl_recoveryRate');
+  const rawRecoveryRate = c.totalUnsec > 0 ? (c.netContrib * S.ivaTerm) / c.totalUnsec * 100 : 0;
+  if(lblRec) {
+      lblRec.textContent = rawRecoveryRate.toFixed(1) + '%';
+      if(rawRecoveryRate > 100) {
+          lblRec.className = 'font-bold text-red-400';
+          lblRec.title = 'Warning: Total contribution significantly exceeds total debt!';
+      } else {
+          lblRec.className = 'font-bold text-emerald-400';
+          lblRec.title = 'Recovery rate looks standard.';
+      }
+  }
+
+  renderExpGrid('expBkContainer', 'bk_');
+  renderExpGrid('expIvaContainer', 'iva_');
+  renderBankAccounts();
+  renderOtherAssets();
+  renderCreditorRows();
+  
+  // Tab 2 UI (Fees)
+  document.getElementById('fee_unsec').textContent = 'HK$ ' + F(c.totalUnsec);
+  document.getElementById('fee_tier1').textContent = 'HK$ ' + F(c.courtTier1);
+  document.getElementById('fee_tier2').textContent = 'HK$ ' + F(c.courtTier2);
+  document.getElementById('fee_court').textContent = 'HK$ ' + F(c.courtFee);
+  document.getElementById('fee_nomLump').textContent = 'HK$ ' + F(c.nomLumpSum) + ' (' + F0(S.nomMonthly) + '×' + S.ivaTerm + ' mo)';
+  document.getElementById('fee_sol').textContent = 'HK$ ' + F(S.solFeeIVA);
+  document.getElementById('fee_adv').textContent = 'HK$ ' + F(c.advFeeFixed);
+  document.getElementById('fee_implCharges').textContent = 'HK$ ' + F(S.implCharges);
+  document.getElementById('fee_accountant').textContent = 'HK$ ' + F(c.accountantFee);
+  document.getElementById('fee_impl').textContent = 'HK$ ' + F(c.implementationFeesIVA);
+  document.getElementById('fee_total').textContent = 'HK$ ' + F(c.totalCostsIVA);
+  document.getElementById('fee_deposit').textContent = 'HK$ ' + F(S.deposit);
+  document.getElementById('fee_preMeeting').textContent = 'HK$ ' + F(c.preMeeting);
+  
+  const sf = document.getElementById('fee_shortfall');
+  sf.textContent = 'HK$ ' + F(c.shortfall);
+  sf.className = 'py-2 text-right font-mono ' + (c.shortfall >= 0 ? 'text-emerald-400' : 'text-red-400');
+
+  // Creditors DB updates
+  renderCredDb();
+  
+  if(activeTab === 2) renderDist(c);
+}
+
+function renderExpGrid(cid, pfx) {
+  document.getElementById(cid).innerHTML = EXPCATS.map((label,i) => 
+    `<div><label class="dark-label">${label}</label></div><div><input type="number" class="dark-input text-right" value="${S[pfx+i]||0}" onchange="U('${pfx}${i}',+this.value)"></div>`
+  ).join('');
+}
+
+function renderBankAccounts() {
+  document.getElementById('bankAccContainer').innerHTML = S.bank.map((b,i) => `
+    <div class="grid grid-cols-4 gap-2">
+      <input class="dark-input col-span-1" placeholder="Bank name" value="${b.name}" onchange="U('bank_${i}_name',this.value)">
+      <input class="dark-input col-span-1" placeholder="A/C number" value="${b.ac}" onchange="U('bank_${i}_ac',this.value)">
+      <input type="number" class="dark-input col-span-1 text-right" placeholder="Balance" value="${b.bal}" onchange="U('bank_${i}_bal',this.value)">
+      <label class="flex items-center gap-1 text-xs text-slate-400"><input type="checkbox" ${b.ex?'checked':''} onchange="S.bank[${i}].ex=this.checked; saveData(); renderAll();"> Exclude</label>
+    </div>`).join('');
+}
+
+function renderOtherAssets() {
+  const items = [['deposit','Deposit for IVA'],['investments','Investments'],['lifeIns','Life Insurance'],['debtRec','Debt Receivable'],['vehicles','Vehicles'],['equip','Equipment'],['jewelry','Jewelry'],['mpf','MPF Value'],['land','Land Properties'],['otherAsset','Other']];
+  document.getElementById('otherAssetsContainer').innerHTML = items.map(([k,label]) => 
+    `<div><label class="dark-label">${label}</label></div><div><input type="number" class="dark-input text-right" value="${S[k]||0}" onchange="U('${k}',+this.value)"></div>`
+  ).join('');
+}
+
+function renderCreditorRows() {
+  const el = document.getElementById('creditorRows');
+  const sortedCdb = [...S.cdb].sort((a,b)=>a.s.localeCompare(b.s));
+  const opts = sortedCdb.map(c => `<option value="${c.s}">${c.s}</option>`).join('');
+  
+  el.innerHTML = S.cred.map((cr,i) => `
+    <tr class="border-b border-slate-800">
+      <td class="py-1 text-slate-500">${i+1}</td>
+      <td class="py-1"><select class="dark-select text-xs" onchange="U('cred_${i}_key',this.value)"><option value="">-- Select --</option>${opts}</select></td>
+      <td class="py-1"><select class="dark-select text-xs" onchange="U('cred_${i}_nature',this.value)">${NATURES.map((n,j)=>`<option value="${j}" ${cr.nature===j?'selected':''}>${n}</option>`).join('')}</select></td>
+      <td class="py-1"><input type="number" class="dark-input text-right" value="${cr.amount||''}" onchange="U('cred_${i}_amount',this.value)" placeholder="0"></td>
+    </tr>`).join('');
+    
+  S.cred.forEach((cr,i) => { const sel=el.querySelectorAll('select')[i*2]; if(sel) sel.value=cr.key; });
+}
+
+// TAB 3: DISTRIBUTION TABLE
+function renderDist(c = C()) {
+  const t = S.ivaTerm; const net = c.netContrib; const nmf = S.nomMonthly; const gross = c.grossContrib;
+  const creds = c.creds; const total = c.totalUnsec; const rate = S.interestRate;
+  
+  document.getElementById('dist_rateNote').textContent = `***Interest Rate @${rate.toFixed(1)}% per annum adopted. IVA Term: ${t} months.`;
+  
+  const bulkEnd = t - 1;
+  const cols = [
+    ['1st month', 1],
+    ['2nd\u20135th month', 4],
+    ['6th month', 1],
+    ['7th\u201310th month', 4],
+    [`11th\u2013${bulkEnd > 10 ? bulkEnd : '11'}th month`, t > 11 ? t - 11 : 0],
+    [`${t}th month`, 1]
+  ];
+  
+  let h = `<thead><tr><th class="left" style="min-width:160px">Item</th><th>HK$</th><th>%</th>`;
+  cols.forEach(([l, m]) => { if(m > 0) h += `<th>${l}</th>`; });
+  h += `<th>Total Contribution</th><th>Accumulated Interest</th></tr></thead>`;
+  
+  const activeCols = cols.filter(c => c[1] > 0);
+  const dash = `<td>-</td>`.repeat(activeCols.length);
+  const dashRow = label => `<tr><td class="left">${label}</td><td></td><td></td>${dash}<td>-</td><td></td></tr>`;
+  const sumRow = (label, cls, monthly, showTot) => {
+    let r = `<tr class="${cls}"><td class="left">${label}</td><td></td><td></td>`;
+    let tot = 0;
+    activeCols.forEach(([,m]) => { const v=monthly*m; tot+=v; r+=`<td>${F(v)}</td>`; });
+    r += `<td>${showTot ? F(tot) : ''}</td><td></td></tr>`; return r;
+  };
+  
+  let b = '<tbody>';
+  
+  // Logic Warning embedded inside Distribution tab
+  const rawRec = total > 0 ? (net * t) / total * 100 : 0;
+  if (rawRec > 100) {
+      b += `<tr><td colspan="${activeCols.length+5}" class="bg-red-100 text-red-700 p-2 font-bold rounded">⚠️ ERROR: Total Contribution ($${F(net*t)}) exceeds Total Debt ($${F(total)}). Please reduce the Term or Monthly Contribution in Tab 1 to ensure a realistic recovery rate.</td></tr>`;
+  }
+
+  b += dashRow('Opening Balance'); b += dashRow('Realisation of assets');
+  b += sumRow('Monthly contribution', '', gross, true); 
+  b += sumRow('<b>Sub-total</b>', 'subtotal', gross, true); 
+  b += sumRow('<b>Balance available</b>', 'subtotal', gross, true);
+  b += `<tr><td colspan="${activeCols.length+5}" style="height:6px"></td></tr>`;
+  b += `<tr class="subtotal"><td class="left" colspan="${activeCols.length+5}">Less: IVA expenses</td></tr>`;
+  b += sumRow('Nominees fees and expenses', '', nmf, true); 
+  b += dashRow('Contingency expenses'); 
+  b += sumRow('<b>Sub-total</b>', 'subtotal', nmf, true);
+  b += `<tr><td colspan="${activeCols.length+5}" style="height:6px"></td></tr>`;
+  b += sumRow('<b>Balance available for distribution</b>', 'subtotal', net, true);
+  b += `<tr><td colspan="${activeCols.length+5}" style="height:6px"></td></tr>`;
+  b += `<tr class="subtotal"><td class="left" colspan="${activeCols.length+5}">Unsecured Claims</td></tr>`;
+  
+  let totalInterest = 0;
+  creds.forEach((cr,i) => {
+    const ratio = total > 0 ? cr.amount/total : 0; 
+    const mPay = net*ratio; const totalPay = mPay*t;
+    const estInt = cr.amount * (rate/100) * (t/12) * 0.55; 
+    totalInterest += estInt;
+    
+    let r = `<tr><td class="left">${i+1}. ${cr.key}</td><td>${F(cr.amount)}</td><td>${(ratio*100).toFixed(0)}%</td>`;
+    activeCols.forEach(([,m]) => { r += `<td>${F(mPay*m)}</td>`; });
+    r += `<td>${F(totalPay)}</td><td>${F(estInt)}</td></tr>`; b += r;
+  });
+  
+  let sr = `<tr class="subtotal"><td class="left"><b>Sub-total</b></td><td><b>${F(total)}</b></td><td><b>100%</b></td>`;
+  activeCols.forEach(([,m]) => { sr += `<td><b>${F(net*m)}</b></td>`; });
+  sr += `<td><b>${F(net*t)}</b></td><td><b>${F(totalInterest)}</b></td></tr>`; b += sr; 
+  b += dashRow('Closing Balance'); b += '</tbody>';
+  
+  document.getElementById('distTable').innerHTML = h+b;
+}
+
+// TAB 4: CREDITORS DB
+function renderCredDb() {
+  document.getElementById('credDbCount').textContent = S.cdb.length;
+  document.getElementById('credDbBody').innerHTML = S.cdb.map((c,i) => `
+    <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+      <td class="py-2 text-slate-500">${i+1}</td>
+      <td class="py-2 font-medium text-blue-400">${c.s}</td>
+      <td class="py-2 text-slate-300">${c.f}</td>
+      <td class="py-2 text-right"><button onclick="deleteCreditor(${i})" class="text-red-400 hover:text-red-300 text-xs px-2 py-1 rounded border border-red-900/50 hover:bg-red-900/20 transition">Delete</button></td>
+    </tr>`).join('');
+}
+function filterCredDb(q) {
+  document.getElementById('credDbBody').querySelectorAll('tr').forEach(r => {
+    r.style.display = r.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+  });
+}
+function addCreditor() {
+  const s = document.getElementById('new_cred_short').value.trim();
+  const f = document.getElementById('new_cred_full').value.trim();
+  if(!s || !f) { alert("Please enter both short name and full legal name."); return; }
+  S.cdb.unshift({s, f});
+  saveData();
+  renderAll();
+  document.getElementById('new_cred_short').value = '';
+  document.getElementById('new_cred_full').value = '';
+}
+function deleteCreditor(index) {
+  if(confirm(`Remove ${S.cdb[index].s} from database?`)) {
+    S.cdb.splice(index, 1);
+    saveData();
+    renderAll();
+  }
+}
+
+// TAB SWITCHING
+let activeTab = 0;
+function switchTab(i) {
+  activeTab = i;
+  for(let t=0; t<5; t++) {
+    document.getElementById('tab'+t).classList.toggle('hidden', t!==i);
+    const btn = document.getElementById('tbtn'+t);
+    if(t===i){ btn.classList.add('tab-active'); btn.classList.remove('text-slate-400'); }
+    else { btn.classList.remove('tab-active'); btn.classList.add('text-slate-400'); }
+  }
+  const main = document.getElementById('mainContainer');
+  if(i===2 || i===4) { main.classList.remove('bg-slate-950','text-slate-100'); main.classList.add('bg-gray-100','text-slate-800'); }
+  else { main.classList.add('bg-slate-950','text-slate-100'); main.classList.remove('bg-gray-100','text-slate-800'); }
+  
+  if(i===2) renderDist();
+  window.scrollTo(0,0);
+}
+
+// PROPOSAL GENERATOR (Formal Typesetting with contenteditable fields)
+const E = (val) => `<span contenteditable="true" class="editable-highlight">${val}</span>`;
+const EB = (val) => `<strong>${E(val)}</strong>`; 
+
+function renderProposal() {
+  const c=C(), s=S;
+  
+  const cy = s.courtYear; 
+  const soaDate = s.soaDate; 
+  const sf = s.shortForm || 'XXX';
+  const nm = s.nameEng || '[Debtor Name]'; 
+  const chi = s.nameChi || '[Chinese Name]';
+  const id = s.hkid || '[HKID]'; 
+  const addr = s.address || '[Address]';
+  
+  const nomName = s.nomName; const nomFirm = s.nomFirm; const nomAddr = s.nomAddr; const nomDesc = s.nomDesc;
+  const solName = s.solName; const solRef = s.solRef;
+  const ivaYrs = (s.ivaTerm/12).toFixed(1);
+  const{totalInc,netContrib,grossContrib,totalBankBal,totalAssets,creds,totalUnsec,
+    courtFee,nomLumpSum,accountantFee,advFeeFixed,implementationFeesIVA,totalCostsIVA,totalCostsBK,
+    totalVoluntary,totalRealIVA,ivaAvailable,bkReal,bkAvailable,bkDiv,ivaDiv,ivaSurplus,totalExpBk,totalExpIva}=c;
+
+  const courtHdr = () => `
+    <div class="pg-hdr"><span>HCBI</span><span>/${E(cy)}</span></div>
+    <div class="court-center">IN THE HIGH COURT OF THE<br>HONG KONG SPECIAL ADMINISTRATIVE REGION<br>COURT OF FIRST INSTANCE<br>BANKRUPTCY PROCEEDINGS</div>
+    <p style="margin:10px 0 4px; text-align:center;">INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}</p>
+    <hr class="chr">
+    <p class="case-matter">IN THE MATTER OF THE BANKRUPTCY ORDINANCE (CAP.6)<br>AND<br>IN THE MATTER OF <strong>${E(nm)} (${E(chi)})</strong>, THE DEBTOR<br>(Holder of Hong Kong Identity Card No. <strong>${E(id)}</strong>)</p>
+    <hr class="chr">`;
+
+  const appxHdr = (n,subtitle,dateStr='') => `
+    <div class="appx-hdr">Appendix ${n}</div>
+    <div class="appx-court">IN THE HIGH COURT OF THE<br>HONG KONG SPECIAL ADMINISTRATIVE REGION<br>COURT OF FIRST INSTANCE</div>
+    <p style="text-align:center"><strong>INTERIM ORDER APPLICATION NO.</strong> <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}</p>
+    <p style="text-align:center"><strong>RE: ${E(nm)} (${E(chi)})</strong><br>(Holder of Hong Kong Identity Card No. <strong>${E(id)}</strong>)</p>
+    <p style="text-align:center;font-weight:bold;margin-top:8px">${subtitle}${dateStr?'<br>'+E(dateStr):''}</p>`;
+
+  const soaCert = () => `
+    <div class="cert"><p>I, <strong>${E(nm)}</strong> holder of Hong Kong Identity Card No. <strong>${E(id)}</strong>, certify that the information contained herein is true to the best of my knowledge and belief.</p>
+    <p style="margin-top:16px"><span class="sig"></span></p>
+    <p class="dated" style="margin-top:4px">Dated: ${E(soaDate)}</p></div>`;
+
+  const RL = (rule,body) => `<div class="rule-wrap"><div class="rule-lbl">${rule}</div><div class="rule-body">${body}</div></div>`;
+  const pg = content => `<div class="legal-page">${content}</div>`;
+  const ST = `<div class="stars">************************************************************</div>`;
+  const ST2 = `<div class="stars">*******************************************************</div>`;
+
+  const expTableRows = EXPCATS.map((label,i) => `<tr><td style="padding:2px 8px">${label}</td><td style="padding:2px 8px;text-align:right">${E(F(s['iva_'+i]))}</td></tr>`).join('');
+  const pages = [];
+
+  // PAGE 1: Application for Interim Order body p.1
+  pages.push(pg(`${courtHdr()}${ST}
+    <div style="display:flex;gap:6px;margin:4px 0">
+      <div style="width:130px;flex-shrink:0;font-size:10px;line-height:2.1">Sections 20A &nbsp;&nbsp;)<br>Bankruptcy Ordinance )<br>Rule 122E of the &nbsp;&nbsp;&nbsp;)<br>Bankruptcy Rules &nbsp;&nbsp;&nbsp;&nbsp;)</div>
+      <div style="flex:1">${ST}<p style="text-align:center;font-weight:bold">APPLICATION FOR INTERIM ORDER</p>${ST}</div>
+    </div>
+    <p style="margin-top:12px">LET ALL PARTIES concerned attend before Master <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> sitting in Court on the <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)} at 4:30 o&rsquo;clock in the afternoon at High Court on the hearing of an application by <strong>${E(nm)}</strong>, the Debtor for an order in the following items: -</p>
+    <p class="ind1" style="margin-top:12px">That there be made in respect of the Debtor an interim order pursuant to Section 20 and 20A of the Bankruptcy Ordinance. &nbsp; On the ground that the Debtor intends to make a proposal to his creditors for a voluntary arrangement within the meaning of Section 2 of the Ordinance.</p>
+    <p style="margin-top:12px">AND TAKE NOTICE that the Debtor seeks an order pursuant to Section 20 of the Ordinance that, whilst any interim order is pending, all actions, executions or other legal process against the property or person of the Debtor be stayed.</p>`));
+
+  // PAGE 2: Application for Interim Order body p.2
+  pages.push(pg(`
+    <p class="ind1">AND FURTHER TAKE NOTICE that in support of this application there will be read the affirmation of the Debtor affirmed on <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)}.</p>
+    <p style="margin-top:20px">Dated this <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)}</p>
+    <p style="margin-top:20px">Signed: <span class="sig"></span><br>${E(solName)}<br>Solicitors for the Debtor</p>
+    <p style="margin-top:16px">The names and address of the persons upon which it is intended to serve this application are: -</p>
+    <p class="ind1" style="margin-top:10px">The Registrar<br>High Court</p><p class="ind1">And</p><p class="ind1"><strong>${E(nomName)}</strong>, ${E(nomFirm)} of ${E(nomAddr)}</p>
+    <p style="margin-top:14px">The above-named Debtor is required after the service of this Order upon him to attend the trustee at such time and place as the trustee may specify.</p>
+    <p style="margin-top:10px">This application was taken out by <strong>${E(solName)}</strong> of ${E(s.solAddr1)}, ${E(s.solAddr2)}, ${E(s.solAddr3)}, Solicitors for the Debtor, <strong>${E(nm)}</strong></p>
+    <p style="margin-top:10px">Estimated time: 15 minutes</p>`));
+
+  // PAGE 3: Backsheet
+  pages.push(pg(`${courtHdr()}${ST2}
+    <p style="text-align:center;font-weight:bold">APPLICATION FOR INTERIM ORDER</p>${ST2}
+    <p style="text-align:center;margin-top:16px">Filed on <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)}</p>
+    <div style="text-align:center;margin-top:220px">
+      <p style="font-weight:bold;text-decoration:underline">${E(solName)}</p><p><em>Solicitors for the Debtor</em></p>
+      <p>${E(s.solAddr1)}<br>${E(s.solAddr2)}<br>${E(s.solAddr3)}</p><p>Tel: ${E(s.solTel)} &nbsp;&nbsp;&nbsp;&nbsp; Fax: ${E(s.solFax)}</p><p>Ref: ${E(solRef)}</p>
+    </div>`));
+
+  // PAGE 4: Affirmation p.1
+  pages.push(pg(`${courtHdr()}${ST}
+    <p style="text-align:center;font-weight:bold">AFFIRMATION OF ${E(nm)} (${E(chi)}),<br>(IN SUPPORT OF APPLICATION FOR INTERIM ORDER)</p>${ST}
+    <p style="margin-top:12px">I, <strong>${E(nm)}</strong> of ${E(addr)}, do solemnly, sincerely and truly affirm and say as follows: -</p>
+    <p style="margin-top:14px">1. &nbsp; I make this affirmation in support of my application for an interim order under Sections 20 and 20A of the Bankruptcy Ordinance (Chapter 6) and pursuant to Rule 122E of the Bankruptcy Rules (Cap. 6 sub. leg.).</p>
+    <p style="margin-top:14px">2. &nbsp; There is exhibited hereto and marked &ldquo;<strong>${E(sf)}-1</strong>&rdquo; the IVA Proposal.</p>
+    <p style="margin-top:14px">3. &nbsp; There is exhibited hereto and marked &ldquo;<strong>${E(sf)}-2</strong>&rdquo; a copy of the notice to my intended nominee under Rule 122D of the Bankruptcy Rules (Cap. 6 sub. leg.) endorsed to the effect that he agrees so to act.</p>`));
+
+  // PAGE 5: Affirmation p.2
+  pages.push(pg(`
+    <p>4. &nbsp; The reasons for making the application are set out in my said proposal.</p>
+    <p style="margin-top:14px">5. &nbsp; No execution or other legal process has been commenced against me.</p>
+    <p style="margin-top:14px">6. &nbsp; I am able to petition for my own bankruptcy.</p>
+    <p style="margin-top:14px">7. &nbsp; No previous application for an interim order has been made by me or respect of me in the period of 12 months ending with the date of this affirmation.</p>
+    <p style="margin-top:14px">8. &nbsp; <strong>${E(nomName)}</strong> of ${E(nomFirm)} of ${E(nomAddr)} is a person who is experienced in insolvency matters and is willing to act in relation to the proposal.</p>
+    <div style="margin-top:40px;font-size:12pt">
+      <p>Affirmed at <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>)</p>
+      <p><span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>)</p>
+      <p>On this <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)} &nbsp;&nbsp;&nbsp;)</p>
+      <p style="margin-top:10px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Before me,</p>
+    </div>`));
+
+  // PAGE 6: Exhibit Dctm-1 Cover
+  pages.push(pg(`${courtHdr()}
+    <p style="text-align:center;text-decoration:underline;font-weight:bold;margin-top:20px">EXHIBIT</p>
+    <p style="margin-top:14px">This is the exhibit marked &ldquo;<strong>${E(sf)}-1</strong>&rdquo; referred to in the Affirmation of <strong>${E(nm)}</strong> affirmed on the <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)}.</p>
+    <table class="soa" style="margin-top:16px">
+      <tr><td style="text-decoration:underline">Date</td><td style="text-decoration:underline">Description</td><td class="r" style="text-decoration:underline">No. of Pages</td></tr>
+      <tr><td>${E(soaDate)}</td><td>Proposal for a voluntary arrangement</td><td class="r">39</td></tr>
+      <tr style="margin-top:10px"><td></td><td style="padding-top:10px">Before me,</td><td></td></tr>
+    </table>`));
+
+  // PAGE 7: Proposal
+  pages.push(pg(`${courtHdr()}${ST}
+    <p style="text-align:center;font-weight:bold">PROPOSAL FOR A VOLUNTARY ARRANGEMENT</p>${ST}
+    <p style="margin-top:12px">I, <strong>${E(nm)}</strong> of ${E(addr)}, the abovenamed debtor, submit the following proposal (&ldquo;the Proposal&rdquo;) for a Voluntary Arrangement in accordance with Rule 122C of the Bankruptcy Rules.</p>
+    <p class="sec-hdr">1. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Interpretation</p>
+    <p>In the Proposal unless the context otherwise requires:</p>
+    <p style="margin-top:10px">(a) &nbsp; the following words and expressions shall have the following meanings:</p>
+    <p class="ind2" style="margin-top:10px">i. &nbsp;&nbsp;&nbsp; &ldquo;Creditors&rdquo; means the creditors listed on Lists C, D and E of Appendix 1;</p>
+    <p class="ind2" style="margin-top:10px">ii. &nbsp;&nbsp;&nbsp; &ldquo;Excluded Assets&rdquo; means the assets to be excluded from IVA listed on list A of Appendix 1;</p>`));
+
+  // PAGE 8
+  pages.push(pg(`
+    <p class="ind2">iii. &nbsp;&nbsp;&nbsp; &ldquo;IVA&rdquo; means the voluntary arrangement contemplated by this Proposal including any modifications contemplated by Section 20F of the Ordinance and as from time to time (if at all) varied or amended in accordance with this Proposal;</p>
+    <p class="ind2" style="margin-top:10px">iv. &nbsp;&nbsp;&nbsp; &ldquo;IVA Assets&rdquo; means the assets to be made to the IVA more particularly described in paragraph 5.2;</p>
+    <p class="ind2" style="margin-top:10px">v. &nbsp;&nbsp;&nbsp; &ldquo;IVA Creditor&rdquo; or &ldquo;IVA Creditors&rdquo; means any creditor other than a secured creditor in respect of a Liability who is bound by the IVA whether by virtue of the Ordinance or the Rules or by subsequent undertaking or agreement with the Nominee that he shall be bound by the approval of the IVA subject to proof of his or its debts;</p>`));
+
+  // PAGE 9
+  pages.push(pg(`
+    <p class="ind2">vi. &nbsp;&nbsp;&nbsp; &ldquo;Liability&rdquo; means of any obligation or liability present, future, prospective or contingent in existence as at the date of the creditors&rsquo; meeting summoned under Rule 122M of the Rules or arising Out of any act, omission, contract, policy, transaction or arrangement effected on or before that date, whether or not for a fixed or unliquidated amount, whether or not involving the payment of money, which arises in any jurisdiction or in any manner whatsoever and is owed by me, to my IVA Creditors, including without limitation, those set on lists C, D and E of Appendix 1;</p>
+    <p class="ind2" style="margin-top:10px">vii. &nbsp;&nbsp;&nbsp; &ldquo;Intended Nominee&rdquo; means <strong>${E(nomName)}</strong>, as specified in paragraph 5.17;</p>
+    <p class="ind2" style="margin-top:10px">viii. &nbsp;&nbsp;&nbsp; &ldquo;Ordinance&rdquo; means the Bankruptcy Ordinance (Chapter 6 of the Laws of Hong Kong), as from time to time in force; &ldquo;Rules&rdquo; means the Bankruptcy Rules, enacted pursuant to the Ordinance, as from time to time in force;</p>
+    <p class="ind2" style="margin-top:10px">ix. &nbsp;&nbsp;&nbsp; &ldquo;Nominee&rdquo; means the individual referred to in paragraph 5.17;</p>`));
+
+  // PAGE 10
+  pages.push(pg(`
+    <p class="ind2">x. &nbsp;&nbsp;&nbsp; &ldquo;Court&rdquo; means any court having first instance jurisdiction in respect of this IVA and any and all courts exercising appellate jurisdiction from there;</p>
+    <p class="ind2" style="margin-top:10px">xi. &nbsp;&nbsp;&nbsp; &ldquo;Proposal&rdquo; means this document with all appendices and other documents attached hereto or referred to herein subject to and together with any amendments or modifications that may be made hereto, whether such be made at or before the creditors&rsquo; meeting summoned pursuant to Rule 122M of the Rules, provided that any such amendments or modifications shall be in writing signed by me;</p>
+    <p class="ind2" style="margin-top:10px">xii. &nbsp;&nbsp;&nbsp; &ldquo;Debtor&rdquo; means <strong>${E(nm)}</strong> (Holder of Hong Kong Identity Card No. ${E(id)})</p>`));
+
+  // PAGE 11
+  pages.push(pg(`
+    <p style="margin-top:10px">(b) &nbsp; words and expressions defined in the Ordinance or the Rules shall bear the meanings thereby attributed to them;</p>
+    <p style="margin-top:6px">(c) &nbsp; reference to &ldquo;Sections&rdquo;, &ldquo;Schedules&rdquo; and &ldquo;Rules&rdquo; are references to the Sections and Schedules of the Ordinance and the Rules;</p>
+    <p style="margin-top:6px">(d) &nbsp; references to paragraph numbers and Appendices are to the numbered paragraphs and Appendices in and to this Proposal;</p>
+    <p style="margin-top:6px">(e) &nbsp; paragraph headings and other headings are for ease of reference only and shall not affect the interpretations of this Proposal; and</p>
+    <p style="margin-top:6px">(f) &nbsp; the singular includes the plural, the masculine includes the feminine and vice versa.</p>
+    <p class="sec-hdr" style="margin-top:14px">2. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Background of the Debtor</p>
+    <p>2.1 &nbsp; It is appropriate to set out the circumstances surrounding the presentation of this Proposal.</p>
+    <p style="margin-top:10px">2.2 &nbsp; ${E(s.jobDesc)}</p>
+    <p style="margin-top:10px">2.3 &nbsp; ${E(s.accomDesc)}</p>`));
+
+  // PAGE 12
+  pages.push(pg(`
+    <p>2.4 &nbsp; I am indebted to various creditors including banks and finance companies. The aggregate amount of my indebtedness is HK$<strong>${E(F(totalUnsec))}</strong> which is more particularly set out in Appendix 1 hereto. I am indebted principally attributed to overspending on personal expenditure as a result of poor management on financial affairs. I had to rely on credit facilities to support my overspending. Gradually, I realized the mistakes I made and started to carry on a tight control on my daily expenditures but my debts have accrued to an unaffordable level.</p>
+    <p style="margin-top:10px">2.5 &nbsp; It is impossible for me to satisfy these liabilities from my monthly income in view of the recurrent high rates of interests charged by each individual creditor. I cannot satisfy all the Creditors even just paying each of them the minimum payment each month at the same time. I need some form of restructuring of any debts. Otherwise, my bankruptcy might become unavoidable.</p>
+    <p style="margin-top:10px">2.6 &nbsp; Up till now, none of the Creditors has taken legal action against me or apply for my bankruptcy. As appears from the Statement of Affairs annexed hereto as Appendix 1 and also from the comparison of the estimated return to creditors in my bankruptcy and in the IVA annexed hereto as Appendix 3, it is clear that I am insolvent in that I am unable to pay my debts as and when they fall due and my liabilities, including contingent liabilities, exceed my assets. In view of the situation, I can have three alternatives, namely:</p>
+    <p class="ind1">(a) &nbsp; petition for my own bankruptcy; or</p>
+    <p class="ind1">(b) &nbsp; allow a bankruptcy petition to be filed against me by a creditor; or</p>
+    <p class="ind1">(c) &nbsp; enter into an IVA with the Creditors.</p>
+    <p>I elected an IVA, which I believe will be acceptable to my creditors.</p>`));
+
+  // PAGE 13
+  pages.push(pg(`
+    ${RL('Rule<br>122C<br>(1)','<p class="sec-hdr">3. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Desirability of a Voluntary Arrangement</p><p>3.1 &nbsp; In my humble opinion, an IVA is desirable due to the following reasons:</p><p class="ind1">(a) &nbsp; I am confident that I can continue with my employment, which provides me with a steady recurrent income for repaying the Creditors.</p><p class="ind1">(b) &nbsp; Higher and/or quicker dividend to the Creditors under IVA. Appendix 3 is a comparison between the position in case of bankruptcy and IVA.</p><p class="ind1">(c) &nbsp; Avoid the stigma and constraints imposed by bankruptcy.</p>')}
+    ${RL('Rule<br>122C<br>(1)','<p class="sec-hdr">4. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Acceptability to Creditors</p><p>4.1 &nbsp; Below is an explanation as to why I believe that it is the best interests of the Creditors that I enter into an IVA and why the Creditors may be expected to concur with the Proposal.</p><p style="margin-top:10px">4.2 &nbsp; I earn a monthly income of approximately HK$<strong>'+E(F(totalInc))+'</strong> from my current employment. If I am forced to apply for bankruptcy, I am afraid that my employer would fire me immediately because my employer concerns very much about the personal and financial stability and credibility of staff. If I am to lose my job at this stage, it would be extremely difficult if not possible for me to find another job in today&rsquo;s labour market.</p>')}`));
+
+  // PAGE 14 (Expenses)
+  pages.push(pg(`
+    <p>4.3 &nbsp; A comparison of monthly income and expenses analysis between bankruptcy and IVA scenario is provided as Appendix 2. In case of bankruptcy, even if I am lucky enough to maintain the present earning level I would be only able to repay HK$<strong>${E(F(s.bkContrib))}</strong> per month to my creditors. On the other hand, if the IVA is accepted by the Court and the Creditors, I am prepared to cut down my personal expenditure to a level below bankruptcy scenario so as to increase my monthly contribution to repay my creditors as soon as possible. Under the IVA, after Mandatory Provident Fund contribution, household bills and my living expenses amounting in a sum of HK$<strong>${E(F(totalExpIva))}</strong> (Details of which are as follows), I would be in a position to contribute HK$<strong>${E(F(grossContrib))}</strong> per month to my creditors.</p>
+    <p style="font-weight:bold;text-decoration:underline;margin-top:10px">Details of expenses</p>
+    <table class="soa" style="border:1px solid #ccc;margin-top:4px"><tbody>${expTableRows}
+      <tr class="b" style="background:#f5f5f5"><td style="padding:4px 8px">Total Expenses</td><td style="padding:4px 8px;text-align:right">${E(F(totalExpIva))}</td></tr>
+    </tbody></table>`));
+
+  // PAGE 15
+  pages.push(pg(`
+    <p>4.4 &nbsp; A comparison of the estimated return to creditors in my bankruptcy and in the IVA is provided as Appendix 3. In bankruptcy, my creditors would receive a return of approximately <strong>${E(bkDiv)}%</strong> whereas the estimated return to my creditors if my IVA is approved would be <strong>${E(ivaDiv)}%</strong>.</p>
+    <p style="margin-top:10px">4.5 &nbsp; If the IVA is approved, I will pay interest to all the IVA Creditors at the annual rate approximately <strong>${E(s.interestRate)}%</strong> on the outstanding Liability until all IVA Creditors are fully paid. My creditors will not only recover the full amount of debt but also interest.</p>
+    ${RL('Rule<br>122C<br>(1)','<p style="margin-top:10px">4.6 &nbsp; Save as otherwise stated, all figures for assets and liabilities are estimated to the best of my knowledge, information and belief. It is my honest belief that a voluntary arrangement will facilitate a more expedient and economically acceptable realization of the IVA Assets which will be to the advantage of the IVA Creditors for the following reasons:</p><p class="ind1">(a) &nbsp; The arrangement is a more suitable procedure for dealing with my assets as it is more flexible and efficient than a formal bankruptcy; and</p><p class="ind1">(b) &nbsp; Whilst the return to creditors will be relatively small, an even lesser return would be received by creditors in the event of bankruptcy.</p>')}
+    ${RL('Rule<br>122C<br>(1)','<p style="margin-top:10px">4.7 &nbsp; It is therefore in the best interests of the IVA Creditors that the Proposal be approved.</p>')}`));
+
+  // PAGE 16
+  pages.push(pg(`
+    ${RL('Rule<br>122C<br>(2)(a)<br>(i)&amp;(ii)','<p class="sec-hdr">5. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Principal Terms of the Proposal</p><p>5.1 &nbsp; I have provided full details of my assets and liabilities, which are reflected in the Statement of Affairs as shown in Appendix 1. As at the date of this Proposal, my assets totaling about HK$<strong>'+E(F(totalAssets))+'</strong> include:</p><p class="ind1">(a) &nbsp; Cash and bank balances of HK$<strong>'+E(F(totalBankBal))+'</strong> (estimated in accordance with available balance as at the date of the Statement of Affairs);</p><p class="ind1">(b) &nbsp; Costs on accounts held by my solicitors or Nominee in respect of my IVA of HK$<strong>'+E(F(s.deposit))+'</strong> (estimated in accordance with a receipt issued from my solicitors or Nominee);</p><p class="ind1">(c) &nbsp; My Mandatory Provident Fund of about HK$<strong>'+E(F(s.mpf))+'</strong> (estimated if when I get retired, permanent departure from Hong Kong or death at the date of this proposal).</p>'+(s.lifeIns>0?'<p class="ind1">(d) &nbsp; My life insurance policy of about HK$<strong>'+E(F(s.lifeIns))+'</strong>.</p>':'')+'<p style="margin-top:10px">Out of the assets set out above, I have not pledged any of my assets with any creditors.</p>')}`));
+
+  // PAGE 17
+  pages.push(pg(`
+    ${RL('Rule<br>122C<br>(2)(a)<br>(iii)&amp;<br>(2)(b)','<p>5.2 &nbsp; The IVA Assets will comprise the monthly payments totaling about HK$<strong>'+E(F(totalVoluntary))+'</strong> described below under paragraph 5.7. The IVA Assets are not and will continue not to be charged in favour of any of IVA Creditors. The following of my assets are excluded from the distributions to IVA Creditors under the IVA (see list of A of Appendix 1):</p><p class="ind1">(a) &nbsp; Cash and bank balances of HK$<strong>'+E(F(totalBankBal))+'</strong> because it will be used by me as day to day expenses; and</p><p class="ind1">(b) &nbsp; Costs on accounts held by my solicitors or Nominee of HK$<strong>'+E(F(s.deposit))+'</strong> because it will be used as costs and disbursements for my IVA; and</p><p class="ind1">(c) &nbsp; My Mandatory Provident Fund about HK$<strong>'+E(F(s.mpf))+'</strong> as according to its term, payment of benefits under my Mandatory Provident Fund will be made only when I get retired, permanent departure from Hong Kong or death.</p>')}
+    ${RL('Rule<br>122C<br>(2)(b)','<p style="margin-top:10px">5.3 &nbsp; No third party will be contributing to any funds to my IVA. Save as to my assets as stated in 5.2 herein no other assets will be included in my IVA.</p>')}`));
+
+  // PAGE 18
+  pages.push(pg(`
+    ${RL('Rule<br>122C<br>(2)(c)<br>(i)&amp;(ii)','<p>5.4 &nbsp; My liabilities are set out in the Statement of Affairs at Appendix 1.</p><p>My secured liabilities are nil.<br>My preferential liabilities are nil.<br>My unsecured liabilities are HK$<strong>'+E(F(totalUnsec))+'</strong>.<br>My debts due to associated creditors are nil.<br>My total liabilities are HK$<strong>'+E(F(totalUnsec))+'</strong>.</p><p style="margin-top:10px">The funds provide by me to the Nominee will be held by him on trust for the purpose of distribution to the IVA Creditors subject to the terms of the IVA and will be paid out in the following order of priority;</p><p class="ind1">(a) &nbsp; Firstly, to pay the expenses of the IVA as specified in paragraph 18.1; and</p><p class="ind1">(b) &nbsp; Secondly, in payment of the IVA Creditors shown on list C of Appendix 1 (if any); and</p><p class="ind1">(c) &nbsp; Thirdly, in payment of the IVA Creditors shown on lists D and E of Appendix 1 in aggregate on pari passu basis.</p><p style="margin-top:8px">My subsequent bankruptcy (if any) of the appointment of a trustee (if any) over any of my assets shall not terminated the trust hereby created and any implied termination is hereby negated.</p>')}`));
+
+  // PAGE 19
+  pages.push(pg(`
+    ${RL('Rule<br>122C<br>(2)(c)<br>(ii)','<p>5.5 &nbsp; As far as I know, there are no circumstances which would give rise to the possibility of claims being made under Sections 49 (Transactions at an Undervalue), 50 (Unfair Preferences) and 71A (Extortionate Credit Transactions) (which sections have been explained to me) in the event that I should be adjudged bankrupt.</p>')}
+    ${RL('Rule<br>122C<br>(2)(d)','<p style="margin-top:10px">5.6 &nbsp; As far as I know, neither have I been indebted to any creditors under a guarantee, nor have any other persons acted as guarantors of my debts.</p>')}
+    ${RL('Rule<br>122C<br>(2)(e)','<p style="margin-top:10px">5.7 &nbsp; I propose to contribute HK$<strong>'+E(F(grossContrib))+'</strong> per month to the IVA for a period of <strong>'+E(s.ivaTerm)+'</strong> months (i.e., <strong>'+E(ivaYrs)+'</strong> years) totaling a sum of HK$<strong>'+E(F(totalVoluntary))+'</strong> by way of bank transfer on a monthly basis, to the account referred to in paragraph 5.11 for the purpose of the IVA. After deducting the implementation and other necessary expenses of the proposed IVA, my total contribution to the unsecured creditors will be HK$<strong>'+E(F(ivaAvailable))+'</strong>. Based on the amount of unsecured liabilities as stated in Appendix 1, the unsecured creditors will receive a <strong>'+E(ivaDiv)+'%</strong> return of the debt with an interest at the annual rate approximately <strong>'+E(s.interestRate)+'%</strong> at the end of the IVA term.</p>')}`));
+
+  // PAGE 20
+  pages.push(pg(`
+    ${RL('Rule<br>122C<br>(2)(f)','<p>5.8 &nbsp; It is proposed that there will be a monthly interim dividend distribution to the IVA Creditors, in proportion to the amount owed to them according to their respective claims as admitted in the IVA by the Nominee. Subject to any challenge made by any creditors pursuant to Section 20J of the Ordinance or the direction of the Court, the first interim dividend shall be distributed within 7 weeks from the date of the approval in the creditors&rsquo; meeting and the subsequent dividends will be paid on the 15<sup>th</sup> day of each and every month. A schedule showing the estimated distribution of IVA dividends to IVA Creditors is attached as Appendix 4.</p>')}
+    ${RL('Rule<br>122C<br>(2)(g)','<p style="margin-top:10px">5.9 &nbsp; The Nominee&rsquo;s remuneration for services provided up to and including the creditors&rsquo; meeting shall be HK$<strong>'+E(F(nomLumpSum))+'</strong> plus disbursements which will be paid out of the cost on accounts held by my solicitors or nominee. The estimated monthly remuneration of the Nominee in implementing this Proposal is HK$<strong>'+E(F(s.nomMonthly))+'</strong>.</p>')}
+    ${RL('Rule<br>122C<br>(2)(h)','<p style="margin-top:10px">5.10 &nbsp; No third party will be offering guarantees or securities for the purpose of my IVA.</p>')}
+    ${RL('Rule<br>122C<br>(2)(i)','<p style="margin-top:10px">5.11 &nbsp; Funds held for the purpose of the IVA are to be banked, invested or otherwise dealt with, pending distribution, with such bank as the Nominee shall nominated in the name of the Nominee and the cheques or orders for drawing out of the said money or part thereof shall be signed by the Nominee. Any funds held by the Nominee which in his opinion are not required for the immediate purposes of the IVA may be placed by him on term deposit with the relevant bank.</p>')}
+    ${RL('Rule<br>122C<br>(2)(j)','<p style="margin-top:10px">5.12 &nbsp; Payments and dividends to the Creditors shall be paid by cheque drawn in Hong Kong Dollars on a Hong Kong branch of a recognised bank and sent by post at the risk of IVA Creditors to them at their respective addresses as notified by them to the Nominee. A final dividend shall be paid on termination of this IVA, that is the '+E(s.ivaTerm)+' months after the date on which the IVA takes effect. Dividends shall be paid when the creditors&rsquo; claims have been agreed and where sufficient funds are available to permit the payment of a dividend. If any dividend remains unclaimed or unpaid for 6 months after the Nominee issue notice that the IVA has been fully implemented:</p><p class="ind1">(a) &nbsp; The Nominee shall pay the unclaimed dividends to the Official Receiver pursuant to Section 128 of the Ordinance; and</p><p class="ind1">(b) &nbsp; The Nominee shall have no further duties, obligations or liabilities to those IVA Creditors.</p>')}`));
+
+  // PAGE 21
+  pages.push(pg(`
+    ${RL('Rule<br>122C<br>(2)(k)','<p>5.13 &nbsp; There shall be no business for the Nominee to oversee during the implementation of my IVA.</p>')}
+    ${RL('Rule<br>122C<br>(2)(l)','<p style="margin-top:10px">5.14 &nbsp; I am not prepared to obtain further credit during the implementation of my IVA.</p>')}
+    ${RL('Rule<br>122C<br>(2)(m)','<p style="margin-top:10px">5.15 &nbsp; The remuneration and the expenses of the Nominee will be borne by me and payable out of the sum made available pursuant to this Proposal and to be paid as set out in paragraph 5.4.</p>')}
+    ${RL('Rule<br>122C<br>(2)(n)','<p style="margin-top:10px">5.16 &nbsp; The functions undertaken by the Nominee include:</p><p class="ind1">(a) &nbsp; Agreement of claims lodged by my IVA Creditors in accordance with the provisions outlined herein;</p><p class="ind1">(b) &nbsp; The Nominee shall have no further duties, obligations or liabilities to those IVA Creditors.</p><p class="ind1">(c) &nbsp; Payment and distribution of IVA dividends to IVA Creditors in accordance with the provisions outlined herein;</p><p class="ind1">(d) &nbsp; Monitoring the implementation of the IVA and communicating with the IVA Creditors in case of my default under this Proposal in accordance with the provisions outlined herein;</p><p class="ind1">(e) &nbsp; Presenting a bankruptcy petition against me pursuant to Section 20L of the Ordinance in accordance with the provisions outlined herein; and</p><p class="ind1">(f) &nbsp; Exercise of the functions given by the IVA and under the Ordinance and Rules provided that such exercise of functions given by the IVA shall be within the unfettered discretion of the Nominee who shall be under no obligation to exercise all or any of the functions and powers conferred upon him other than those imposed or implied by law.</p>')}
+    ${RL('Rule<br>122C<br>(2)(o)','<p style="margin-top:10px">5.17 &nbsp; '+E(nomDesc)+'</p>')}`));
+
+  // PAGE 22-35 : Boilerplate Clauses
+  pages.push(pg(`
+    <p class="sec-hdr">6. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Agreement of Claims</p>
+    <p>6.1 &nbsp; As soon as possible after the approval of the IVA (provided no application under Section 20J and /or rule 122Q is pending), the Nominee shall send a notice to each IVA Creditor shown in Proposal and the Statement of Affairs or of whom they subsequently become aware (a &ldquo;Claim Notice&rdquo;), requiring him to provide such details as the Nominee thinks fit of the amount claimed to be due from me.</p>
+    <p style="margin-top:12px">6.2 &nbsp; The Nominee shall:</p>
+    <p class="ind1">(a) &nbsp; Send a Claim Notice to any other person to whom he believes I may be indebted. In the event that such a person (or any other person who did not receive notice of the Proposal or the creditors&rsquo; meeting it contemplates) claims I am indebted to him in respect of a Liability, the Nominee may, if he agrees I am so indebted, whether in whole or in part, seek to obtain his written agreement to be bound by the IVA;</p>
+    <p class="ind1">(b) &nbsp; be entitled but not obliged to insert a similar notice in such newspapers as he considers appropriate;</p>
+    <p class="ind1">(c) &nbsp; be entitled to ask for any further details or documentation he thinks necessary for the purpose of establishing the amount due to any person claiming to be an IVA Creditor.</p>`));
+
+  pages.push(pg(`
+    <p>6.3 &nbsp; No creditor shall be entitled to receive any payment of dividend from the Nominee or any other person under the terms of the IVA unless:</p>
+    <p class="ind1">(a) &nbsp; He is an IVA Creditor;</p>
+    <p class="ind1">(b) &nbsp; He has submitted his claim in written form to the Nominee;</p>
+    <p class="ind1">(c) &nbsp; The Nominee has, subject to paragraph 6.5 below, admitted his claim for the purpose participation in any payment of dividend under the IVA.</p>
+    <p style="margin-top:12px">6.4 &nbsp; The amount on which payments of dividends to an IVA Creditor are to be calculated under the IVA shall, subject as set out in paragraphs 6.3 and 6.5, be the sum for which a proof would have been admitted had a bankruptcy order been made against me on the date of the creditors&rsquo; meeting summoned under Rule 122M, save that where interest is payable on a Liability, interest shall continue to accrue until payment of that Liability in full. Accordingly the provisions of the Ordinance and the Rules apply as if references therein to &ldquo;bankrupt&rdquo;, &ldquo;bankruptcy&rdquo; or &ldquo;trustee&rdquo; were respectively to me, the IVA and the Nominee and cognate expressions shall be construed accordingly.</p>
+    <p style="margin-top:12px">6.5 &nbsp; A claim may be admitted for inclusion in the IVA by the Nominee either for the whole amount claimed by the IVA Creditor or for part only of that amount and if the Nominee rejects a claim in whole or in part he shall prepare a written statement of his reasons for doing so and shall send it forthwith to the relevant IVA Creditor. In the event of the claim of any IVA Creditor or purported IVA Creditor being rejected (whether in whole or in part) by the Nominee, the IVA Creditor or purported IVA Creditor shall have the right of application to the court to determine the admissibility or otherwise of such proof of debt or claim provided that any such application must be made within 21 days of the IVA Creditor receiving the written statement mentioned earlier in this paragraph.</p>
+    <p style="margin-top:12px">6.6 &nbsp; Without prejudice to paragraph 6.5, to the extent that any IVA Creditor (the &ldquo;Relevant IVA Creditor&rdquo;) has received or at any time in the future receives payment or settlement of a Liability otherwise than pari passu with other IVA Creditors of the same class;</p>
+    <p class="ind1">(a) &nbsp; The Nominee shall be entitled to make such adjustments to the claim of that IVA Creditor; or</p>
+    <p class="ind1">(b) &nbsp; I shall, upon being requested by the Nominee in writing to do so, make such additional payments to them as are necessary;</p>
+    <p>in either case to ensure that the Relevant IVA Creditor is not placed in a position which, in the event of my bankruptcy, would be better than the position the Relevant IVA Creditor would have been in if that payment or settlement had not been made.</p>`));
+
+  pages.push(pg(`
+    <p class="sec-hdr">7. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Functions and duties of Nominee</p>
+    <p>7.1 &nbsp; The IVA does not contemplate, and the Nominee shall be free from any responsibility for the making of, any payments by way of dividend, distribution or otherwise, to creditors other than as set out in paragraph 5.4 and 5.8 and 5.12.</p>
+    <p style="margin-top:10px">7.2 &nbsp; In any event, the Nominee shall not be obliged to make any payment to creditors until not less than 28 days have elapsed since the first dispatch by him of a notice requesting persons believed to be creditors to submit their claims. Subject thereto, and provided no application under Section 20J or 20K(1) or appeal under Rule 122Q is pending, the Nominee shall make payments or distributions to IVA Creditors at the time or times specified in the IVA or if no other provision is made, at such time or times as he considers convenient.</p>
+    <p style="margin-top:10px">7.3 &nbsp; My IVA shall continue until the Nominee holds no further funds for distribution to IVA Creditors in accordance with the terms of the IVA whereupon the Nominee will comply with the provisions of Rule 122ZC(1), (2) and (3) or until the Nominee issues a certificate of default under clause 7.5 hereof.</p>
+    <p style="margin-top:10px">7.4 &nbsp; On termination of the IVA, for whatever reason, the Nominee shall be entitled to retain from any funds under his control such funds as he thinks fit for such period as he thinks fit, on account of his fees, costs and expenses in addition to any other sum contemplated to be retained by him pursuant to the Proposal.</p>`));
+
+  pages.push(pg(`
+    <p>7.5 &nbsp; In the event that the Nominee is of the opinion that I have committed a default pursuant to Sections 20L(1)(a), (b) or (c), he shall issue a certificate of default to me and immediately send copies to the IVA Creditors.</p>
+    <p style="margin-top:8px">The issue of a certificate of default shall:</p>
+    <p class="ind1">(a) &nbsp; not release me from any obligation or undertaking under the IVA;</p>
+    <p class="ind1">(b) &nbsp; not prejudice the Nominee&rsquo;s right to exercise any powers under the IVA; and</p>
+    <p class="ind1">(c) &nbsp; not prejudice the collection and distribution of the funds under the Nominee&rsquo;s control in accordance with the terms of the IVA.</p>
+    <p style="margin-top:8px">Following the issue of a certificate of default the Nominee shall summon a meeting of the IVA Creditors as to whether the Nominee should petition for my bankruptcy pursuant to Section 3(1)(c) or seek the directions of the Court pursuant to Section 20K(2) to modify the IVA.</p>
+    <p style="margin-top:10px">7.6 &nbsp; The Nominee shall have power to bring, institute or defend any action or legal proceedings relating to the property comprised in my estate and at the expense of the estate.</p>
+    <p style="margin-top:10px">7.7 &nbsp; Any creditors&rsquo; meeting contemplated by the IVA will be summoned and conducted pursuant to the provisions of Rules 122M, 122N, 122O, 122Q, and 122R save that any references in those Rules to the Intended Nominee shall be read as reference to the Nominee and an appeal under Rule 122Q shall not be made after the end of the period of 28 days beginning with the day on which any decision is taken upon which the appeal is founded. Notice of any such meeting shall include such information, as the Nominee deems necessary.</p>
+    <p style="margin-top:10px">7.8 &nbsp; The Nominee has power to employ agents including solicitors to assist in any respect of the IVA.</p>`));
+
+  pages.push(pg(`
+    <p>7.9 &nbsp; Should a vacancy arise in the office of Nominee by death or otherwise, that vacancy shall be filled by the IVA Creditors at a meeting:</p>
+    <p class="ind1">(a) &nbsp; convened for the purpose by:</p>
+    <p class="ind2">1. &nbsp; any creditor bond;</p>
+    <p class="ind2">2. &nbsp; any who is in partnership with the Nominee immediately before the vacancy occurred;</p>
+    <p class="ind1">(b) &nbsp; and chaired by:</p>
+    <p class="ind2">1. &nbsp; the convenor;</p>
+    <p class="ind2">2. &nbsp; any person qualified to act as a Nominee in relation to the Debtor;</p>
+    <p class="ind2">3. &nbsp; a partner or senior employee of the former Nominee&rsquo;s firm experienced in insolvency matters.</p>
+    <p style="margin-top:10px">7.10 &nbsp; I shall at the request of the Nominee, execute upon such terms as the Nominee might require, such deeds, transfers, assignments, deeds of trust, powers of attorney and other deeds, instruments or agreements as may be required by the Nominee for the implementation of the IVA.</p>
+    <p class="sec-hdr" style="margin-top:14px">8. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nominee&rsquo;s right to apply to the Court</p>
+    <p>8.1 &nbsp; The right of the Nominee to apply to the Court for directions under Section 20K shall be absolute and unfettered.</p>`));
+
+  pages.push(pg(`
+    <p class="sec-hdr">9. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nominee&rsquo;s powers</p>
+    <p>9.1 &nbsp; The powers of the Nominee shall be those set out in this Proposal and, subject thereto, the Nominee shall have all the powers conferred upon him by virtue of the Ordinance and the Rules provided that the Nominee shall be under no obligation to exercise such powers unless expressly so required by this Proposal.</p>
+    <p style="margin-top:10px">9.2 &nbsp; Where the exercise or performance of any such power can only lawfully be exercised or performed by me then, at the written request of the Nominee, I shall exercise or perform such power. Failure to do so shall constitute failure within the meaning of this Proposal subject to my right to apply to the Court for relief pursuant to Section 20K.</p>
+    <p style="margin-top:10px">9.3 &nbsp; (a) Should the Nominee be satisfied that through reasons of default or failure (as hereinafter defined) or for any other reason the IVA is or is likely to be incapable of being complied with in accordance with its terms, he may issue to all creditors bound by this IVA and to me a notice of non-compliance which shall be in such form as he thinks fit, but which shall sufficiently identify the grounds upon which the Nominee has concluded that the IVA is or is likely to be incapable of being complied with as aforesaid.</p>
+    <p class="ind1">(b) Upon service of such notice, I shall have 28 days or such longer period as the Nominee shall allow to make good to the Nominee&rsquo;s satisfaction such matters shall have been identified in the notice, failing which failure will be deemed to have occurred within the meaning of this Proposal.</p>
+    <p style="margin-top:10px">9.4 &nbsp; The Nominee, myself and all parties bound by the IVA recognize that the Ordinance and Rules do not constitute a single statutory body of rules relating to the implementation of individual voluntary arrangements, so that situations and circumstances may arise which are not directly or indirectly provided for in this Proposal. In such situations and circumstances, and subject to the jurisdiction of the Court, the Nominee shall apply, if appropriate and feasible, the Rules as they relate to a bankruptcy, provided that such application is not prejudicial to the express provisions of the IVA.</p>
+    <p class="sec-hdr" style="margin-top:14px">10. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Exercise of Nominee&rsquo;s powers</p>
+    <p>10.1 &nbsp; If the Nominee is, for whatever reason, uncertain as to what action he should take in any situation he may within his own discretion:</p>
+    <p class="ind1">(i) &nbsp; seek the advice of the IVA Creditors; or</p>
+    <p class="ind1">(ii) &nbsp; apply so far as is possible the Ordinance and Rules as they relate to bankruptcy; or</p>
+    <p class="ind1">(iii) &nbsp; apply to the Court for directions.</p>
+    <p style="margin-top:10px">10.2 &nbsp; The Nominee may delegate to his firm and any partners, servant, employee or agent of his any or all of his duties hereunder save those which by law he is bound to perform personally.</p>`));
+
+  pages.push(pg(`
+    <p class="sec-hdr">11. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nominee&rsquo;s liability</p>
+    <p>11.1 &nbsp; Neither the Nominee, his firm, nor any of his agents, employees or servants shall, for any reason whatsoever, or in any manner whatsoever, incur any personal liability in respect of any act, deed, thing or omission carried out by them or any of them in connection with their acting as Nominee or in connection with the supervision and implementation of this IVA save as to acts of negligence or acts of dishonesty or breaches of the Nominee&rsquo;s obligations under the Ordinance, the Rules and the IVA. The Nominee will not enter into any contract or other arrangement in a position or manner so as to incur any personal liability.</p>
+    <p class="sec-hdr" style="margin-top:14px">12. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Warranty</p>
+    <p>12.1 &nbsp; I warrant that I have disclosed to the Intended Nominee full and complete particulars of:</p>
+    <p class="ind1">(a) &nbsp; all matters without exception relating to my assets and liabilities whether actual or contingent;</p>
+    <p class="ind1">(b) &nbsp; all matters which are required of me under the Ordinance and the Rules and further warrant that the contents of the Proposal are in all respects complete, accurate and true.</p>
+    <p style="margin-top:12px">12.2 &nbsp; For the general implementation of the IVA and during its subsistence, I undertake with the Nominee, unless the Court otherwise directs that, I will:</p>
+    <p class="ind1">(i) &nbsp; do all things that the Nominee may reasonably require;</p>
+    <p class="ind1">(ii) &nbsp; subject to the agreement of the Nominee and subject to his control, institute or defend any legal proceedings which touch upon or concern the IVA;</p>
+    <p class="ind1">(iii) &nbsp; attend upon the Nominee, his agents, legal advisers, employees and all others authorized by him when and where required;</p>
+    <p class="ind1">(iv) &nbsp; deliver to the Nominee upon receipt of any communications I received (save from the Nominee) which may touch upon or concern the IVA;</p>
+    <p class="ind1">(v) &nbsp; without prejudice to (iv) above, ensure that I comply with all requirements of law and all other legislation affecting my business or undertaking.</p>`));
+
+  pages.push(pg(`
+    <p class="sec-hdr">13. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Variation</p>
+    <p>13.1 &nbsp; If the Nominee shall consider that the interests of creditors are best served by variations to this IVA being incorporated after the IVA has been approved by my creditors, the Nominee may circulate creditors with details of the proposed variations and any such variation shall be deemed to be incorporated in this Proposal if he receives the approval of the requisite majority of creditors at a creditors&rsquo; meeting. For these purpose, the requisite majority means a majority in excess of three-quarters in value of the creditors voting on the resolution in person or by proxy, such value to be determined at the date of the meeting. The provisions of Rule 122R(3)-(6) of the Bankruptcy Rules, Cap. 6 shall apply to the voting in respect of any such matter.</p>
+    <p style="margin-top:10px">13.2 &nbsp; Any decision of the Nominee as to admission or rejection of votes in respect of any matter referred to in this clause shall be final and binding and provided always that any creditor or I can appeal against his decision in accordance with the applicable provisions and rules set out in the Bankruptcy Ordinance.</p>
+    <p style="margin-top:10px">13.3 &nbsp; Notwithstanding that above, the Nominee shall not propose a variation which may affect the rights of my secured or preferential creditor contrary to the provisions of Bankruptcy Ordinance.</p>
+    <p style="margin-top:10px">13.4 &nbsp; The Nominee shall not propose a variation which may prejudice an individual creditor unless he concludes that, after taking into account of the probable prejudice, the proposed variation will be in the best interests of the creditors generally.</p>
+    <p style="margin-top:10px">13.5 &nbsp; Any variation envisaged under this clause shall not take effect unless I consent to it, but if I do not so consent then unless the Nominee decides to the contrary, he shall be at liberty to present a petition for my bankruptcy provided that it is approved by the requisite majority of creditors at a creditors&rsquo; meeting called pursuant to the rules provided in my Proposal. For these purposes, the requisite majority means a majority in excess of three-quarters in value of the creditors voting on the resolution in person or by proxy, such value to be determined at the date of the meeting. The provisions of Rule 122R(3)-(6) of the Bankruptcy Rules, Cap. 6 shall apply to the voting in respect of this matter.</p>`));
+
+  pages.push(pg(`
+    <p class="sec-hdr">14. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Completion</p>
+    <p>14.1 &nbsp; On completion of the IVA, the Nominee shall give written notice to the IVA Creditors in accordance with provisions of the Rules.</p>
+    <p class="sec-hdr" style="margin-top:14px">15. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Default Petition</p>
+    <p>15.1 &nbsp; Default shall be defined in accordance with Section 20L. Upon the Nominee being satisfied that default has occurred then unless the same is regarded by him as de minimis, he shall be entitled but not obliged (subject to what follows) to petition for my bankruptcy. The Nominee shall not present any petition pursuant to Section 3(1)(c) of the Ordinance unless such has been agreed upon by a meeting of the IVA Creditors called in accordance with the terms of the IVA. I shall be given notice of any such meeting and shall be entitled to attend the same.</p>
+    <p class="sec-hdr" style="margin-top:14px">16. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Failure</p>
+    <p>16.1 &nbsp; The term &ldquo;failure of the IVA&rdquo; shall mean any of the following events:</p>
+    <p class="ind1">(i) &nbsp; any petition presented in respect of the Debtor pursuant to Section 3(1)(a) of the Ordinance upon which a bankruptcy order is made;</p>
+    <p class="ind1">(ii) &nbsp; a bankruptcy order being made on my own petition pursuant to Section 3(1)(b) of the Ordinance;</p>
+    <p class="ind1">(iii) &nbsp; any act or thing which in the opinion of the Nominee renders the implementation of the IVA as approved impossible or frustrated; and</p>
+    <p class="ind1">(iv) &nbsp; any occurrence which leads the Nominee to believe that he will not be able to issue a notice of full implementation pursuant to Rule 122ZC.</p>
+    <p style="margin-top:10px">16.2 &nbsp; The Nominee may without giving notice to any party make application to the Court pursuant to Section 20K for a direction that the IVA has failed and for such further or consequential directions as may to him seem appropriate.</p>
+    <p style="margin-top:10px">16.3 &nbsp; If the Nominee believes that failure as hereinbefore defined has occurred or is likely to occur then he may convene a meeting of the IVA Creditors do resolve that the IVA has failed and if such resolution is passed, the Nominee will then issue a notice of non-compliance and the termination provisions of this Proposal shall take effect and, subject to the terms of this Proposal, the IVA shall, on the issue of such notice, terminate forthwith.</p>`));
+
+  pages.push(pg(`
+    <p class="sec-hdr">17. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; General Power to Call Meetings</p>
+    <p>17.1 &nbsp; The Nominee may at any time and for any purpose, including without limitation to consider a modification of the IVA, convene a general meeting of IVA Creditors in accordance with Section 20E of the Ordinance and the Rules.</p>
+    <p style="margin-top:10px">17.2 &nbsp; If at any meeting so held the Nominee is dissatisfied with any resolutions so passed, he may apply to the Court for directions pursuant to Section 20K of the Ordinance and the decision of the Court shall be final.</p>
+    <p class="sec-hdr" style="margin-top:14px">18. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fees and expenses of the Intended Nominee and Nominee</p>
+    <p>18.1 &nbsp; The expenses of the IVA shall comprise:</p>
+    <p class="ind1">(a) &nbsp; the remuneration, disbursements and out-of-pocket expenses of my Intended Nominee (including the fees of any solicitors appointed by my Intended Nominee);</p>
+    <p class="ind1">(b) &nbsp; the fees of any solicitors (including disbursements and counsel&rsquo;s fee) whose appointment by me for the purpose of the application for the interim order and conduct of the IVA is agreed upon by the Nominee;</p>
+    <p class="ind1">(c) &nbsp; any expenses property incurred by the Nominee in pursuance of the IVA including, without prejudice to the generality of the foregoing;</p>
+    <p class="ind2">(i) &nbsp; the fees of any solicitor, valuer or agent retained by the Nominee;</p>
+    <p class="ind2">(ii) &nbsp; the cost of complying with any obligation placed upon the Nominee by virtue of the IVA, the Ordinance, the Rules or any other rules, regulations or orders made thereunder;</p>
+    <p class="ind2">(iii) &nbsp; such other sums as the Nominee shall be authorized or required to pay by the IVA;</p>
+    <p>and the order of priority of the expenses shall be as set out in sub-paragraphs (c)(i)-(iii) in paragraph 18.1.</p>
+    <p style="margin-top:10px">18.2 &nbsp; Other than the estimated remuneration set out in paragraph 5.9, the Nominee shall also be remunerated on the basis of his reasonable time costs when performing his duties under paragraph 15.1 and 16.3 of this Proposal, and out-of-pocket expenses (including any costs arising out of paragraphs 7.6 and 7.8) all of which will be borne by me and payable out of the sum made available pursuant to this Proposal and to be paid as set out in paragraph 5.4.</p>`));
+
+  pages.push(pg(`
+    <p class="sec-hdr">19. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Release</p>
+    <p>19.1 &nbsp; In consideration of the foregoing (but subject as set out in paragraph 19.2) the IVA Creditors hereby release me from all debts, claims and demands of the IVA Creditors respectively of whatsoever nature or kind except to the extent that such debts, claims and demands are provable in the IVA. Such release shall not prevent any of the IVA Creditors from suing or recovering payment from any other persons who may have become in any manner liable for payment of any of my debts and the IVA Creditors shall be entitled to all their remedies against such persons in the same manner as if the Proposal and its approval had not been made and given.</p>
+    <p style="margin-top:10px">19.2 &nbsp; If the Nominee issues a certificate of default and no modification of the IVA is agreed by the IVA Creditors or subsequently directed by the Court, nothing in this Proposal shall prevent the IVA Creditors from suing or recovering payment from me in respect of any debt I owe to them, or taking any other action against me which they would otherwise be entitled to take.</p>
+    <p class="sec-hdr" style="margin-top:14px">20. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Stay</p>
+    <p>20.1 &nbsp; For the duration of the IVA no IVA Creditor shall, subject to paragraph 6.5 and Section 20K, present or proceed with any bankruptcy petition relating to me or commence or continue any other proceedings, execution, other legal process, distress or take any remedy (the pursuance of which does not require the taking of any legal or quasi-legal step) against me or my residence premises for the purpose of obtaining payment or settlement of any Liability.</p>`));
+
+  pages.push(pg(`
+    <p class="sec-hdr">21. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; General</p>
+    <p>21.1 &nbsp; Should I die before the completion of the IVA or the Nominee has issued a completion notice or certificate of default, the IVA shall be binding on my personal representatives, or the person or persons appointed to administer my estate.</p>
+    <p style="margin-top:10px">21.2 &nbsp; Where any part of these conditions incorporates any provisions of the Ordinance or the Rules and such incorporation gives rise to an ambiguity or inconsistency, then the Nominee shall in his absolute discretion resolve such ambiguity or inconsistency as he shall think fit and the exercise of such discretion shall not be open to any challenge by legal proceedings or otherwise by any IVA Creditor or by me or by any person on their on my behalf, but is without prejudice to the right of the Nominee to seek directions from the Court pursuant to Section 20K(2).</p>
+    <p style="margin-top:10px">21.3 &nbsp; Should I at any time become beneficiary to, or receive, any sums by way of a &ldquo;windfall&rdquo; during the duration of the IVA, I agree that such funds will be utilized and paid over to the Nominee of the IVA for the benefit of the Creditors.</p>
+    <p style="margin-top:10px">21.4 &nbsp; Notwithstanding the provisions relating to &ldquo;windfall&rdquo;, I shall surrender to the Nominee of the Arrangement for the benefit of the Creditors any lump sum payment including but not limited to payment by way of pension, gratuity, retirement benefits, severance payment, entitlement to funds held under the Provident Fund Schemes and/or termination payment, which I may receive upon my retirement or the termination of my employment within 14 days from my receipt thereof.</p>
+    <p style="margin-top:10px">21.5 &nbsp; Notwithstanding the provisions relating to &ldquo;windfall&rdquo;. I agree to surrender to the Nominee for the benefit of the Creditors all bonuses, year-end payments, gratuities, or payments of like nature that I may become entitled to as a result of my employment within 14 days after receipt thereof.</p>`));
+
+  pages.push(pg(`
+    <p>21.6 &nbsp; The Nominee shall review my contribution with me every 6 months to decide whether there are any change in my circumstances that may reasonably warrant an increase in my monthly payment with a view to obtaining a higher dividend for creditors provided that an increase in my monthly income by less than 5% shall not be considered as a circumstance for change. In case of my income being adjusted more than 5%, I shall forthwith inform of my Nominee and adjust monthly contributions accordingly. My Nominee will retain such monies as may be necessary to meet the expenses of the IVA as specified in paragraph 18.1. In case of my monthly income shall reduce by more than 5%, I may either try my best to continue to contribute the same amount of my monthly contribution into the IVA or to adjust the amount of my monthly contribution and to vary the duration of the Proposal. In this connection, I shall make full and frank disclosure of all such circumstances to the Nominee.</p>
+    <p style="margin-top:10px">21.7 &nbsp; (a) I shall make the first payment under the IVA within 14 days of the approval of the IVA and thereafter on the 15<sup>th</sup> day of each month provided that this would not have the effect of requiring me to make two payments within the same calendar month.</p>
+    <p class="ind1">(b) The first payment and any subsequent payments shall be held in escrow by the Nominee and shall not be distributed to my creditors until the expiry of the period provided for the challenge of the creditors&rsquo; meeting&rsquo; decision as provided in Section 20J of the Bankruptcy Ordinance and if the challenge is lodged, to abide by such decisions or directions as the court should make.</p>
+    <p class="ind1">(c) If no challenge is made within the challenge period, the Nominee shall make distribution to the creditors under the IVA within 14 days after the expiry of the challenge period.</p>
+    <p style="margin-top:10px">21.8 &nbsp; If I should make any extra payments to the Nominee beyond the monthly payment as proposed in my Proposal whether by way of lump sum or otherwise, the same shall be applied towards the reduction of the total amount payable to my Creditors under the IVA (including any outstanding expenses payable thereunder) and the number of installments payable under the IVA shall be accordingly adjusted to the intent that all my obligations under the IVA can be satisfied at the earliest juncture.</p>`));
+
+  pages.push(pg(`
+    <p>21.9 &nbsp; In the event that the Proposal is approved by the requisite majority of the Creditors at the Creditors&rsquo; meeting, my solicitors or the chairman of the meeting shall send a copy of chairman&rsquo;s report for this meeting (which should contain a statement of the monthly contribution and the number of monthly payments) to each of the Creditors within 14 days of the said meeting.</p>
+    <p style="margin-top:10px">21.10 &nbsp; In the event of conflict between the terms contained in my Proposal and any of the modifications accepted in the Creditors&rsquo; meeting, the terms of the modifications shall prevail.</p>
+    <p class="sec-hdr" style="margin-top:14px">22. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; My Acknowledgment</p>
+    <p>22.1 &nbsp; I, <strong>${E(nm)}</strong> holder of Hong Kong Identity Card No. <strong>${E(id)}</strong>, confirm that this document fairly sets out my Proposal to my Creditors for the IVA and that, to the best of my knowledge and belief, the statements herein are true. Although I have received assistance in drafting the Proposal, its contents remain my sole responsibility and the implications of the Proposal have been carefully explained to me.</p>
+    <p style="margin-top:10px">22.2 &nbsp; I acknowledge that I commit an offence if I make any false representation to the Creditors in this Proposal or at any meeting of creditors for the purpose of obtaining the Creditors&rsquo; approval to this Proposal, and am punishable by a fine at level 2 and imprisonment for 6 months.</p>`));
+
+  // PAGE 36: Signature
+  pages.push(pg(`
+    <p style="margin-top:60px"><span class="sig" style="width:260px"></span></p>
+    <p style="margin-top:6px">Signed this <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)}</p>`));
+
+  // PAGE 37: Appendix 1 (SOA)
+  pages.push(pg(`${appxHdr(1,'STATEMENT OF AFFAIRS','AS AT '+E(soaDate))}
+    <table class="soa" style="margin-top:16px">
+      <tr><td>List Reference</td><td>Particulars</td><td>Rule</td><td class="r">Estimated Value (HK$)</td></tr>
+      <tr><td colspan="4" class="b">ASSETS</td></tr>
+      <tr><td>A</td><td>Various assets</td><td>122H(3)(a)</td><td class="r">${E(F(totalAssets))}</td></tr>
+      <tr><td>B</td><td>Excess value of assets pledged to secured creditors</td><td>122H(3)(b)</td><td class="r">Nil</td></tr>
+      <tr class="bt bb"><td colspan="3" style="text-align:right;font-weight:bold">Total amount of assets</td><td class="r b">${E(F(totalAssets))}</td></tr>
+      <tr><td colspan="4" style="height:12px"></td></tr>
+      <tr><td>List Reference</td><td>Particulars</td><td>Rule</td><td class="r">Estimated Value (HK$)</td></tr>
+      <tr><td colspan="4" class="b">LIABILITIES</td></tr>
+      <tr><td>B</td><td>Deficiency due to secured creditors</td><td>122H(3)(a)</td><td class="r">Nil</td></tr>
+      <tr><td>C</td><td>Prioritized claims under Section 38 of the Ordinance</td><td>122H(3)(c)</td><td class="r">Nil</td></tr>
+      <tr><td>D</td><td>Unsecured creditors and contingent liabilities</td><td>122H(3)(d)</td><td class="r">${E(F(totalUnsec))}</td></tr>
+      <tr><td>E</td><td>Associate creditors</td><td>122H(3)(e)</td><td class="r">Nil</td></tr>
+      <tr class="bt bb"><td colspan="3" style="text-align:right;font-weight:bold">Total amount of liabilities</td><td class="r b">${E(F(totalUnsec))}</td></tr>
+      <tr class="bt"><td colspan="3" style="text-align:right;font-weight:bold">SURPLUS / (DEFICIENCY)</td><td class="r b">(${E(F(totalUnsec-totalAssets))})</td></tr>
+      <tr><td colspan="4" style="height:10px"></td></tr>
+      <tr><td>F</td><td>OTHER INFORMATION — Additional information requested by the Nominee</td><td>122H(3)(f)</td><td></td></tr>
+    </table>
+    ${soaCert()}`));
+
+  // PAGE 38: List A
+  const bankRows = s.bank.map(b=>`<tr><td>- ${b.name||'[Bank Name]'} A/C #${b.ac||'xxxxxxxxx'}</td><td class="r">${E(F(b.bal))}</td><td class="r">${b.ex?'**':''}</td></tr>`).join('');
+  pages.push(pg(`${appxHdr(1,'STATEMENT OF AFFAIRS — LIST A','VARIOUS ASSETS')}
+    <p style="text-align:center;font-size:11pt">AS AT ${E(soaDate)}</p>
+    <table class="soa" style="margin-top:10px">
+      <tr><td class="b bb">Items and particulars</td><td class="r b bb">Estimated Value (HK$)</td><td class="bb"></td></tr>
+      <tr><td>Cash and bank balances (Supplementary Note 1)</td><td></td><td></td></tr>
+      ${bankRows}
+      <tr><td style="padding-left:12px"><em>Sub-total bank balances</em></td><td class="r">${E(F(totalBankBal))}</td><td></td></tr>
+      <tr><td>Deposits held by solicitors or nominee for IVA purpose (Supplementary Note 2)</td><td class="r">${E(F(s.deposit))}</td><td class="r">**</td></tr>
+      <tr><td>Investments in stocks and shares</td><td class="r">${E(F(s.investments))}</td><td></td></tr>
+      <tr><td>Life Insurance policy</td><td class="r">${E(F(s.lifeIns))}</td><td></td></tr>
+      <tr><td>Debt receivable</td><td class="r">${E(F(s.debtRec))}</td><td></td></tr>
+      <tr><td>Vehicles and vessels</td><td class="r">${E(F(s.vehicles))}</td><td></td></tr>
+      <tr><td>Equipment, plant and machinery</td><td class="r">${E(F(s.equip))}</td><td></td></tr>
+      <tr><td>Jewelry and collection</td><td class="r">${E(F(s.jewelry))}</td><td></td></tr>
+      <tr><td>Mandatory Provident Fund (Supplementary Note 3)</td><td class="r">${E(F(s.mpf))}</td><td class="r">**</td></tr>
+      <tr><td>Land properties</td><td class="r">${E(F(s.land))}</td><td></td></tr>
+      <tr><td>Other accounts receivables</td><td class="r">${E(F(s.otherAsset))}</td><td></td></tr>
+      <tr class="bt bb"><td style="text-align:right;font-weight:bold">TOTAL AMOUNT</td><td class="r b">${E(F(totalAssets))}</td><td></td></tr>
+    </table>
+    <p style="font-size:10pt;margin-top:8px">** Assets to be excluded from the distributions to IVA Creditors under voluntary arrangement</p>
+    ${soaCert()}`));
+
+  // PAGE 39: List B
+  pages.push(pg(`${appxHdr(1,'STATEMENT OF AFFAIRS — LIST B','DETAILS OF SECURED ASSETS AND SECURED CREDITORS')}
+    <p style="text-align:center;font-size:11pt">AS AT ${E(soaDate)}</p>
+    <table class="soa" style="margin-top:10px">
+      <tr><td class="b bb">Items and particulars</td><td class="r b bb">Estimated Value (HK$)</td></tr>
+      <tr><td>Secured assets</td><td class="r">Nil</td></tr>
+      <tr><td>Secured creditors</td><td class="r">Nil</td></tr>
+      <tr class="bt bb"><td style="text-align:right;font-weight:bold">SURPLUS / (DEFICIENCY)</td><td class="r b">Nil</td></tr>
+    </table>
+    ${soaCert()}`));
+
+  // PAGE 40: List C
+  pages.push(pg(`${appxHdr(1,'STATEMENT OF AFFAIRS — LIST C','PRIORITIZED CLAIMS UNDER SECTION 38 OF THE ORDINANCE')}
+    <p style="text-align:center;font-size:11pt">AS AT ${E(soaDate)}</p>
+    <table class="soa" style="margin-top:10px">
+      <tr><td class="b bb">Items and particulars</td><td class="r b bb">Estimated Value (HK$)</td></tr>
+      <tr><td>Amount due to employees</td><td class="r">Nil</td></tr>
+      <tr><td>Amount due to government</td><td class="r">Nil</td></tr>
+      <tr><td>Amount due to other preferential creditors</td><td class="r">Nil</td></tr>
+      <tr class="bt bb"><td style="text-align:right;font-weight:bold">TOTAL AMOUNT</td><td class="r b">Nil</td></tr>
+    </table>
+    ${soaCert()}`));
+
+  // PAGE 41-42: List D
+  const half = Math.ceil(creds.length/2);
+  const credRowsAll = creds.map((cr,i) => `<tr><td style="padding:4px">${i+1}</td><td style="padding:4px;font-size:10.5pt">${E(getCredFull(cr.key))}</td><td style="padding:4px;font-size:10.5pt">${E(NATURES[cr.nature])}</td><td class="r" style="padding:4px">${E(F(cr.amount))}</td></tr>`);
+  
+  pages.push(pg(`${appxHdr(1,'STATEMENT OF AFFAIRS — LIST D','UNSECURED CREDITORS, GUARANTEES AND CONTINGENT LIABILITIES')}
+    <p style="text-align:center;font-size:11pt">AS AT ${E(soaDate)}</p>
+    <table class="soa" style="margin-top:8px;font-size:11pt">
+      <tr><td class="b bb" style="width:24px">#</td><td class="b bb">Unsecured creditors</td><td class="b bb">Nature</td><td class="r b bb">Estimated Value (HK$)</td></tr>
+      ${credRowsAll.slice(0,half).join('')}
+    </table>`));
+    
+  pages.push(pg(`${appxHdr(1,'STATEMENT OF AFFAIRS — LIST D (continued)','')}
+    <table class="soa" style="margin-top:8px;font-size:11pt">
+      <tr><td class="b bb" style="width:24px">#</td><td class="b bb">Unsecured creditors</td><td class="b bb">Nature</td><td class="r b bb">Estimated Value (HK$)</td></tr>
+      ${credRowsAll.slice(half).join('')}
+      <tr><td colspan="3" style="padding:4px">Amount due under guarantees</td><td class="r" style="padding:4px">Nil</td></tr>
+      <tr><td colspan="3" style="padding:4px">Contingent liabilities</td><td class="r" style="padding:4px">Nil</td></tr>
+      <tr class="bt bb"><td colspan="3" style="text-align:right;font-weight:bold;padding:4px">TOTAL</td><td class="r b" style="padding:4px">${E(F(totalUnsec))}</td></tr>
+    </table>
+    ${soaCert()}`));
+
+  // PAGE 43: List E
+  pages.push(pg(`${appxHdr(1,'STATEMENT OF AFFAIRS — LIST E','ASSOCIATE CREDITORS')}
+    <p style="text-align:center;font-size:11pt">AS AT ${E(soaDate)}</p>
+    <table class="soa" style="margin-top:10px">
+      <tr><td class="b bb">Items and particulars</td><td class="r b bb">Estimated Value (HK$)</td></tr>
+      <tr><td>Liabilities or debts due to associate creditors</td><td class="r">Nil</td></tr>
+    </table>
+    ${soaCert()}`));
+
+  // PAGE 44: List F
+  pages.push(pg(`${appxHdr(1,'STATEMENT OF AFFAIRS — LIST F','ADDITIONAL INFORMATION REQUESTED BY THE NOMINEE')}
+    <p style="text-align:center;font-size:11pt">AS AT ${E(soaDate)}</p>
+    <div style="margin-top:12px">
+      <p>1. &nbsp; My projected monthly income and expense analysis was included in Appendix 2 of the Proposal.</p>
+      <p style="margin-top:10px">2. &nbsp; As far as I know there are no circumstances which would give rise to the possibility of claims being made under Section 49 (Transactions at an Undervalue), 50 (Unfair Preferences) and 71A (Extortionate Credit Transactions) in the event that I should be adjudged bankrupt.</p>
+    </div>
+    ${soaCert()}`));
+
+  // PAGE 45: Notes
+  pages.push(pg(`${appxHdr(1,'STATEMENT OF AFFAIRS — SUPPLEMENTARY NOTES','')}
+    <p style="text-align:center;font-size:11pt">AS AT ${E(soaDate)}</p>
+    <div style="margin-top:12px">
+      <p>1. &nbsp; The basis of estimation of the cash and bank balances is made according to the balance available in my bank accounts as of the date of the Statement of Affairs.</p>
+      <p style="margin-top:10px">2. &nbsp; The basis of estimation of costs of account held by solicitors or nominee is made according to the receipt issued by my solicitors or nominee.</p>
+      <p style="margin-top:10px">3. &nbsp; Since the payment of benefits under my Mandatory Provident Fund will be made only when I get retired, permanent departure from Hong Kong or death, I do not consider that there will be any value for my Mandatory Provident Fund available to the Creditors.</p>
+    </div>
+    ${soaCert()}`));
+
+  // PAGE 46: Appendix 2
+  const r2 = (label,bk,iva,bold=false) => `<tr${bold?' class="b"':''}><td style="padding:4px 8px">${label}</td><td class="r" style="padding:4px 8px">${E(bk)}</td><td class="r" style="padding:4px 8px">${E(iva)}</td></tr>`;
+  const fixedBk=c.mpf; const fixedIva=c.mpf+s.nomMonthly;
+  const bkPct=totalInc>0?Math.round(s.bkContrib/totalInc*100):0; const ivaPct=totalInc>0?Math.round(grossContrib/totalInc*100):0;
+  const bkNetPct=c.netDisposalBk>0?Math.round(s.bkContrib/c.netDisposalBk*100):0; const ivaNetPct=c.netDisposalIva>0?Math.round(grossContrib/c.netDisposalIva*100):0;
+  
+  pages.push(pg(`${appxHdr(2,'MONTHLY INCOME AND EXPENSES ANALYSIS','')}
+    <p style="text-align:center;font-size:11pt">INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}<br>RE: <strong>${E(nm)} (${E(chi)})</strong><br>(Holder of Hong Kong Identity Card No. <strong>${E(id)}</strong>)</p>
+    <table class="soa" style="margin-top:10px;font-size:10.5pt;border:1px solid #000">
+      <tr><td class="b bb" style="padding:4px 8px;width:30px">1.1</td><td class="b bb" style="padding:4px 8px">Income &amp; Expenses Breakdown</td><td class="r b bb" style="padding:4px 12px;white-space:nowrap">Under Bankruptcy</td><td class="r b bb" style="padding:4px 12px;white-space:nowrap">Under IVA</td></tr>
+      ${r2('1.2 &nbsp; Salary',F(s.salary),F(s.salary))}
+      ${r2('1.3 &nbsp; Estimated commission',s.commission||'',s.commission||'')}
+      ${r2('1.4 &nbsp; Overtime allowance',s.overtime||'',s.overtime||'')}
+      ${r2('1.5 &nbsp; Other allowance',s.otherAllow||'',s.otherAllow||'')}
+      ${r2('1.6 &nbsp; Total Income (1.2+1.3+1.4+1.5)',F(totalInc),F(totalInc),true)}
+      ${r2('1.7 &nbsp; Contribution to Provident Fund/MPF',F(c.mpf),F(c.mpf))}
+      ${r2('1.8 &nbsp; Monthly nominee\'s fee','',F(s.nomMonthly))}
+      ${r2('1.9 &nbsp; Provision of tax','','')}
+      ${r2('1.10 Fixed Expenses (1.7+1.8+1.9)',F(fixedBk),F(fixedIva),true)}
+      ${r2('1.11 Net Disposal Income (1.6-1.10)',F(c.netDisposalBk),F(c.netDisposalIva),true)}
+      ${EXPCATS.map((label,i)=>r2(`1.${i+12} ${label}`,F(s['bk_'+i]),F(s['iva_'+i]))).join('')}
+      ${r2('1.27 Total Expenses',F(totalExpBk),F(totalExpIva),true)}
+      ${r2('1.28 Proposed Monthly Contribution to Creditors',F(s.bkContrib),F(netContrib),true)}
+      ${r2('1.29 Total Monthly Contribution (inclusive of monthly nominee fee)',F(s.bkContrib),F(grossContrib),true)}
+      ${r2('1.30 Contribution-To-Total Income%',bkPct+'%',ivaPct+'%')}
+      ${r2('1.31 Contribution-To-Net Disposal Income%',bkNetPct+'%',ivaNetPct+'%')}
+    </table>
+    ${soaCert()}`));
+
+  // PAGE 47: Appendix 3
+  const appx3Hdr=`${appxHdr(3,'COMPARISON BETWEEN BANKRUPTCY AND INDIVIDUAL VOLUNTARY ARRANGEMENT','')}`;
+  const c3r=(label,bk,iva)=>`<tr><td style="padding:4px">${label}</td><td class="r" style="padding:4px;white-space:nowrap">${E(bk)}</td><td class="r" style="padding:4px;white-space:nowrap">${E(iva)}</td></tr>`;
+  const c3rb=(label,bk,iva)=>`<tr class="b bt bb"><td style="padding:6px 4px">${label}</td><td class="r" style="padding:6px 4px">${E(bk)}</td><td class="r" style="padding:6px 4px">${E(iva)}</td></tr>`;
+  const bkSurp=bkAvailable-totalUnsec;
+  const bkSurpStr=bkSurp<0?'('+F(-bkSurp)+')':F(bkSurp);
+  const ivaSurpStr=ivaSurplus>=0?F(ivaSurplus):'('+F(-ivaSurplus)+')';
+  
+  pages.push(pg(`${appx3Hdr}
+    <table class="soa" style="margin-top:10px;font-size:10pt">
+      <tr><td></td><td class="r b bb" style="width:140px;padding:4px">Under Bankruptcy HK$</td><td class="r b bb" style="width:140px;padding:4px">Under IVA HK$</td></tr>
+      <tr><td colspan="3" class="b" style="padding:6px 4px">Estimated realizations</td></tr>
+      ${c3r('Cash and bank balances','-','-')}
+      ${c3r('Deposit for administrations expenses under IVA','-',F(s.deposit))}
+      ${c3r('Life policy','-','-')}
+      ${c3r('Investments in mutual funds','-','-')}
+      ${c3r('Debts receivable','-','-')}
+      ${c3r('Vehicles and vessels','-','-')}
+      ${c3r('Equipment, plant and machinery','-','-')}
+      ${c3r('Jewellery and collection','-','-')}
+      ${c3r('Landed properties (attributable interest of jointly owned property)','-','-')}
+      ${c3r('Provident Fund/MPF','-','-')}
+      ${c3r('Excess value of secured assets','-','-')}
+      ${c3r('Other assets','-','-')}
+      ${c3r('Voluntary contribution under IVA','-',F(totalVoluntary))}
+      ${c3r('Contribution to Trustee under bankruptcy (48 month \u00D7 HK$'+F0(s.bkContrib)+') (Note 2)',F(bkReal),'-')}
+      ${c3r('Ex-gratia payment from third party','-','-')}
+      ${c3rb('',F(bkReal),F(totalRealIVA))}
+      <tr><td colspan="3" class="b" style="padding:6px 4px">Less: Costs and Disbursements</td></tr>
+      ${c3r('Nominee\'s fees','-',F(nomLumpSum))}
+      ${c3r('Solicitor\'s fees for IVA','-',F(s.solFeeIVA))}
+      ${c3r('Court Fees under IVA','-',F(courtFee))}
+      ${c3r('Statutory advertising and miscellaneous disbursements under IVA','-',F(advFeeFixed))}
+      ${c3r('Implementation fees under IVA (Accountant HK$'+F0(accountantFee)+' + Charges HK$'+F0(s.implCharges)+')','-',F(implementationFeesIVA))}
+      ${c3r('Costs for bankruptcy proceedings','12,000.00','-')}
+      ${c3r('Trustee\'s fees and disbursements','14,400.00','-')}
+      ${c3r('Provision for contingencies','\u2014','\u2014')}
+      ${c3rb('TOTAL COSTS AND EXPENSES',F(totalCostsBK),F(totalCostsIVA))}
+      ${c3rb('AMOUNT AVAILABLE TO PRIORITIZED AND UNSECURED CREDITORS',F(bkAvailable),F(ivaAvailable))}
+      ${c3r('LESS: PRIORITIZED CREDITORS','-','-')}
+      ${c3rb('AMOUNT AVAILABLE TO UNSECURED CREDITORS',F(bkAvailable),F(ivaAvailable))}
+      ${c3r('TOTAL AMOUNT OF UNSECURED CREDITORS AS AT '+E(soaDate),'('+F(totalUnsec)+')','('+F(totalUnsec)+')')}
+      ${c3rb('',bkSurpStr,ivaSurpStr)}
+      ${c3r('INTEREST TO UNSECURED CREDITORS','-',ivaSurplus<0?'('+F(-ivaSurplus)+')':'-')}
+      ${c3rb('ESTIMATED SURPLUS/(DEFICIENCY)',bkSurpStr,ivaSurpStr)}
+      ${c3rb('ESTIMATED PERCENTAGE OF DIVIDENDS TO UNSECURED CREDITORS',bkDiv+'%',ivaDiv+'%')}
+    </table>`));
+
+  // PAGE 48: Notes for Appx 3
+  pages.push(pg(`${appxHdr(3,'COMPARISON — NOTES','')}
+    <div style="margin-top:20px;font-size:11pt">
+      <p>Note 1: As at ${E(soaDate)}, the costs on accounts held by my solicitors or nominee were HK$${E(F(s.deposit))}, the amount of which would be used to partly settle the costs and disbursements in relation to the IVA, inter alia, the nominee&rsquo;s fees, solicitors&rsquo; fees and the incidental disbursements. This HK$${E(F(s.deposit))} will not form a part of voluntary contributions under the IVA.</p>
+      <p style="margin-top:14px">Note 2: In case of bankruptcy, even if I am lucky enough to maintain the present level I would be only able to repay HK$${E(F(s.bkContrib))} per month to my creditors. Please refer to monthly income and expenses analysis under bankruptcy scenario as shown in Appendix 2.</p>
+    </div>
+    ${soaCert()}`));
+
+  // PAGE 49: Distribution Table
+  const t = s.ivaTerm;
+  const bulkEnd2 = t - 1;
+  const colHdrs = ['1<sup>st</sup> mo','2<sup>nd</sup>-5<sup>th</sup> mo','6<sup>th</sup> mo','7<sup>th</sup>-10<sup>th</sup> mo',`11<sup>th</sup>-${bulkEnd2 > 10 ? bulkEnd2 : '11'}<sup>th</sup> mo`,`${t}<sup>th</sup> mo`,'Total','Accum. Int'];
+  const colMults = [1,4,1,4, t > 11 ? t - 11 : 0, 1];
+  
+  let distHtml = `<table class="soa" style="font-size:9pt;border-collapse:collapse;width:100%;margin-top:8px">
+    <thead><tr style="background:#f0f0f0">
+      <th style="border:1px solid #000;padding:4px;text-align:left;"></th>
+      <th style="border:1px solid #000;padding:4px">HK$</th><th style="border:1px solid #000;padding:4px">%</th>`;
+      
+  colHdrs.forEach((h, i) => { if(colMults[i] > 0 || i >= 6) distHtml += `<th style="border:1px solid #000;padding:4px">${h}</th>`; });
+  distHtml += `</tr></thead><tbody>`;
+    
+  const activeCols = colMults.filter(m => m > 0);
+  const dash9 = activeCols.map(()=>'<td style="border:1px solid #000;padding:3px;text-align:right">-</td>').join('');
+  
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Opening Balance</td><td></td><td></td>${dash9}<td>-</td><td></td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Realisation of assets</td><td></td><td></td>${dash9}<td>-</td><td></td></tr>`;
+  
+  const grossCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(grossContrib*m))}</td>`).join('');
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Monthly contribution</td><td></td><td></td>${grossCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(grossContrib*t))}</td><td></td></tr>`;
+  distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:3px">Sub-total / Balance available</td><td></td><td></td>${grossCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(grossContrib*t))}</td><td></td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px;font-weight:bold" colspan="${activeCols.length+5}">Less: IVA expenses</td></tr>`;
+  
+  const nmfCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(s.nomMonthly*m))}</td>`).join('');
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Nominees fees and expenses</td><td></td><td></td>${nmfCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(s.nomMonthly*t))}</td><td></td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Contingency expenses</td><td></td><td></td>${dash9}<td>-</td><td></td></tr>`;
+  
+  const netCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(netContrib*m))}</td>`).join('');
+  distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:3px">Balance available for distribution</td><td></td><td></td>${netCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(netContrib*t))}</td><td></td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px;font-weight:bold" colspan="${activeCols.length+5}">Unsecured Claims</td></tr>`;
+  
+  let totInterest4 = 0;
+  creds.forEach((cr,i)=>{
+    const ratio=totalUnsec>0?cr.amount/totalUnsec:0;
+    const mPay=netContrib*ratio; const totPay=mPay*t;
+    const estInt=cr.amount*(s.interestRate/100)*(t/12)*0.55; totInterest4+=estInt;
+    const credCols=activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(mPay*m))}</td>`).join('');
+    distHtml += `<tr><td style="border:1px solid #000;padding:3px">${i+1}. ${E(cr.key)}</td><td style="border:1px solid #000;padding:3px;text-align:right">${E(F(cr.amount))}</td><td style="border:1px solid #000;padding:3px;text-align:right">${(ratio*100).toFixed(0)}%</td>${credCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(totPay))}</td><td style="border:1px solid #000;padding:3px;text-align:right">${E(F(estInt))}</td></tr>`;
+  });
+  
+  const subCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right;font-weight:bold">${E(F(netContrib*m))}</td>`).join('');
+  distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:3px">Sub-total</td><td style="border:1px solid #000;padding:3px;text-align:right">${E(F(totalUnsec))}</td><td style="border:1px solid #000;padding:3px;text-align:right">100%</td>${subCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(netContrib*t))}</td><td style="border:1px solid #000;padding:3px;text-align:right">${E(F(totInterest4))}</td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Closing Balance</td><td></td><td></td>${dash9}<td>-</td><td></td></tr>`;
+  distHtml += `</tbody></table>`;
+  distHtml += `<p style="font-size:9pt;margin-top:8px">***Interest Rate @${E(s.interestRate.toFixed(1))}% per annum is adopted for above calculation</p>`;
+  
+  pages.push(pg(`${appxHdr(4,'ESTIMATED DISTRIBUTION OF IVA DIVIDENDS','')}
+    <p style="text-align:center;font-size:11pt">INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}<br>RE: <strong>${E(nm)} (${E(chi)})</strong><br>(Holder of Hong Kong Identity Card No. <strong>${E(id)}</strong>)</p>
+    <div style="overflow-x:auto">${distHtml}</div>
+    <p style="margin-top:14px;font-size:11pt"><span class="sig" style="width:220px"></span><br>Date: ${E(soaDate)}</p>`));
+
+  // PAGE 50: Exhibit Dctm-2
+  pages.push(pg(`${courtHdr()}
+    <p style="text-align:center;text-decoration:underline;font-weight:bold;margin-top:20px">EXHIBIT</p>
+    <p style="margin-top:14px">This is the exhibit marked &ldquo;<strong>${E(sf)}-2</strong>&rdquo; referred to in the Affirmation of <strong>${E(nm)}</strong> affirmed on the <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)}.</p>
+    <table class="soa" style="margin-top:16px">
+      <tr><td style="text-decoration:underline">Date</td><td style="text-decoration:underline">Description</td><td class="r" style="text-decoration:underline">No. of Pages</td></tr>
+      <tr><td>${E(soaDate)}</td><td>Notice to Intended Nominee</td><td class="r">3</td></tr>
+      <tr><td></td><td style="padding-top:10px">Before me,</td><td></td></tr>
+    </table>`));
+
+  // PAGE 51: Notice to Intended Nominee
+  pages.push(pg(`${courtHdr()}
+    <div style="display:flex;gap:6px;margin:4px 0">
+      <div style="width:130px;flex-shrink:0;font-size:10pt;line-height:2.1">Rules 122D and 122E )<br>of the Bankruptcy Rules )<br>Cap.6 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</div>
+      <div style="flex:1">${ST}<p style="text-align:center;font-weight:bold">NOTICE TO INTENDED NOMINEE</p>${ST}</div>
+    </div>
+    <p style="margin-top:12px">To: &nbsp; <strong>${E(nomName)}</strong> of ${E(nomFirm)} of ${E(nomAddr)}</p>
+    <p style="margin-top:12px">Pursuant to Rule 122D of the Bankruptcy Rules (Cap.6 sub. leg.), I hereby give you notice of my proposal for a voluntary arrangement pursuant to Sections 20 and 20A of the Bankruptcy Ordinance (Chapter 6).</p>
+    <p style="margin-top:12px">There is delivered herewith a copy of the proposal.</p>
+    <p style="margin-top:20px">Dated this <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)}</p>
+    <p style="margin-top:30px;text-align:right"><span class="sig" style="width:180px"></span><br>${E(nm)}</p>`));
+
+  // PAGE 52: Notice acceptance
+  pages.push(pg(`
+    <p>I, <strong>${E(nomName)}</strong> of ${E(nomFirm)} of ${E(nomAddr)} do hereby confirm pursuant to Rules 122D and 122E of the Bankruptcy Rules (Cap.6 sub. leg.) that: -</p>
+    <p style="margin-top:14px">(1) &nbsp; on ${E(soaDate)} I did receive a copy of the above notice; and</p>
+    <p style="margin-top:14px">(2) &nbsp; I agree to act as nominee.</p>
+    <p style="margin-top:30px">Signed by:</p>
+    <p style="margin-top:30px"><span class="sig" style="width:220px"></span></p>
+    <p style="margin-top:4px"><strong>${E(nomName)}</strong><br>${E(nomFirm)}<br>Dated this <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)}</p>`));
+
+  // PAGE 53: Backsheets
+  pages.push(pg(`${courtHdr()}${ST2}
+    <p style="text-align:center;font-weight:bold">PROPOSAL FOR<br>A VOLUNTARY ARRANGEMENT</p>${ST2}
+    <p style="text-align:center;margin-top:10px">Filed on <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)}</p>
+    <hr style="margin:16px 80px;border-top:1px dashed #000">
+    ${ST2}
+    <p style="text-align:center;font-weight:bold">NOTICE TO INTENDED NOMINEE</p>${ST2}
+    <p style="text-align:center;margin-top:10px">Filed on <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)}</p>
+    <hr style="margin:16px 80px;border-top:1px dashed #000">
+    ${ST2}
+    <p style="text-align:center;font-weight:bold">AFFIRMATION OF ${E(nm)} (${E(chi)})<br>(IN SUPPORT OF APPLICATION FOR INTERIM ORDER)</p>${ST2}
+    <p style="text-align:center;margin-top:10px">Filed on <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)}</p>
+    <div style="text-align:center;margin-top:60px">
+      <p style="font-weight:bold;text-decoration:underline">${E(solName)}</p>
+      <p><em>Solicitors for the Debtor</em></p>
+      <p>${E(s.solAddr1)}<br>${E(s.solAddr2)}<br>${E(s.solAddr3)}</p>
+      <p>Tel: ${E(s.solTel)} &nbsp;&nbsp;&nbsp;&nbsp; Fax: ${E(s.solFax)}</p>
+      <p>Ref: ${E(solRef)}</p>
+    </div>`));
+
+  document.getElementById('proposalOut').innerHTML = pages.join('\n');
+  
+  // Page enumeration
+  document.querySelectorAll('.proposal-container .legal-page').forEach((el,i) => {
+    const pn = document.createElement('div');
+    pn.className = 'no-print';
+    pn.style.cssText = 'font-size:10px;color:#94a3b8;text-align:right;margin-top:4px;margin-bottom:2px';
+    pn.textContent = '— Page '+(i+1)+' —';
+    el.parentNode.insertBefore(pn, el.nextSibling);
+  });
+}
+
+function init() {
+  loadData();
+  renderAll();
+}
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
