@@ -1215,7 +1215,6 @@
                 <i class="fas fa-moon" id="themeIcon"></i>
             </button>
             <button class="toggle-btn" id="loginBtn" onclick="openLogin()">🔐</button>
-            
         </div>
     </div>
 
@@ -1752,42 +1751,42 @@
             <button class="modal-close" onclick="closeModal()">OK</button>
         </div>
     <!-- Login Modal -->
-<div class="login-modal" id="loginModal">
-    <div class="login-box">
-        <button class="login-x" onclick="closeLogin()">✕</button>
-        <div class="login-emoji">🔐</div>
-        <h3>
-            <span class="lang-zh-i">管理員登入</span>
-            <span class="lang-en-i">Admin Login</span>
-        </h3>
-        <div class="login-error" id="loginError">
-            <i class="fas fa-exclamation-circle"></i>
-            <span class="lang-zh-i"> 帳號或密碼錯誤，請重試。</span>
-            <span class="lang-en-i"> Incorrect credentials, please try again.</span>
+    <div class="login-modal" id="loginModal">
+        <div class="login-box">
+            <button class="login-x" onclick="closeLogin()">✕</button>
+            <div class="login-emoji">🔐</div>
+            <h3>
+                <span class="lang-zh-i">管理員登入</span>
+                <span class="lang-en-i">Admin Login</span>
+            </h3>
+            <div class="login-error" id="loginError">
+                <i class="fas fa-exclamation-circle"></i>
+                <span class="lang-zh-i"> 帳號或密碼錯誤，請重試。</span>
+                <span class="lang-en-i"> Incorrect credentials, please try again.</span>
+            </div>
+            <div class="form-group">
+                <label>
+                    <span class="lang-zh-i">帳號</span>
+                    <span class="lang-en-i">Username</span>
+                </label>
+                <input type="text" id="loginUser" placeholder="Username" autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label>
+                    <span class="lang-zh-i">密碼</span>
+                    <span class="lang-en-i">Password</span>
+                </label>
+                <input type="password" id="loginPass" placeholder="Password"
+                    autocomplete="current-password"
+                    onkeydown="if(event.key==='Enter') doLogin()">
+            </div>
+            <button class="btn-primary" onclick="doLogin()" style="width:100%; margin-top:10px;">
+                <span class="lang-zh-i">登入</span>
+                <span class="lang-en-i">Login</span>
+                <i class="fas fa-sign-in-alt"></i>
+            </button>
         </div>
-        <div class="form-group">
-            <label>
-                <span class="lang-zh-i">帳號</span>
-                <span class="lang-en-i">Username</span>
-            </label>
-            <input type="text" id="loginUser" placeholder="Username" autocomplete="username">
-        </div>
-        <div class="form-group">
-            <label>
-                <span class="lang-zh-i">密碼</span>
-                <span class="lang-en-i">Password</span>
-            </label>
-            <input type="password" id="loginPass" placeholder="Password"
-                autocomplete="current-password"
-                onkeydown="if(event.key==='Enter') doLogin()">
-        </div>
-        <button class="btn-primary" onclick="doLogin()" style="width:100%; margin-top:10px;">
-            <span class="lang-zh-i">登入</span>
-            <span class="lang-en-i">Login</span>
-            <i class="fas fa-sign-in-alt"></i>
-        </button>
     </div>
-</div>
     </div>
 
     <!-- Replace the existing form submit JavaScript (at the bottom) with this -->
@@ -2026,34 +2025,35 @@
             }
         });
     });
+
     // Login Modal
-function openLogin() {
-    document.getElementById('loginModal').classList.add('show');
-    document.getElementById('loginUser').value = '';
-    document.getElementById('loginPass').value = '';
-    document.getElementById('loginError').classList.remove('show');
-    setTimeout(() => document.getElementById('loginUser').focus(), 150);
-}
-
-function closeLogin() {
-    document.getElementById('loginModal').classList.remove('show');
-}
-
-function doLogin() {
-    const user = document.getElementById('loginUser').value.trim();
-    const pass = document.getElementById('loginPass').value;
-    if (user === 'Qubeley2003' && pass === '93949413') {
-        window.location.href = 'Generator.html';
-    } else {
-        document.getElementById('loginError').classList.add('show');
+    function openLogin() {
+        document.getElementById('loginModal').classList.add('show');
+        document.getElementById('loginUser').value = '';
         document.getElementById('loginPass').value = '';
-        document.getElementById('loginPass').focus();
+        document.getElementById('loginError').classList.remove('show');
+        setTimeout(() => document.getElementById('loginUser').focus(), 150);
     }
-}
-
-document.getElementById('loginModal').addEventListener('click', function(e) {
-    if (e.target === this) closeLogin();
-});
+    
+    function closeLogin() {
+        document.getElementById('loginModal').classList.remove('show');
+    }
+    
+    function doLogin() {
+        const user = document.getElementById('loginUser').value.trim();
+        const pass = document.getElementById('loginPass').value;
+        if (user === 'Qubeley2003' && pass === '93949413') {
+            window.location.href = 'Generator.html';
+        } else {
+            document.getElementById('loginError').classList.add('show');
+            document.getElementById('loginPass').value = '';
+            document.getElementById('loginPass').focus();
+        }
+    }
+    
+    document.getElementById('loginModal').addEventListener('click', function(e) {
+        if (e.target === this) closeLogin();
+    });
 </script>
 </body>
 </html>
