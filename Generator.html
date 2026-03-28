@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Qubeley V13 IVA DocGenSys </title>
+<title>IVA Document Generation System v7 (Decoupled Contribution)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 /* ========================================
@@ -126,7 +126,7 @@
 <nav class="no-print bg-slate-900 border-b border-slate-700 shrink-0 sticky top-0 z-50">
   <div class="max-w-screen-2xl mx-auto px-4 flex items-center justify-between h-14">
     <div class="flex items-center gap-5 overflow-x-auto">
-      <span class="text-blue-400 font-bold text-sm whitespace-nowrap mr-2">IVA Generator v6</span>
+      <span class="text-blue-400 font-bold text-sm whitespace-nowrap mr-2">IVA Generator v7</span>
       <button onclick="switchTab(0)" id="tbtn0" class="tab-active text-sm font-medium px-3 py-3 border-b-2 border-transparent whitespace-nowrap transition-all">1. Debtor Info</button>
       <button onclick="switchTab(1)" id="tbtn1" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">2. Court Fees</button>
       <button onclick="switchTab(2)" id="tbtn2" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">3. Distribution</button>
@@ -221,9 +221,13 @@
       <h3>F — Expenses (IVA)</h3>
       <div class="grid grid-cols-2 gap-2 text-xs" id="expIvaContainer"></div>
       <div class="mt-2 bg-slate-800 rounded p-2">
-        <p class="text-xs text-slate-400">Total (IVA): <span class="text-amber-400 font-bold" id="lbl_totalExpIva">0</span></p>
-        <p class="text-xs text-slate-400">Net Contribution to Creditors: <span class="text-emerald-400 font-bold" id="lbl_netContrib">0</span></p>
+        <p class="text-xs text-slate-400">Total (IVA Expenses): <span class="text-amber-400 font-bold" id="lbl_totalExpIva">0</span></p>
+        <div class="mt-2 mb-2">
+          <label class="dark-label text-emerald-400 font-bold">IVA Net Contribution to Creditors</label>
+          <input type="number" class="dark-input border-emerald-600/50" style="max-width:140px" id="i_netContrib" onchange="U('netContrib',+this.value)">
+        </div>
         <p class="text-xs text-slate-400">Gross Contribution (incl. Nominee): <span class="text-blue-400 font-bold" id="lbl_grossContrib">0</span></p>
+        <p id="lbl_incomeWarning" class="text-xs font-bold text-red-400 hidden mt-1"></p>
       </div>
     </div>
 
@@ -433,20 +437,21 @@ const DEFAULT_CDB=[
 const EXPCATS=['Housing','Govt Rent & Rates','Property Mgmt Fee','Water/Elec/Gas','Phones & Internet','Transportation','Food & Groceries','Dependant (Mother)','Dependant (Father)','Dependant (Others)','Children Education','Household Expenses','Life Insurance','Clothing/Personal Care','Others'];
 const NATURES=['Due under personal loan','Due under credit card','Due under personal loan and credit card'];
 
-// Default State
+// Default State 
 const DEFAULT_STATE = {
   courtYear:'2026', soaDate:'12th March 2026',
-  solName:'代名人的機構',
-  solAddr1:'地址line1', solAddr2:'地址line2',
-  solTel:'代名人的電話', solFax:'代名人的FAX', solRef:'90xxx/3.7/AL(IN)',
-  nomName:'代名人英文全名', nomFirm:'Solicitor of 代名人的機構',
-  nomAddr:'8/F., Pilkem Commercial Centre, 8 Pilkem Street, Jordan, Kowloon, Hong Kong',
-  nomDesc:'It is proposed that 代名人 英文全名(the \u201cIntended Nominee\u201d) of 代名人的機構of代名人的機構地址, should act as Nominee of my IVA. 代名人 英文全名who acts as the Intended Nominee in respect of this Proposal is the Principal of 代名人的機構, a 代名機構類型of Hong Kong SAR. The Intended Nominee is a Solicitor of the High Court of Hong Kong with Practicing Certificate to practice in Hong Kong with 19 years of experience in bankruptcy and insolvency matters. He has been entrusted to act for debtors or creditors in a number of non-summary cases, including Re: Rehm Suneast International Limited (HCCW 60/2009), Re: Sit Kwong Lam (HCB 6051/2018) and Re: Brightoil Petroleum (Holdings) Limited (HCCW 147/2019). The Intended Nominee is covered by professional indemnity insurance arranged by him under the name of 代名人的機構. The Intended Nominee confirms that he is prepared to act as my Nominee if appointed to do so. If appointed as Nominee, the Intended Nominee will exercise the functions set out in the Ordinance and Rules and as set out in this Proposal. In the premises, I hereby confirm that the Intended Nominee is experienced and qualified, so far as I am aware, to act as nominee and not trustee in relation to the voluntary arrangement for the purpose of supervising its implementation. No assets will vest in 代名人英文全名. No liability will fall upon him and he will not enter into any contract or other arrangement in a position so as to incur any personal liability. I confirm that the Intended Nominee is experienced and qualified to act as Nominee in relation to my voluntary arrangement.',
+  solName:'LIMS Solicitors',
+  solAddr1:'代名人地址', solAddr2:'代名人地址',
+  solTel:'3428 2973', solFax:'2730 0875', solRef:'90xxx/3.7/AL(IN)',
+  nomName:'代名人', nomFirm:'代名人機構',
+  nomAddr:'代名人地址',
+  nomDesc:'It is proposed that 代名人 (the \u201cIntended Nominee\u201d) of LIMS SOLICITORS of 8th Floor, Pilkem Commercial Centre, 8 Pilkem Street, Jordan, Kowloon, Hong Kong, should act as Nominee of my IVA. 代名人 who acts as the Intended Nominee in respect of this Proposal is the Principal of LIMS SOLICITORS, a Solicitors firm of Hong Kong SAR. The Intended Nominee is a Solicitor of the High Court of Hong Kong with Practicing Certificate to practice in Hong Kong with 19 years of experience in bankruptcy and insolvency matters. He has been entrusted to act for debtors or creditors in a number of non-summary cases, including Re: Rehm Suneast International Limited (HCCW 60/2009), Re: Sit Kwong Lam (HCB 6051/2018) and Re: Brightoil Petroleum (Holdings) Limited (HCCW 147/2019). The Intended Nominee is covered by professional indemnity insurance arranged by him under the name of LIMS SOLICITORS. The Intended Nominee confirms that he is prepared to act as my Nominee if appointed to do so. If appointed as Nominee, the Intended Nominee will exercise the functions set out in the Ordinance and Rules and as set out in this Proposal. In the premises, I hereby confirm that the Intended Nominee is experienced and qualified, so far as I am aware, to act as nominee and not trustee in relation to the voluntary arrangement for the purpose of supervising its implementation. No assets will vest in 代名人. No liability will fall upon him and he will not enter into any contract or other arrangement in a position so as to incur any personal liability. I confirm that the Intended Nominee is experienced and qualified to act as Nominee in relation to my voluntary arrangement.',
   nameEng:'CHAN TAI MAN',nameChi:'陳大文',hkid:'Z123456(7)',shortForm:'CTM',address:'Flat A, 1/F., Block 1, Sunshine City, Ma On Shan, N.T.',
   jobDesc:'I am now 25 years old and I was separated. I am working as a Waiter in Watami (China) Company Limited since May 2018. Meanwhile, I am also working as a part-time Financial Strategist in Dynasty Financial Group Limited since April 2017.',
   accomDesc:'I am living with my parents at an accommodation situated at First Floor, No. 59 Leng Pei Tsuen, Fanling, New Territories, Hong Kong. The accommodation is rented by my parents while the monthly rental fee is shared by me and my father who is working as a Shop Assistant with a monthly salary around HK$10,000. My mother is a housewife.',
   salary:23150,commission:0,overtime:0,otherAllow:0,
   bkContrib:8000,
+  netContrib:7000, // Explicit standalone user input
   bank:[{name:'',ac:'',bal:0,ex:true},{name:'',ac:'',bal:0,ex:false},{name:'',ac:'',bal:0,ex:false}],
   deposit:126000,investments:0,lifeIns:0,debtRec:0,vehicles:0,equip:0,jewelry:0,mpf:0,land:0,otherAsset:0,
   ivaTerm:33,interestRate:7,nomMonthly:1000,
@@ -474,9 +479,9 @@ DEFAULT_STATE.iva_0=7000; DEFAULT_STATE.iva_3=850; DEFAULT_STATE.iva_4=500; DEFA
 let S = JSON.parse(JSON.stringify(DEFAULT_STATE));
 
 // LocalStorage Persistence
-function saveData() { localStorage.setItem('iva_state_v6', JSON.stringify(S)); }
+function saveData() { localStorage.setItem('iva_state_v7', JSON.stringify(S)); }
 function loadData() {
-  const saved = localStorage.getItem('iva_state_v6');
+  const saved = localStorage.getItem('iva_state_v7');
   if (saved) {
     try { 
       const parsed = JSON.parse(saved);
@@ -528,17 +533,17 @@ function autoTargetTerm() {
       alert("No unsecured debt found to calculate a target.");
       return;
   }
-  if(c.netContrib <= 0) {
-      alert("Error: Net contribution is zero or negative. Please adjust Monthly Income and Expenses first.");
+  if(S.netContrib <= 0) {
+      alert("Error: Your inputted Net Contribution is zero or negative. Please enter a valid proposed contribution.");
       return;
   }
   
   const targetDebt = c.totalUnsec * 0.95;
-  const optimizedTerm = Math.round(targetDebt / c.netContrib);
+  const optimizedTerm = Math.round(targetDebt / S.netContrib);
   
   if (optimizedTerm > 120) {
       const requiredContrib = Math.ceil(targetDebt / 120);
-      alert(`Warning: Current Net Contribution (HK$ ${F0(c.netContrib)}) is too low to recover ~95% within the standard 120-month limit.\n\nTo achieve this, you need a minimum Net Contribution of HK$ ${F0(requiredContrib)} per month. Please increase Income or reduce Expenses.`);
+      alert(`Warning: Current Net Contribution (HK$ ${F0(S.netContrib)}) is too low to recover ~95% within the standard 120-month limit.\n\nTo achieve this, you need a minimum Net Contribution of HK$ ${F0(requiredContrib)} per month. Please adjust your contribution accordingly.`);
   } else {
       U('ivaTerm', optimizedTerm);
       alert(`Success: Term automatically adjusted to ${optimizedTerm} months to target ~95% debt recovery.`);
@@ -555,8 +560,14 @@ function C(){
   
   const netDisposalBk = totalInc - mpf;
   const netDisposalIva = totalInc - mpf - S.nomMonthly;
-  const netContrib = netDisposalIva - totalExpIva;
+  
+  // DECOUPLED: Use the explicit user input for net contribution
+  const netContrib = S.netContrib || 0;
   const grossContrib = netContrib + S.nomMonthly;
+  
+  // Verify if they have enough surplus to afford their proposed contribution
+  const availableForContrib = netDisposalIva - totalExpIva;
+  const incomeWarning = netContrib > availableForContrib;
   
   const totalBankBal = S.bank.reduce((a,b) => a + (b.bal||0), 0);
   const totalAssets = totalBankBal + S.deposit + S.investments + S.lifeIns + S.debtRec + S.vehicles + S.equip + S.jewelry + S.mpf + S.land + S.otherAsset;
@@ -600,6 +611,7 @@ function C(){
   
   return {
     totalInc, mpf, totalExpBk, totalExpIva, netDisposalBk, netDisposalIva, netContrib, grossContrib,
+    availableForContrib, incomeWarning,
     totalBankBal, totalAssets, creds, totalUnsec, courtTier1, courtTier2, courtFee,
     nomLumpSum, accountantFee, advFeeFixed, implementationFeesIVA, bkProceedingsCost, trusteeFeesCost,
     totalCostsIVA, totalCostsBK, totalVoluntary, totalRealIVA, ivaAvailable,
@@ -632,7 +644,7 @@ function renderAll() {
   const c = C();
   
   // Tab 1 UI
-  const strFields = ['courtYear','soaDate','solName','solAddr1','solAddr2','solAddr3','solTel','solFax','solRef','nomName','nomFirm','nomAddr','nameEng','nameChi','hkid','shortForm','address','jobDesc','accomDesc','salary','commission','overtime','otherAllow','bkContrib','ivaTerm','interestRate','nomMonthly','solFeeIVA','implCharges','nomDesc','assetComplexity'];
+  const strFields = ['courtYear','soaDate','solName','solAddr1','solAddr2','solAddr3','solTel','solFax','solRef','nomName','nomFirm','nomAddr','nameEng','nameChi','hkid','shortForm','address','jobDesc','accomDesc','salary','commission','overtime','otherAllow','bkContrib','netContrib','ivaTerm','interestRate','nomMonthly','solFeeIVA','implCharges','nomDesc','assetComplexity'];
   strFields.forEach(k => { const el=document.getElementById('i_'+k); if(el) el.value=S[k]; });
   
   document.getElementById('i_ivaYears').value = (S.ivaTerm/12).toFixed(1);
@@ -640,13 +652,21 @@ function renderAll() {
   document.getElementById('lbl_mpf').textContent = 'HK$ ' + F(c.mpf);
   document.getElementById('lbl_totalExpBk').textContent = 'HK$ ' + F(c.totalExpBk);
   document.getElementById('lbl_totalExpIva').textContent = 'HK$ ' + F(c.totalExpIva);
-  document.getElementById('lbl_netContrib').textContent = 'HK$ ' + F(c.netContrib);
   document.getElementById('lbl_grossContrib').textContent = 'HK$ ' + F(c.grossContrib);
   document.getElementById('lbl_totalAssets').textContent = 'HK$ ' + F(c.totalAssets);
   document.getElementById('lbl_totalUnsec').textContent = 'HK$ ' + F(c.totalUnsec);
   document.getElementById('lbl_nomLumpSum').textContent = 'HK$ ' + F(c.nomLumpSum);
   document.getElementById('lbl_accountantFee').textContent = 'HK$ ' + F(c.accountantFee);
   document.getElementById('lbl_implTotal').textContent = 'HK$ ' + F(c.implementationFeesIVA);
+
+  // Logic Warning: Decoupled Contribution check
+  const warnEl = document.getElementById('lbl_incomeWarning');
+  if (warnEl) {
+      warnEl.classList.toggle('hidden', !c.incomeWarning);
+      if(c.incomeWarning) {
+          warnEl.textContent = `⚠️ Warning: Proposed Net Contrib. (HK$ ${F(S.netContrib)}) exceeds your surplus income of (HK$ ${F(c.availableForContrib)})!`;
+      }
+  }
 
   // Live Recovery Rate Monitor
   const lblRec = document.getElementById('lbl_recoveryRate');
@@ -1476,6 +1496,7 @@ function renderProposal() {
   distHtml += `</tbody></table>`;
   distHtml += `<p style="font-size:9pt;margin-top:8px">***Interest Rate @${E(s.interestRate.toFixed(1))}% per annum is adopted for above calculation</p>`;
   
+  // Notice the pg_landscape wrapper below:
   pages.push(pg_landscape(`${appxHdr(4,'ESTIMATED DISTRIBUTION OF IVA DIVIDENDS','')}
     <p style="text-align:center;font-size:11pt">INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}<br>RE: <strong>${E(nm)} (${E(chi)})</strong><br>(Holder of Hong Kong Identity Card No. <strong>${E(id)}</strong>)</p>
     <div style="overflow-x:auto">${distHtml}</div>
