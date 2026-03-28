@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Qubeley IVADocGen V13 (Retainers Added)</title>
+<title>Qubeley IVADocGen V13</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 /* ========================================
@@ -495,9 +495,9 @@ DEFAULT_STATE.iva_0=7000; DEFAULT_STATE.iva_3=850; DEFAULT_STATE.iva_4=500; DEFA
 let S = JSON.parse(JSON.stringify(DEFAULT_STATE));
 
 // LocalStorage Persistence
-function saveData() { localStorage.setItem('iva_state_v8', JSON.stringify(S)); }
+function saveData() { localStorage.setItem('iva_state_v9', JSON.stringify(S)); }
 function loadData() {
-  const saved = localStorage.getItem('iva_state_v8');
+  const saved = localStorage.getItem('iva_state_v9');
   if (saved) {
     try { 
       const parsed = JSON.parse(saved);
@@ -1382,8 +1382,8 @@ function renderProposal() {
   // PAGE 46: Appendix 2
   const r2 = (label,bk,iva,bold=false) => `<tr${bold?' class="b"':''}><td style="padding:4px 8px">${label}</td><td class="r" style="padding:4px 8px">${E(bk)}</td><td class="r" style="padding:4px 8px">${E(iva)}</td></tr>`;
   const fixedBk=c.mpf; const fixedIva=c.mpf+s.nomMonthly;
-  const bkPct=totalInc>0?Math.round(s.bkContrib/totalInc*100):0; const ivaPct=totalInc>0?Math.round(grossContrib/totalInc*100):0;
-  const bkNetPct=c.netDisposalBk>0?Math.round(s.bkContrib/c.netDisposalBk*100):0; const ivaNetPct=c.netDisposalIva>0?Math.round(grossContrib/c.netDisposalIva*100):0;
+  const bkPct=totalInc>0?Math.round(s.bkContrib/totalInc*100):0; const ivaPct=totalInc>0?Math.round(c.grossContrib/totalInc*100):0;
+  const bkNetPct=c.netDisposalBk>0?Math.round(s.bkContrib/c.netDisposalBk*100):0; const ivaNetPct=c.netDisposalIva>0?Math.round(c.grossContrib/c.netDisposalIva*100):0;
   
   pages.push(pg(`${appxHdr(2,'MONTHLY INCOME AND EXPENSES ANALYSIS','')}
     <p style="text-align:center;font-size:11pt">INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}<br>RE: <strong>${E(nm)} (${E(chi)})</strong><br>(Holder of Hong Kong Identity Card No. <strong>${E(id)}</strong>)</p>
@@ -1512,6 +1512,7 @@ function renderProposal() {
   distHtml += `</tbody></table>`;
   distHtml += `<p style="font-size:9pt;margin-top:8px">***Interest Rate @${E(s.interestRate.toFixed(1))}% per annum is adopted for above calculation</p>`;
   
+  // Notice the pg_landscape wrapper below:
   pages.push(pg_landscape(`${appxHdr(4,'ESTIMATED DISTRIBUTION OF IVA DIVIDENDS','')}
     <p style="text-align:center;font-size:11pt">INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}<br>RE: <strong>${E(nm)} (${E(chi)})</strong><br>(Holder of Hong Kong Identity Card No. <strong>${E(id)}</strong>)</p>
     <div style="overflow-x:auto">${distHtml}</div>
@@ -1605,6 +1606,8 @@ function renderRetainers() {
   const id = s.hkid || '[HKID]'; 
   const solName = s.solName; 
   const nomName = s.nomName; 
+  
+  const pg = content => `<div class="legal-page">${content}</div>`;
   
   const pages = [];
   
@@ -1703,6 +1706,15 @@ function renderRetainers() {
   `));
 
   document.getElementById('retainerOut').innerHTML = pages.join('\n');
+  
+  // Page enumeration
+  document.querySelectorAll('#retainerOut .legal-page').forEach((el,i) => {
+    const pn = document.createElement('div');
+    pn.className = 'no-print';
+    pn.style.cssText = 'font-size:10px;color:#94a3b8;text-align:right;margin-top:4px;margin-bottom:2px';
+    pn.textContent = '— Retainer Page '+(i+1)+' of 3 —';
+    el.parentNode.insertBefore(pn, el.nextSibling);
+  });
 }
 
 function init() {
