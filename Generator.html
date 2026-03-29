@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Qubeley IVADocGen V13</title>
+<title>Qubeley IVADocGen V15</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 /* ========================================
@@ -126,7 +126,7 @@
 <nav class="no-print bg-slate-900 border-b border-slate-700 shrink-0 sticky top-0 z-50">
   <div class="max-w-screen-2xl mx-auto px-4 flex items-center justify-between h-14">
     <div class="flex items-center gap-5 overflow-x-auto">
-      <span class="text-blue-400 font-bold text-sm whitespace-nowrap mr-2">Qubeley IVADocGen V13</span>
+      <span class="text-blue-400 font-bold text-sm whitespace-nowrap mr-2">Qubeley IVADocGen V15</span>
       <button onclick="switchTab(0)" id="tbtn0" class="tab-active text-sm font-medium px-3 py-3 border-b-2 border-transparent whitespace-nowrap transition-all">1. Debtor Info</button>
       <button onclick="switchTab(1)" id="tbtn1" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">2. Court Fees</button>
       <button onclick="switchTab(2)" id="tbtn2" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">3. Distribution</button>
@@ -453,21 +453,22 @@ const DEFAULT_CDB=[
 const EXPCATS=['Housing','Govt Rent & Rates','Property Mgmt Fee','Water/Elec/Gas','Phones & Internet','Transportation','Food & Groceries','Dependant (Mother)','Dependant (Father)','Dependant (Others)','Children Education','Household Expenses','Life Insurance','Clothing/Personal Care','Others'];
 const NATURES=['Due under personal loan','Due under credit card','Due under personal loan and credit card'];
 
-// Default State 
+// Default State (Update Nominee details per latest request)
 const DEFAULT_STATE = {
   courtYear:'2026', soaDate:'12th March 2026',
   solName:'LIMS Solicitors',
   solAddr1:'8/F., Pilkem Commercial Centre', solAddr2:'8 Pilkem Street, Jordan', solAddr3:'Kowloon, Hong Kong',
   solTel:'3428 2973', solFax:'2730 0875', solRef:'90xxx/3.7/AL(IN)',
-  nomName:'LIM CHI YU ALVIN', nomFirm:'Solicitor of LIMS SOLICITORS',
-  nomAddr:'8/F., Pilkem Commercial Centre, 8 Pilkem Street, Jordan, Kowloon, Hong Kong',
-  nomDesc:'It is proposed that LIM CHI YU ALVIN (the \u201cIntended Nominee\u201d) of LIMS SOLICITORS of 8th Floor, Pilkem Commercial Centre, 8 Pilkem Street, Jordan, Kowloon, Hong Kong, should act as Nominee of my IVA. LIM CHI YU ALVIN who acts as the Intended Nominee in respect of this Proposal is the Principal of LIMS SOLICITORS, a Solicitors firm of Hong Kong SAR. The Intended Nominee is a Solicitor of the High Court of Hong Kong with Practicing Certificate to practice in Hong Kong with 19 years of experience in bankruptcy and insolvency matters. He has been entrusted to act for debtors or creditors in a number of non-summary cases, including Re: Rehm Suneast International Limited (HCCW 60/2009), Re: Sit Kwong Lam (HCB 6051/2018) and Re: Brightoil Petroleum (Holdings) Limited (HCCW 147/2019). The Intended Nominee is covered by professional indemnity insurance arranged by him under the name of LIMS SOLICITORS. The Intended Nominee confirms that he is prepared to act as my Nominee if appointed to do so. If appointed as Nominee, the Intended Nominee will exercise the functions set out in the Ordinance and Rules and as set out in this Proposal. In the premises, I hereby confirm that the Intended Nominee is experienced and qualified, so far as I am aware, to act as nominee and not trustee in relation to the voluntary arrangement for the purpose of supervising its implementation. No assets will vest in LIM CHI YU ALVIN. No liability will fall upon him and he will not enter into any contract or other arrangement in a position so as to incur any personal liability. I confirm that the Intended Nominee is experienced and qualified to act as Nominee in relation to my voluntary arrangement.',
+  nomName:'NG, KA KUEN', 
+  nomFirm:'NG KA KUEN, Certified Public Accountant (Practising)',
+  nomAddr:'Unit 1503, 15/F, One Portside, 29 Tai Yau Street, San Po Kong, Kowloon, Hong Kong',
+  nomDesc:'It is proposed that NG, KA KUEN (the “Intended Nominee”) of NG KA KUEN, Certified Public Accountant (Practising) of Unit 1503, 15/F, One Portside, 29 Tai Yau Street, San Po Kong, Kowloon, Hong Kong, should act as Nominee of my IVA. NG, KA KUEN who acts as the Intended Nominee in respect of this Proposal is the Principal of NG KA KUEN, Certified Public Accountant (Practising), a Certified Public Accountant firm of Hong Kong SAR. The Intended Nominee is a Certified Public Accountant (Practising) registered with the Hong Kong Institute of Certified Public Accountants (HKICPA) with extensive experience in accounting, corporate restructuring, bankruptcy, and insolvency matters. He has been entrusted to act for debtors or creditors, and appointed as nominee, trustee, or liquidator in a number of non-summary and insolvency cases. The Intended Nominee is covered by professional indemnity insurance arranged by him under the name of NG KA KUEN, Certified Public Accountant (Practising) in compliance with the requirements of the HKICPA. The Intended Nominee confirms that he is prepared to act as my Nominee if appointed to do so. If appointed as Nominee, the Intended Nominee will exercise the functions set out in the Ordinance and Rules and as set out in this Proposal. In the premises, I hereby confirm that the Intended Nominee is experienced and qualified, so far as I am aware, to act as nominee and not trustee in relation to the voluntary arrangement for the purpose of supervising its implementation. No assets will vest in NG, KA KUEN. No liability will fall upon him and he will not enter into any contract or other arrangement in a position so as to incur any personal liability. I confirm that the Intended Nominee is experienced and qualified to act as Nominee in relation to my voluntary arrangement.',
   nameEng:'CHAN TAI MAN',nameChi:'陳大文',hkid:'Z123456(7)',shortForm:'CTM',address:'Flat A, 1/F., Block 1, Sunshine City, Ma On Shan, N.T.',
   jobDesc:'I am now 25 years old and I was separated. I am working as a Waiter in Watami (China) Company Limited since May 2018. Meanwhile, I am also working as a part-time Financial Strategist in Dynasty Financial Group Limited since April 2017.',
   accomDesc:'I am living with my parents at an accommodation situated at First Floor, No. 59 Leng Pei Tsuen, Fanling, New Territories, Hong Kong. The accommodation is rented by my parents while the monthly rental fee is shared by me and my father who is working as a Shop Assistant with a monthly salary around HK$10,000. My mother is a housewife.',
   salary:23150,commission:0,overtime:0,otherAllow:0,
   bkContrib:8000,
-  netContrib:7000, // Explicit standalone user input
+  netContrib:7000, 
   bank:[{name:'',ac:'',bal:0,ex:true},{name:'',ac:'',bal:0,ex:false},{name:'',ac:'',bal:0,ex:false}],
   deposit:126000,investments:0,lifeIns:0,debtRec:0,vehicles:0,equip:0,jewelry:0,mpf:0,land:0,otherAsset:0,
   ivaTerm:33,interestRate:7,nomMonthly:1000,
@@ -495,9 +496,9 @@ DEFAULT_STATE.iva_0=7000; DEFAULT_STATE.iva_3=850; DEFAULT_STATE.iva_4=500; DEFA
 let S = JSON.parse(JSON.stringify(DEFAULT_STATE));
 
 // LocalStorage Persistence
-function saveData() { localStorage.setItem('iva_state_v9', JSON.stringify(S)); }
+function saveData() { localStorage.setItem('iva_state_v10', JSON.stringify(S)); }
 function loadData() {
-  const saved = localStorage.getItem('iva_state_v9');
+  const saved = localStorage.getItem('iva_state_v10');
   if (saved) {
     try { 
       const parsed = JSON.parse(saved);
@@ -1062,7 +1063,7 @@ function renderProposal() {
 
   // PAGE 14 (Expenses)
   pages.push(pg(`
-    <p>4.3 &nbsp; A comparison of monthly income and expenses analysis between bankruptcy and IVA scenario is provided as Appendix 2. In case of bankruptcy, even if I am lucky enough to maintain the present earning level I would be only able to repay HK$<strong>${E(F(s.bkContrib))}</strong> per month to my creditors. On the other hand, if the IVA is accepted by the Court and the Creditors, I am prepared to cut down my personal expenditure to a level below bankruptcy scenario so as to increase my monthly contribution to repay my creditors as soon as possible. Under the IVA, after Mandatory Provident Fund contribution, household bills and my living expenses amounting in a sum of HK$<strong>${E(F(totalExpIva))}</strong> (Details of which are as follows), I would be in a position to contribute HK$<strong>${E(F(grossContrib))}</strong> per month to my creditors.</p>
+    <p>4.3 &nbsp; A comparison of monthly income and expenses analysis between bankruptcy and IVA scenario is provided as Appendix 2. In case of bankruptcy, even if I am lucky enough to maintain the present earning level I would be only able to repay HK$<strong>${E(F(s.bkContrib))}</strong> per month to my creditors. On the other hand, if the IVA is accepted by the Court and the Creditors, I am prepared to cut down my personal expenditure to a level below bankruptcy scenario so as to increase my monthly contribution to repay my creditors as soon as possible. Under the IVA, after Mandatory Provident Fund contribution, household bills and my living expenses amounting in a sum of HK$<strong>${E(F(totalExpIva))}</strong> (Details of which are as follows), I would be in a position to contribute HK$<strong>${E(F(c.grossContrib))}</strong> per month to my creditors.</p>
     <p style="font-weight:bold;text-decoration:underline;margin-top:10px">Details of expenses</p>
     <table class="soa" style="border:1px solid #ccc;margin-top:4px"><tbody>${expTableRows}
       <tr class="b" style="background:#f5f5f5"><td style="padding:4px 8px">Total Expenses</td><td style="padding:4px 8px;text-align:right">${E(F(totalExpIva))}</td></tr>
@@ -1092,7 +1093,7 @@ function renderProposal() {
   pages.push(pg(`
     ${RL('Rule<br>122C<br>(2)(c)<br>(ii)','<p>5.5 &nbsp; As far as I know, there are no circumstances which would give rise to the possibility of claims being made under Sections 49 (Transactions at an Undervalue), 50 (Unfair Preferences) and 71A (Extortionate Credit Transactions) (which sections have been explained to me) in the event that I should be adjudged bankrupt.</p>')}
     ${RL('Rule<br>122C<br>(2)(d)','<p style="margin-top:10px">5.6 &nbsp; As far as I know, neither have I been indebted to any creditors under a guarantee, nor have any other persons acted as guarantors of my debts.</p>')}
-    ${RL('Rule<br>122C<br>(2)(e)','<p style="margin-top:10px">5.7 &nbsp; I propose to contribute HK$<strong>'+E(F(grossContrib))+'</strong> per month to the IVA for a period of <strong>'+E(s.ivaTerm)+'</strong> months (i.e., <strong>'+E(ivaYrs)+'</strong> years) totaling a sum of HK$<strong>'+E(F(totalVoluntary))+'</strong> by way of bank transfer on a monthly basis, to the account referred to in paragraph 5.11 for the purpose of the IVA. After deducting the implementation and other necessary expenses of the proposed IVA, my total contribution to the unsecured creditors will be HK$<strong>'+E(F(ivaAvailable))+'</strong>. Based on the amount of unsecured liabilities as stated in Appendix 1, the unsecured creditors will receive a <strong>'+E(ivaDiv)+'%</strong> return of the debt with an interest at the annual rate approximately <strong>'+E(s.interestRate)+'%</strong> at the end of the IVA term.</p>')}`));
+    ${RL('Rule<br>122C<br>(2)(e)','<p style="margin-top:10px">5.7 &nbsp; I propose to contribute HK$<strong>'+E(F(c.grossContrib))+'</strong> per month to the IVA for a period of <strong>'+E(s.ivaTerm)+'</strong> months (i.e., <strong>'+E(ivaYrs)+'</strong> years) totaling a sum of HK$<strong>'+E(F(totalVoluntary))+'</strong> by way of bank transfer on a monthly basis, to the account referred to in paragraph 5.11 for the purpose of the IVA. After deducting the implementation and other necessary expenses of the proposed IVA, my total contribution to the unsecured creditors will be HK$<strong>'+E(F(ivaAvailable))+'</strong>. Based on the amount of unsecured liabilities as stated in Appendix 1, the unsecured creditors will receive a <strong>'+E(ivaDiv)+'%</strong> return of the debt with an interest at the annual rate approximately <strong>'+E(s.interestRate)+'%</strong> at the end of the IVA term.</p>')}`));
 
   // PAGE 20
   pages.push(pg(`
@@ -1608,65 +1609,122 @@ function renderRetainers() {
   const nomName = s.nomName; 
   
   const pg = content => `<div class="legal-page">${content}</div>`;
-  
   const pages = [];
   
-  // 1. Solicitor Retainer
+  // ==========================================================
+  // DOCUMENT 1: SOLICITOR RETAINER & TERMS OF BUSINESS (2+ Pages)
+  // ==========================================================
   pages.push(pg(`
-    <h2 style="text-align:center;font-weight:bold;margin-bottom:20px;">RETAINER AND FEE AGREEMENT<br>聘用及收費協議</h2>
-    <p><strong>Date 日期:</strong> ${E(soaDate)}</p>
-    <p><strong>Between 雙方:</strong></p>
-    <p>(1) <strong>${E(solName)}</strong> (hereinafter "the Solicitor" 本律師行)</p>
-    <p>(2) <strong>${E(nm)} (${E(chi)})</strong>, HKID: <strong>${E(id)}</strong> (hereinafter "the Client" 客戶)</p>
+    <h2 style="text-align:center;font-weight:bold;margin-bottom:20px;text-decoration:underline;">RETAINER AND FEE AGREEMENT</h2><span class="no-print text-[8px] text-gray-300"></span>
+    <p style="text-align:right;"><strong>Date:</strong> ${E(soaDate)}</p>
+    <p><strong>To:</strong> ${E(nm)} (${E(chi)}) (HKID: <strong>${E(id)}</strong>) (the "Client")</p>
+    <p><strong>From:</strong> <strong>${E(solName)}</strong> (the "Solicitor")</p>
     <hr class="chr" style="margin: 20px 0;">
-    <p class="sec-hdr">1. Scope of Engagement 委託範圍</p>
-    <p>The Client hereby engages the Solicitor to act on his/her behalf to prepare and file a proposal for an Individual Voluntary Arrangement (IVA) pursuant to the Bankruptcy Ordinance (Cap. 6).</p>
-    <p class="sec-hdr">2. Fees and Disbursements 收費及雜費</p>
-    <p>The Client agrees to pay an initial deposit of <strong>HK$${E(F(s.deposit))}</strong> to the Solicitor. This deposit shall be applied towards the following estimated costs and expenses prior to the creditors' meeting:</p>
-    <table class="soa" style="margin-top:10px; width:90%;">
-      <tr><td>(a) Solicitor's Fee 律師費:</td><td class="r">HK$ ${E(F(s.solFeeIVA))}</td></tr>
-      <tr><td>(b) Nominee's Initial Fee 代名人初步收費:</td><td class="r">HK$ ${E(F(c.nomLumpSum))}</td></tr>
-      <tr><td>(c) Court Fees 法庭費用:</td><td class="r">HK$ ${E(F(c.courtFee))}</td></tr>
-      <tr><td>(d) Accountant's Fee 會計師費:</td><td class="r">HK$ ${E(F(c.accountantFee))}</td></tr>
-      <tr><td>(e) Advertising & Disbursements 廣告及雜費:</td><td class="r">HK$ ${E(F(c.advFeeFixed))}</td></tr>
-      <tr class="bt"><td><strong>Total Pre-meeting Costs 總計:</strong></td><td class="r"><strong>HK$ ${E(F(c.preMeeting))}</strong></td></tr>
+    <p class="sec-hdr">1. Scope of Engagement</p>
+    <p>You have instructed us, and we agree to act on your behalf, to prepare and file an application to the High Court of the Hong Kong Special Administrative Region for an Interim Order and to prepare a Proposal for an Individual Voluntary Arrangement ("IVA") pursuant to Sections 20 and 20A of the Bankruptcy Ordinance (Cap. 6) <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    <p class="sec-hdr">2. Initial Deposit and Estimated Pre-Meeting Costs</p>
+    <p>You agree to pay an initial deposit of <strong>HK$${E(F(s.deposit))}</strong> to our firm <span class="no-print text-[8px] text-gray-300"></span>. This deposit will be held in our client account and applied towards the initial costs and disbursements required to convene the creditors' meeting. The estimated breakdown is as follows:</p>
+    <table class="soa" style="margin-top:10px; width:100%;">
+      <tr><td>(a) Solicitor's Fee for preparation of IVA Proposal:</td><td class="r">HK$ ${E(F(s.solFeeIVA))}</td></tr>
+      <tr><td>(b) Nominee's Pre-Meeting Remuneration:</td><td class="r">HK$ ${E(F(c.nomLumpSum))}</td></tr>
+      <tr><td>(c) Court Fees (calculated at 1.5% on first $100k, 0.75% on remainder):</td><td class="r">HK$ ${E(F(c.courtFee))}</td></tr>
+      <tr><td>(d) Accountant's Assessment Fee:</td><td class="r">HK$ ${E(F(c.accountantFee))}</td></tr>
+      <tr><td>(e) Statutory Advertising & Misc. Disbursements:</td><td class="r">HK$ ${E(F(c.advFeeFixed))}</td></tr>
+      <tr class="bt"><td><strong>Total Pre-meeting Costs:</strong></td><td class="r"><strong>HK$ ${E(F(c.preMeeting))}</strong></td></tr>
     </table>
-    <p class="sec-hdr">3. Client's Acknowledgement 客戶聲明</p>
-    <p>The Client confirms that he/she has made full and frank disclosure of all assets and liabilities. The Client acknowledges that if the IVA is rejected by the creditors or the Court, the aforementioned deposit and fees incurred are non-refundable.</p>
-    <div style="margin-top:80px; display:flex; justify-content:space-between;">
+    <p style="margin-top:14px">In the event that your IVA Proposal is rejected by your creditors or the Court, you acknowledge and agree that the initial deposit utilized for the aforementioned services and disbursements is strictly non-refundable <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    <p class="sec-hdr">3. Client Confirmation and Instructions</p>
+    <p>By signing below, you confirm that you have made full, frank, and truthful disclosure of all your assets and liabilities. You authorize us to disclose such information to the Court, your Intended Nominee, and your creditors as required under Cap. 6. You further confirm you have read, understood, and agree to be bound by our Standard Terms and Conditions of Business attached hereto <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    
+    <div style="margin-top:60px; display:flex; justify-content:space-between;">
        <div>
          <span class="sig" style="width:200px"></span><br>
-         Signed by the Client 客戶簽署<br>
+         Signed by the Client<br>
          <strong>${E(nm)}</strong>
        </div>
        <div>
          <span class="sig" style="width:200px"></span><br>
-         For and on behalf of the Solicitor 律師行代表<br>
+         For and on behalf of the Solicitor<br>
          <strong>${E(solName)}</strong>
        </div>
     </div>
   `));
 
-  // 2. Nominee Retainer
   pages.push(pg(`
-    <h2 style="text-align:center;font-weight:bold;margin-bottom:20px;">NOMINEE SERVICE AGREEMENT<br>代名人服務協議</h2>
-    <p><strong>Date 日期:</strong> ${E(soaDate)}</p>
-    <p><strong>Between 雙方:</strong></p>
-    <p>(1) <strong>${E(nomName)}</strong> (hereinafter "the Nominee" 代名人)</p>
-    <p>(2) <strong>${E(nm)} (${E(chi)})</strong>, HKID: <strong>${E(id)}</strong> (hereinafter "the Client" 客戶)</p>
+    <h3 style="text-align:center;font-weight:bold;margin-bottom:20px;text-decoration:underline;">STANDARD TERMS AND CONDITIONS OF BUSINESS</h3><span class="no-print text-[8px] text-gray-300"></span>
+    <p class="sec-hdr">4. Standard of Service and Communication</p>
+    <p>4.1 We will provide the services described herein with reasonable skill, care, and diligence. We will keep you informed of the progress of your matter and communicate primarily by telephone, post, or email. You must ensure your contact details remain updated <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    <p>4.2 We rely heavily on the accuracy and completeness of the information you provide. We will not independently verify the documentation you supply unless expressly agreed. You bear full responsibility for any false declarations made in your Statement of Affairs <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    
+    <p class="sec-hdr">5. Conflicts of Interest</p>
+    <p>5.1 We have conducted a conflict of interest check prior to accepting your instructions. If a conflict arises during the course of our representation, we reserve the right to terminate our services in accordance with the Solicitors' Practice Rules <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    
+    <p class="sec-hdr">6. Client Money and Billing</p>
+    <p>6.1 Any money held on your behalf will be maintained in our firm's client account in strict compliance with the Solicitors' Accounts Rules. Interest will not be paid to you on these funds unless it exceeds the statutory de minimis threshold <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    <p>6.2 We reserve the right to render interim bills for our services and disbursements. Unless otherwise agreed, invoices are payable upon presentation. We reserve the right to halt work or retain your documents (exercising a solicitor's lien) if bills remain unpaid <span class="no-print text-[8px] text-gray-300"></span>.</p>
+
+    <p class="sec-hdr">7. Limitation of Liability</p>
+    <p>7.1 Our aggregate liability to you for any loss, damage, costs, or expenses arising out of or in connection with this engagement (whether in contract, tort, negligence, or otherwise) shall be strictly limited to the extent permitted by law, and shall not exceed the limit of our professional indemnity insurance coverage <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    <p>7.2 We shall not be liable for any indirect or consequential loss, nor for any loss arising from your failure to provide accurate, truthful, or timely information <span class="no-print text-[8px] text-gray-300"></span>.</p>
+
+    <p class="sec-hdr">8. Termination</p>
+    <p>8.1 You may terminate our instructions at any time by providing written notice. We may also cease to act for you for good cause (e.g., failure to pay bills, failure to provide instructions, or if a conflict of interest arises) upon reasonable notice <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    <p>8.2 Upon termination, you remain liable for all fees and disbursements incurred up to the date of termination <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    
+    <p class="sec-hdr">9. Governing Law</p>
+    <p>9.1 This agreement and any dispute arising out of it shall be governed by and construed in accordance with the laws of the Hong Kong Special Administrative Region. Both parties submit to the exclusive jurisdiction of the Hong Kong Courts <span class="no-print text-[8px] text-gray-300"></span>.</p>
+  `));
+
+  // ==========================================================
+  // DOCUMENT 2: NOMINEE SERVICE AGREEMENT
+  // ==========================================================
+  pages.push(pg(`
+    <h2 style="text-align:center;font-weight:bold;margin-bottom:20px;text-decoration:underline;">NOMINEE SERVICE AGREEMENT (聘用協議)</h2><span class="no-print text-[8px] text-gray-300"></span>
+    <p style="text-align:right;"><strong>Date:</strong> ${E(soaDate)}</p>
+    <p><strong>Between:</strong></p>
+    <p>(1) <strong>${E(nomName)}</strong> of ${E(nomFirm)} (the "Nominee")</p>
+    <p>(2) <strong>${E(nm)} (${E(chi)})</strong>, HKID: <strong>${E(id)}</strong> (the "Debtor")</p>
     <hr class="chr" style="margin: 20px 0;">
-    <p class="sec-hdr">1. Appointment 委任</p>
-    <p>The Client confirms the appointment of the Nominee to act as the Intended Nominee and subsequently the Nominee for the Client's IVA, subject to the approval of the creditors and the Court.</p>
-    <p class="sec-hdr">2. Duties 職責</p>
-    <p>The Nominee shall assess the viability of the IVA proposal, submit the Nominee's Report to the Court, chair the creditors' meeting, and upon approval, supervise the implementation of the IVA and distribute dividends to creditors.</p>
-    <p class="sec-hdr">3. Remuneration 收費</p>
-    <p>The Nominee's pre-meeting fees are covered by the initial deposit held by the Solicitor. Upon approval of the IVA, the Nominee is entitled to a monthly implementation fee of <strong>HK$${E(F(s.nomMonthly))}</strong> for the duration of the IVA term (${E(s.ivaTerm)} months).</p>
-    <p class="sec-hdr">4. Default 違約</p>
-    <p>The Client undertakes to remit the monthly gross contribution of <strong>HK$${E(F(c.grossContrib))}</strong> strictly on time. Failure to do so may result in the Nominee issuing a Certificate of Default and petitioning for the Client's bankruptcy.</p>
+    
+    <p class="sec-hdr">1. Appointment</p>
+    <p>The Debtor hereby officially appoints the Nominee to act as the Intended Nominee and subsequently as the Nominee for the Debtor's Individual Voluntary Arrangement ("IVA") pursuant to the Bankruptcy Ordinance (Cap. 6). The Nominee accepts such appointment subject to the terms and conditions herein <span class="no-print text-[8px] text-gray-300"></span>.</p>
+
+    <p class="sec-hdr">2. Duties of the Nominee</p>
+    <p>Upon appointment, the Nominee shall <span class="no-print text-[8px] text-gray-300"></span>:</p>
+    <ul class="ind1" style="list-style-type: disc; margin-top: 8px;">
+        <li>Assess the viability of the Debtor's Proposal and submit the Nominee's Report to the High Court of Hong Kong.</li>
+        <li>Summon and act as Chairman of the creditors' meeting under Rule 122M.</li>
+        <li>Upon approval by the creditors, supervise the implementation of the IVA.</li>
+        <li>Receive the Debtor's monthly contributions, adjudicate creditor claims, and distribute dividends to admitted creditors on a regular basis.</li>
+    </ul>
+
+    <p class="sec-hdr">3. Remuneration</p>
+    <p>3.1 For duties performed prior to and including the creditors' meeting, the Nominee shall be paid a lump sum fee of <strong>HK$${E(F(c.nomLumpSum))}</strong> plus reasonable disbursements. This amount shall be settled from the initial deposit held by the Debtor's Solicitor <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    <p>3.2 Upon successful approval of the IVA, the Nominee is entitled to deduct a monthly implementation and supervision fee of <strong>HK$${E(F(s.nomMonthly))}</strong> directly from the gross monthly contributions remitted by the Debtor during the ${E(s.ivaTerm)}-month term <span class="no-print text-[8px] text-gray-300"></span>.</p>
+
+    <p class="sec-hdr">4. Debtor's Covenants</p>
+    <p>The Debtor undertakes and covenants to <span class="no-print text-[8px] text-gray-300"></span>:</p>
+    <ul class="ind1" style="list-style-type: disc; margin-top: 8px;">
+        <li>Remit the agreed gross monthly contribution of <strong>HK$${E(F(c.grossContrib))}</strong> to the Nominee strictly on time.</li>
+        <li>Report to the Nominee any increase or decrease in monthly income exceeding 5%, or any changes in employment or contact details, within 14 days.</li>
+        <li>Surrender any lump-sum "windfalls" (including bonuses, severance, lottery winnings, or inheritance) to the Nominee within 14 days of receipt for the benefit of creditors.</li>
+    </ul>
+  `));
+
+  pages.push(pg(`
+    <p class="sec-hdr">5. Termination, Default, and Bankruptcy Petition</p>
+    <p>5.1 If the Debtor fails to make the agreed contributions or breaches any terms of the Proposal, the Nominee is obligated under Cap. 6 to issue a Certificate of Default to the Debtor and the creditors <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    <p>5.2 Upon issuing a Certificate of Default, the Nominee is authorized, subject to creditors' instruction, to present a bankruptcy petition against the Debtor pursuant to Section 3(1)(c) of the Ordinance <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    <p>5.3 All legal costs, court fees, and Nominee's time-costs incurred in relation to issuing the default certificate and presenting the bankruptcy petition shall be borne solely by the Debtor <span class="no-print text-[8px] text-gray-300"></span>.</p>
+
+    <p class="sec-hdr">6. Exclusions of Liability and Indemnity</p>
+    <p>6.1 No assets of the Debtor shall vest in the Nominee. The Nominee acts purely in a supervisory capacity and shall not enter into any contract or arrangement so as to incur any personal liability <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    <p>6.2 The Debtor hereby agrees to fully indemnify and hold harmless the Nominee, his firm, agents, and employees against all claims, demands, liabilities, costs, or expenses arising from any act, omission, or false statement made by the Debtor in relation to this IVA <span class="no-print text-[8px] text-gray-300"></span>.</p>
+
     <div style="margin-top:80px; display:flex; justify-content:space-between;">
        <div>
          <span class="sig" style="width:200px"></span><br>
-         Signed by the Client 客戶簽署<br>
+         Signed by the Debtor 客戶簽署<br>
          <strong>${E(nm)}</strong>
        </div>
        <div>
@@ -1677,20 +1735,33 @@ function renderRetainers() {
     </div>
   `));
 
-  // 3. Service Agent Retainer
+  // ==========================================================
+  // DOCUMENT 3: CLERICAL SUPPORT SERVICE AGREEMENT
+  // ==========================================================
   pages.push(pg(`
-    <h2 style="text-align:center;font-weight:bold;margin-bottom:20px;">CLERICAL SUPPORT SERVICE AGREEMENT<br>文書支援服務協議</h2>
-    <p><strong>Date 日期:</strong> ${E(soaDate)}</p>
-    <p><strong>Between 雙方:</strong></p>
-    <p>(1) <strong>___________________________________</strong> (hereinafter "the Service Agent" 服務代理)</p>
-    <p>(2) <strong>${E(nm)} (${E(chi)})</strong>, HKID: <strong>${E(id)}</strong> (hereinafter "the Client" 客戶)</p>
+    <h2 style="text-align:center;font-weight:bold;margin-bottom:20px;text-decoration:underline;">CLERICAL SUPPORT SERVICE AGREEMENT (顧問服務協議)</h2><span class="no-print text-[8px] text-gray-300"></span>
+    <p style="text-align:right;"><strong>Date:</strong> ${E(soaDate)}</p>
+    <p><strong>Between:</strong></p>
+    <p>(1) <strong>___________________________________</strong> (the "Service Agent")</p>
+    <p>(2) <strong>${E(nm)} (${E(chi)})</strong>, HKID: <strong>${E(id)}</strong> (the "Client")</p>
     <hr class="chr" style="margin: 20px 0;">
-    <p class="sec-hdr">1. Scope of Services 服務範圍</p>
-    <p>The Service Agent shall provide clerical support, document collation, and administrative assistance in relation to the Client's IVA application. The Service Agent acts strictly as a communication bridge to assist the Client in preparing the necessary paperwork for the Solicitor and the Nominee.</p>
-    <p class="sec-hdr">2. Important Disclaimer 免責聲明</p>
-    <p>The Service Agent is <strong>NOT</strong> a firm of solicitors nor a firm of certified public accountants. The Service Agent and its staff <strong>do not and cannot</strong> provide legal or formal accounting advice. The Client is strictly advised to seek independent legal representation for legal matters.</p>
-    <p class="sec-hdr">3. Service Fee 服務收費</p>
-    <p>In consideration of the clerical and administrative services provided, the Client agrees to pay the Service Agent a fee of <strong>HK$${E(F(s.implCharges))}</strong>.</p>
+    
+    <p class="sec-hdr">1. Scope of Services (服務範圍)</p>
+    <p>The Service Agent agrees to provide purely clerical, administrative, and document-collation support to assist the Client in preparing the necessary paperwork for their Individual Voluntary Arrangement (IVA) application. The Service Agent will act as a communication bridge, liaising with the Client to gather financial documents and passing them to the formally appointed Solicitor and Nominee <span class="no-print text-[8px] text-gray-300"></span>.</p>
+
+    <p class="sec-hdr">2. Important Disclaimer (免責聲明)</p>
+    <p>2.1 The Client explicitly acknowledges and understands that the Service Agent is <strong>NOT</strong> a firm of solicitors, <strong>NOT</strong> a law firm, and <strong>NOT</strong> a firm of certified public accountants <span class="no-print text-[8px] text-gray-300"></span>.</p>
+    <p>2.2 The Service Agent and its staff <strong>do not and cannot</strong> provide any formal legal advice, accounting advice, or professional representation in Court. The Client is strictly advised to seek independent legal representation from a qualified Solicitor for all legal matters pertaining to the IVA <span class="no-print text-[8px] text-gray-300"></span>.</p>
+
+    <p class="sec-hdr">3. Service Fee (顧問服務收費)</p>
+    <p>In consideration of the clerical time and administrative overhead spent on gathering documents and liaising with professionals, the Client agrees to pay the Service Agent a fixed implementation fee of <strong>HK$${E(F(s.implCharges))}</strong> <span class="no-print text-[8px] text-gray-300"></span>.</p>
+
+    <p class="sec-hdr">4. Client's Obligations (客戶責任)</p>
+    <p>The Client must provide true, complete, and accurate financial records to the Service Agent. The Service Agent is not liable for verifying the authenticity of the documents provided. Any delay by the Client in providing necessary documents or signing forms may delay the IVA application <span class="no-print text-[8px] text-gray-300"></span>.</p>
+
+    <p class="sec-hdr">5. Confidentiality (保密條款)</p>
+    <p>The Service Agent shall keep the Client's personal and financial data strictly confidential and shall only disclose such data to the appointed Solicitor, Nominee, Court, and Creditors strictly for the purpose of the IVA application <span class="no-print text-[8px] text-gray-300"></span>.</p>
+
     <div style="margin-top:80px; display:flex; justify-content:space-between;">
        <div>
          <span class="sig" style="width:200px"></span><br>
@@ -1706,15 +1777,6 @@ function renderRetainers() {
   `));
 
   document.getElementById('retainerOut').innerHTML = pages.join('\n');
-  
-  // Page enumeration
-  document.querySelectorAll('#retainerOut .legal-page').forEach((el,i) => {
-    const pn = document.createElement('div');
-    pn.className = 'no-print';
-    pn.style.cssText = 'font-size:10px;color:#94a3b8;text-align:right;margin-top:4px;margin-bottom:2px';
-    pn.textContent = '— Retainer Page '+(i+1)+' of 3 —';
-    el.parentNode.insertBefore(pn, el.nextSibling);
-  });
 }
 
 function init() {
