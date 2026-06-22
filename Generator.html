@@ -2183,14 +2183,25 @@ function generateProxyForm(c, s, pg) {
     <p style="margin-top:8px;">a creditor of the above-named debtor, hereby appoint:</p>
     <p>為上述債務人之債權人，現委任：</p>
 
-    <p style="margin-top:16px;margin-left:1.5cm;">
-      Name 姓名: <span contenteditable="true" class="editable-highlight" style="min-width:350px;">&nbsp;</span><br>
-      HKID / Passport No. 香港身份證/護照號碼: <span contenteditable="true" class="editable-highlight" style="min-width:250px;">&nbsp;</span><br>
-      of 地址: <span contenteditable="true" class="editable-highlight" style="min-width:400px;">&nbsp;</span>
+    <div style="border:2px solid #3b82f6;background:#eff6ff;padding:16px;margin:16px 0;border-radius:8px;">
+      <p style="margin:0;font-weight:bold;color:#1e40af;">☑ THE CHAIRMAN OF THE MEETING 會議主席</p>
+      <p style="margin:8px 0 0 0;font-size:10pt;color:#1e40af;">
+        <strong>${E(s.nomName)}</strong><br>
+        ${E(s.nomAddr)}
+      </p>
+    </div>
+
+    <p style="font-size:10pt;font-style:italic;color:#64748b;margin-top:8px;">OR, if you wish to appoint a different proxy, complete the details below:</p>
+    <p style="font-size:10pt;font-style:italic;color:#64748b;">或者，如閣下希望委任其他代表，請填寫以下詳情：</p>
+
+    <p style="margin-top:12px;margin-left:1.5cm;color:#94a3b8;">
+      Name 姓名: <span contenteditable="true" class="editable-highlight" style="min-width:350px;background:#f1f5f9;">&nbsp;</span><br>
+      HKID / Passport No. 香港身份證/護照號碼: <span contenteditable="true" class="editable-highlight" style="min-width:250px;background:#f1f5f9;">&nbsp;</span><br>
+      of 地址: <span contenteditable="true" class="editable-highlight" style="min-width:400px;background:#f1f5f9;">&nbsp;</span>
     </p>
 
-    <p style="margin-top:16px;">or failing him / her, the Chairman of the meeting, to be my / our proxy to attend and vote on my / our behalf at the meeting of creditors to be held on <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)} and at any adjournment thereof.</p>
-    <p>或如其缺席，則委任會議主席為本人/本公司之代表，代表本人/本公司出席及表決於 <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)} 舉行之債權人會議及其任何續會。</p>
+    <p style="margin-top:16px;">to be my / our proxy to attend and vote on my / our behalf at the meeting of creditors to be held on <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)} and at any adjournment thereof.</p>
+    <p>為本人/本公司之代表，代表本人/本公司出席及表決於 <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)} 舉行之債權人會議及其任何續會。</p>
 
     <p style="margin-top:20px;font-weight:bold;text-decoration:underline;">Voting Instructions 投票指示:</p>
     <p style="margin-top:10px;">I / We instruct my / our proxy to vote:</p>
@@ -2202,7 +2213,15 @@ function generateProxyForm(c, s, pg) {
         <td style="border:1px solid #000;padding:8px;width:50%;"><strong>☐ AGAINST 反對</strong> the approval of the debtor's proposal<br>批准債務人之建議書</td>
       </tr>
       <tr>
-        <td colspan="2" style="border:1px solid #000;padding:8px;"><strong>☐ AT THE DISCRETION 由代表酌情決定</strong> of the proxy<br>由代表酌情決定</td>
+        <td colspan="2" style="border:1px solid #000;padding:12px;">
+          <strong>☐ AT THE DISCRETION 由代表酌情決定</strong> of the proxy, subject to the following conditions:<br>
+          由代表酌情決定，但須符合以下條件：
+          <div style="margin-top:8px;padding:8px;border:1px dashed #cbd5e1;background:#f8fafc;min-height:60px;">
+            <span contenteditable="true" class="editable-highlight" style="display:block;min-height:50px;line-height:1.6;">
+              Example 例如: Vote FOR only if installment <= 96 months / 只有在還款期 少於 96個月 才投贊成票
+            </span>
+          </div>
+        </td>
       </tr>
     </table>
 
