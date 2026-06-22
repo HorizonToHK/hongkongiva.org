@@ -12,32 +12,43 @@
 */
 @page {
   size: A4 portrait;
-  margin: 2.5cm; /* Standard court margin */
+  margin: 2.5cm;
 }
 
 @page landscape-page {
   size: A4 landscape;
-  margin: 2.5cm;
+  margin: 1.5cm; /* Reduced margin for landscape to fit more content */
 }
 
 @media print {
   body { background: white !important; margin: 0; padding: 0; }
   .no-print { display: none !important; }
-  
+
   .legal-page {
     page-break-after: always;
-    padding: 0 !important; /* Rely on @page margin */
+    page-break-inside: avoid; /* Prevent content from breaking mid-page */
+    padding: 0 !important;
     margin: 0 !important;
     border: none !important;
     box-shadow: none !important;
     width: 100% !important;
     min-height: auto !important;
+    overflow: visible !important;
   }
+
   .legal-page.page-landscape {
     page: landscape-page;
+    width: 100% !important;
   }
+
   .legal-page:last-child { page-break-after: auto; }
-  
+
+  /* Prevent table rows from breaking across pages */
+  table { page-break-inside: auto; }
+  tr { page-break-inside: avoid; page-break-after: auto; }
+  thead { display: table-header-group; }
+  tfoot { display: table-footer-group; }
+
   /* Remove yellow highlight and dashed lines on print */
   .editable-highlight {
     background: transparent !important;
@@ -380,6 +391,7 @@
     <div class="flex gap-2">
       <button onclick="renderProposal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow">Generate / Refresh</button>
       <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow">Print / PDF</button>
+      <button onclick="exportToDocx('proposalOut', 'IVA_Proposal')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow">📄 Export .docx</button>
     </div>
   </div>
   <div class="no-print text-center text-xs text-slate-400 mb-4">Highlighted text fields below are editable directly. Adjustments won't persist if you click 'Refresh'.</div>
@@ -395,6 +407,7 @@
     <div class="flex gap-2">
       <button onclick="renderRetainers()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow">Generate / Refresh</button>
       <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow">Print / PDF</button>
+      <button onclick="exportToDocx('retainerOut', 'IVA_Retainers')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow">📄 Export .docx</button>
     </div>
   </div>
   <div class="no-print text-center text-xs text-slate-400 mb-4">Highlighted text fields below are editable directly. Adjustments won't persist if you click 'Refresh'.</div>
@@ -410,6 +423,7 @@
     <div class="flex gap-2">
       <button onclick="renderStep4Docs()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow">Generate / Refresh</button>
       <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow">Print / PDF</button>
+      <button onclick="exportToDocx('step4Out', 'IVA_Step4_Documents')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow">📄 Export .docx</button>
     </div>
   </div>
 
@@ -1724,32 +1738,33 @@ function renderProposal() {
   const bulkEnd2 = t - 1;
   const colHdrs = ['1<sup>st</sup> mo','2<sup>nd</sup>-5<sup>th</sup> mo','6<sup>th</sup> mo','7<sup>th</sup>-10<sup>th</sup> mo',`11<sup>th</sup>-${bulkEnd2 > 10 ? bulkEnd2 : '11'}<sup>th</sup> mo`,`${t}<sup>th</sup> mo`,'Total','Accum. Int'];
   const colMults = [1,4,1,4, t > 11 ? t - 11 : 0, 1];
-  
-  let distHtml = `<table class="soa" style="font-size:9pt;border-collapse:collapse;width:100%;margin-top:8px">
+
+  let distHtml = `<table style="font-size:8pt;border-collapse:collapse;width:100%;margin-top:8px;border:1px solid #000">
     <thead><tr style="background:#f0f0f0">
-      <th style="border:1px solid #000;padding:4px;text-align:left;"></th>
-      <th style="border:1px solid #000;padding:4px">HK$</th><th style="border:1px solid #000;padding:4px">%</th>`;
+      <th style="border:1px solid #000;padding:3px;text-align:left;min-width:80px">Creditor</th>
+      <th style="border:1px solid #000;padding:3px;min-width:60px">HK$</th>
+      <th style="border:1px solid #000;padding:3px;min-width:35px">%</th>`;
       
   colHdrs.forEach((h, i) => { if(colMults[i] > 0 || i >= 6) distHtml += `<th style="border:1px solid #000;padding:4px">${h}</th>`; });
   distHtml += `</tr></thead><tbody>`;
     
   const activeCols = colMults.filter(m => m > 0);
-  const dash9 = activeCols.map(()=>'<td style="border:1px solid #000;padding:3px;text-align:right">-</td>').join('');
-  
-  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Opening Balance</td><td></td><td></td>${dash9}<td>-</td><td></td></tr>`;
-  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Realisation of assets</td><td></td><td></td>${dash9}<td>-</td><td></td></tr>`;
-  
+  const dash9 = activeCols.map(()=>'<td style="border:1px solid #000;padding:3px;text-align:center">-</td>').join('');
+
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Opening Balance</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${dash9}<td style="border:1px solid #000;text-align:center">-</td><td style="border:1px solid #000;"></td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Realisation of assets</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${dash9}<td style="border:1px solid #000;text-align:center">-</td><td style="border:1px solid #000;"></td></tr>`;
+
   const grossCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(c.grossContrib*m))}</td>`).join('');
-  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Monthly contribution</td><td></td><td></td>${grossCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(c.grossContrib*t))}</td><td></td></tr>`;
-  distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:3px">Sub-total / Balance available</td><td></td><td></td>${grossCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(c.grossContrib*t))}</td><td></td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Monthly contribution</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${grossCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(c.grossContrib*t))}</td><td style="border:1px solid #000;"></td></tr>`;
+  distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:3px">Sub-total / Balance available</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${grossCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(c.grossContrib*t))}</td><td style="border:1px solid #000;"></td></tr>`;
   distHtml += `<tr><td style="border:1px solid #000;padding:3px;font-weight:bold" colspan="${activeCols.length+5}">Less: IVA expenses</td></tr>`;
-  
+
   const nmfCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(s.nomMonthly*m))}</td>`).join('');
-  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Nominees fees and expenses</td><td></td><td></td>${nmfCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(s.nomMonthly*t))}</td><td></td></tr>`;
-  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Contingency expenses</td><td></td><td></td>${dash9}<td>-</td><td></td></tr>`;
-  
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Nominees fees and expenses</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${nmfCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(s.nomMonthly*t))}</td><td style="border:1px solid #000;"></td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Contingency expenses</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${dash9}<td style="border:1px solid #000;text-align:center">-</td><td style="border:1px solid #000;"></td></tr>`;
+
   const netCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(c.netContrib*m))}</td>`).join('');
-  distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:3px">Balance available for distribution</td><td></td><td></td>${netCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(c.netContrib*t))}</td><td></td></tr>`;
+  distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:3px">Balance available for distribution</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${netCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(c.netContrib*t))}</td><td style="border:1px solid #000;"></td></tr>`;
   distHtml += `<tr><td style="border:1px solid #000;padding:3px;font-weight:bold" colspan="${activeCols.length+5}">Unsecured Claims</td></tr>`;
   
   let totInterest4 = 0;
@@ -1763,7 +1778,7 @@ function renderProposal() {
   
   const subCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right;font-weight:bold">${E(F(c.netContrib*m))}</td>`).join('');
   distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:3px">Sub-total</td><td style="border:1px solid #000;padding:3px;text-align:right">${E(F(totalUnsec))}</td><td style="border:1px solid #000;padding:3px;text-align:right">100%</td>${subCols}<td style="border:1px solid #000;padding:3px;text-align:right">${E(F(c.netContrib*t))}</td><td style="border:1px solid #000;padding:3px;text-align:right">${E(F(totInterest4))}</td></tr>`;
-  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Closing Balance</td><td></td><td></td>${dash9}<td>-</td><td></td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px">Closing Balance</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${dash9}<td style="border:1px solid #000;text-align:center">-</td><td style="border:1px solid #000;"></td></tr>`;
   distHtml += `</tbody></table>`;
   distHtml += `<p style="font-size:9pt;margin-top:8px">***Interest Rate @${E(s.interestRate.toFixed(1))}% per annum is adopted for above calculation</p>`;
   
@@ -2405,6 +2420,95 @@ function generateClaimForm(c, s, pg) {
 
     <p style="margin-top:20px;font-size:10pt;">(Company Chop/Stamp 公司印章)</p>
   `);
+}
+
+// Export to .docx functionality
+function exportToDocx(containerId, filename) {
+  const content = document.getElementById(containerId);
+
+  if (!content || !content.innerHTML.trim()) {
+    alert('⚠️ Please generate the documents first before exporting.');
+    return;
+  }
+
+  // Get the HTML content
+  const htmlContent = content.innerHTML;
+
+  // Create a complete HTML document with proper Word formatting
+  const docContent = `
+<!DOCTYPE html>
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+  <meta charset='utf-8'>
+  <title>${filename}</title>
+  <!--[if gte mso 9]>
+  <xml>
+    <w:WordDocument>
+      <w:View>Print</w:View>
+      <w:Zoom>100</w:Zoom>
+      <w:DoNotOptimizeForBrowser/>
+    </w:WordDocument>
+  </xml>
+  <![endif]-->
+  <style>
+    @page {
+      size: A4;
+      margin: 2.5cm;
+    }
+    @page landscape-page {
+      size: A4 landscape;
+      margin: 1.5cm;
+    }
+    body {
+      font-family: "Times New Roman", serif;
+      font-size: 12pt;
+      line-height: 1.5;
+    }
+    .legal-page {
+      page-break-after: always;
+    }
+    .legal-page.page-landscape {
+      page: landscape-page;
+    }
+    .legal-page:last-child {
+      page-break-after: auto;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .editable-highlight {
+      background-color: transparent;
+      border-bottom: none;
+    }
+    /* Preserve all borders */
+    td, th {
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+  ${htmlContent}
+</body>
+</html>`;
+
+  // Create blob with proper MIME type for Word
+  const blob = new Blob(['﻿', docContent], {
+    type: 'application/msword'
+  });
+
+  // Create download link
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${filename}_${new Date().toISOString().slice(0,10)}.doc`;
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+
+  alert('✅ Document exported successfully!\n\nNote: The file is in .doc format which can be opened and edited in Microsoft Word. Word will convert it to .docx format when you save it.');
 }
 
 function init() {
