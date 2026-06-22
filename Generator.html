@@ -134,6 +134,7 @@
       <button onclick="switchTab(4)" id="tbtn4" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">5. Proposal</button>
       <button onclick="switchTab(5)" id="tbtn5" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">6. Retainers</button>
       <button onclick="switchTab(6)" id="tbtn6" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">7. Step 4 Docs</button>
+      <button onclick="switchTab(7)" id="tbtn7" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">8. Next Step →</button>
     </div>
     <div class="flex items-center gap-2">
       <button onclick="resetData()" class="text-xs bg-red-900/50 hover:bg-red-800 text-red-200 px-3 py-1.5 rounded transition">Reset</button>
@@ -450,9 +451,86 @@
   </div>
 </div>
 
+<div id="tab7" class="hidden">
+  <div class="max-w-4xl mx-auto p-8">
+    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-xl p-12 border-2 border-blue-200">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-blue-900 mb-4">✅ Pre-Meeting Documents Complete!</h2>
+        <p class="text-lg text-slate-700 mb-2">You've successfully generated all documents for Steps 1-4:</p>
+        <div class="inline-block text-left mt-4 space-y-2">
+          <div class="flex items-center gap-2 text-slate-600">
+            <span class="text-green-600 font-bold">✓</span> IVA Proposal & Statement of Affairs
+          </div>
+          <div class="flex items-center gap-2 text-slate-600">
+            <span class="text-green-600 font-bold">✓</span> Retainers & Engagement Letters
+          </div>
+          <div class="flex items-center gap-2 text-slate-600">
+            <span class="text-green-600 font-bold">✓</span> Advertisement, Proxy Form, Claim Form
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-8 border-blue-300">
+
+      <div class="text-center mb-8">
+        <h3 class="text-2xl font-bold text-blue-900 mb-4">📋 Next: Post-Meeting Documents</h3>
+        <p class="text-slate-700 mb-6">After the creditors' meeting, you'll need to generate:</p>
+        <div class="inline-block text-left space-y-2 mb-8">
+          <div class="flex items-center gap-2 text-slate-600">
+            <span class="text-blue-600">→</span> Meeting Minutes (required for all outcomes)
+          </div>
+          <div class="flex items-center gap-2 text-slate-600">
+            <span class="text-blue-600">→</span> Report on Creditors' Meeting
+          </div>
+          <div class="flex items-center gap-2 text-slate-600">
+            <span class="text-blue-600">→</span> Repayment Schedule (if approved)
+          </div>
+          <div class="flex items-center gap-2 text-slate-600">
+            <span class="text-blue-600">→</span> Amended Proposal (if modifications accepted)
+          </div>
+          <div class="flex items-center gap-2 text-slate-600">
+            <span class="text-blue-600">→</span> Notice of Adjournment (if meeting adjourned)
+          </div>
+        </div>
+
+        <button onclick="goToPostMeeting()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-lg text-lg shadow-lg transition-all transform hover:scale-105">
+          Open Post-Meeting Generator →
+        </button>
+
+        <p class="text-sm text-slate-500 mt-6">
+          <strong>Tip:</strong> Export your data as JSON from this page before proceeding.<br>
+          The Post-Meeting Generator can import it to avoid re-entering information.
+        </p>
+      </div>
+
+      <hr class="my-8 border-blue-300">
+
+      <div class="bg-white rounded-lg p-6 shadow-inner">
+        <h4 class="font-bold text-slate-800 mb-3">📦 Export Data for Post-Meeting Generator</h4>
+        <p class="text-sm text-slate-600 mb-4">Save your current case data to import into the Post-Meeting Generator:</p>
+        <button onclick="exportJSON()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-6 rounded-lg transition">
+          📥 Export JSON
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </main>
 
 <script>
+function goToPostMeeting() {
+  const postMeetingUrl = 'Post-Meeting Generator.html';
+
+  // Check if file exists
+  window.location.href = postMeetingUrl;
+
+  // If file doesn't exist, show message
+  setTimeout(() => {
+    alert('Post-Meeting Generator.html is not available yet.\n\nThis tool is currently under development.\n\nFor now, you can export your data as JSON and wait for the next release.');
+  }, 100);
+}
+
 const DEFAULT_CDB=[
 {s:"AEON",f:'Aeon Credit Service (Asia) Co. Limited of 20/F., Mira Place Tower A, 132 Nathan Road, Tsim Sha Tsui, Kowloon, Hong Kong (\u201CAEON\u201D)'},
 {s:"Airstar",f:'Airstar Bank Limited of Room 3201-07, 32/F, Tower 5, Gateway Tower, Harbour City, Tsim Sha Tsui, Kowloon, Hong Kong (\u201CAirstar\u201D)'},
@@ -988,14 +1066,14 @@ function deleteCreditor(index) {
 let activeTab = 0;
 function switchTab(i) {
   activeTab = i;
-  for(let t=0; t<7; t++) {
+  for(let t=0; t<8; t++) {
     document.getElementById('tab'+t).classList.toggle('hidden', t!==i);
     const btn = document.getElementById('tbtn'+t);
     if(t===i){ btn.classList.add('tab-active'); btn.classList.remove('text-slate-400'); }
     else { btn.classList.remove('tab-active'); btn.classList.add('text-slate-400'); }
   }
   const main = document.getElementById('mainContainer');
-  if(i===2 || i===4 || i===5 || i===6) { main.classList.remove('bg-slate-950','text-slate-100'); main.classList.add('bg-gray-100','text-slate-800'); }
+  if(i===2 || i===4 || i===5 || i===6 || i===7) { main.classList.remove('bg-slate-950','text-slate-100'); main.classList.add('bg-gray-100','text-slate-800'); }
   else { main.classList.add('bg-slate-950','text-slate-100'); main.classList.remove('bg-gray-100','text-slate-800'); }
 
   if(i===2) renderDist();
