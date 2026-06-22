@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Qubeley IVADocGen V15</title>
+<title>Qubeley IVADocGen V17</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 /* ========================================
@@ -126,13 +126,14 @@
 <nav class="no-print bg-slate-900 border-b border-slate-700 shrink-0 sticky top-0 z-50">
   <div class="max-w-screen-2xl mx-auto px-4 flex items-center justify-between h-14">
     <div class="flex items-center gap-5 overflow-x-auto">
-      <span class="text-blue-400 font-bold text-sm whitespace-nowrap mr-2">IVA Generator v10</span>
+      <span class="text-blue-400 font-bold text-sm whitespace-nowrap mr-2">IVA Generator v17</span>
       <button onclick="switchTab(0)" id="tbtn0" class="tab-active text-sm font-medium px-3 py-3 border-b-2 border-transparent whitespace-nowrap transition-all">1. Debtor Info</button>
       <button onclick="switchTab(1)" id="tbtn1" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">2. Court Fees</button>
       <button onclick="switchTab(2)" id="tbtn2" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">3. Distribution</button>
       <button onclick="switchTab(3)" id="tbtn3" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">4. Creditors DB</button>
       <button onclick="switchTab(4)" id="tbtn4" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">5. Proposal</button>
       <button onclick="switchTab(5)" id="tbtn5" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">6. Retainers</button>
+      <button onclick="switchTab(6)" id="tbtn6" class="text-sm font-medium px-3 py-3 border-b-2 border-transparent text-slate-400 whitespace-nowrap transition-all hover:text-slate-200">7. Step 4 Docs</button>
     </div>
     <div class="flex items-center gap-2">
       <button onclick="resetData()" class="text-xs bg-red-900/50 hover:bg-red-800 text-red-200 px-3 py-1.5 rounded transition">Reset</button>
@@ -402,6 +403,53 @@
   </div>
 </div>
 
+<div id="tab6" class="hidden">
+  <div class="no-print p-4 max-w-4xl mx-auto flex justify-between items-center">
+    <h2 class="text-xl font-bold text-blue-400">Tab 7 — Step 4 Post-Approval Documents</h2>
+    <div class="flex gap-2">
+      <button onclick="renderStep4Docs()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow">Generate / Refresh</button>
+      <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow">Print / PDF</button>
+    </div>
+  </div>
+
+  <div class="no-print p-4 max-w-4xl mx-auto">
+    <div class="dark-card">
+      <h3>Meeting Details (Required for Step 4 Documents)</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="dark-label">Creditors' Meeting Date</label>
+          <input type="date" class="dark-input" id="i_meetingDate" onchange="U('meetingDate',this.value)">
+        </div>
+        <div>
+          <label class="dark-label">Meeting Time</label>
+          <input type="time" class="dark-input" id="i_meetingTime" onchange="U('meetingTime',this.value)" value="14:00">
+        </div>
+        <div class="col-span-2">
+          <label class="dark-label">Meeting Venue</label>
+          <input class="dark-input" id="i_meetingVenue" onchange="U('meetingVenue',this.value)"
+                 placeholder="e.g., Conference Room A, 15/F, One Portside, San Po Kong">
+        </div>
+        <div>
+          <label class="dark-label">Advertisement Publication Date</label>
+          <input type="date" class="dark-input" id="i_advPublishDate" onchange="U('advPublishDate',this.value)">
+        </div>
+        <div>
+          <label class="dark-label">Newspaper Name</label>
+          <select class="dark-select" id="i_newspaper" onchange="U('newspaper',this.value)">
+            <option value="Hong Kong Economic Journal">Hong Kong Economic Journal (信報)</option>
+            <option value="Ming Pao">Ming Pao (明報)</option>
+            <option value="South China Morning Post">South China Morning Post</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proposal-container max-w-4xl mx-auto pb-8 px-4" id="step4Out">
+    <p class="text-slate-500 text-center py-20">Click "Generate" to create Step 4 documents.</p>
+  </div>
+</div>
+
 </main>
 
 <script>
@@ -473,6 +521,7 @@ const DEFAULT_STATE = {
   deposit:126000,investments:0,lifeIns:0,debtRec:0,vehicles:0,equip:0,jewelry:0,mpf:0,land:0,otherAsset:0,
   ivaTerm:33,interestRate:7,nomMonthly:1000,
   solFeeIVA:4000, implCharges:22000, assetComplexity:'simple',
+  meetingDate:'', meetingTime:'14:00', meetingVenue:'', advPublishDate:'', newspaper:'Hong Kong Economic Journal',
   cred:[ 
     {key:'AEON', nature:2, amount: 44792},
     {key:'BOC Credit Card', nature:2, amount: 55000},
@@ -661,7 +710,7 @@ function renderAll() {
   const c = C();
   
   // Tab 1 UI
-  const strFields = ['courtYear','soaDate','solName','solAddr1','solAddr2','solAddr3','solTel','solFax','solRef','nomName','nomFirm','nomAddr','nameEng','nameChi','hkid','shortForm','address','jobDesc','accomDesc','salary','commission','overtime','otherAllow','bkContrib','netContrib','ivaTerm','interestRate','nomMonthly','solFeeIVA','implCharges','nomDesc','assetComplexity'];
+  const strFields = ['courtYear','soaDate','solName','solAddr1','solAddr2','solAddr3','solTel','solFax','solRef','nomName','nomFirm','nomAddr','nameEng','nameChi','hkid','shortForm','address','jobDesc','accomDesc','salary','commission','overtime','otherAllow','bkContrib','netContrib','ivaTerm','interestRate','nomMonthly','solFeeIVA','implCharges','nomDesc','assetComplexity','meetingDate','meetingTime','meetingVenue','advPublishDate','newspaper'];
   strFields.forEach(k => { const el=document.getElementById('i_'+k); if(el) el.value=S[k]; });
   
   document.getElementById('i_ivaYears').value = (S.ivaTerm/12).toFixed(1);
@@ -770,21 +819,63 @@ function renderCreditorRows() {
 }
 
 // TAB 3: DISTRIBUTION TABLE
+
+// FIX #2: Dynamic Distribution Algorithm
+function ordinal(n) {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+function generateDistributionColumns(totalMonths) {
+  const columns = [];
+
+  if (totalMonths < 6) {
+    // Short-term: monthly breakdown
+    for (let i = 1; i <= totalMonths; i++) {
+      columns.push([`${ordinal(i)} month`, 1]);
+    }
+  } else if (totalMonths <= 12) {
+    // Medium-term: strategic grouping
+    columns.push(['1st month', 1]);
+    columns.push(['2nd–5th month', 4]);
+    columns.push(['6th month', 1]);
+    if (totalMonths > 6) {
+      columns.push([`7th–${totalMonths}th month`, totalMonths - 6]);
+    }
+  } else {
+    // Long-term: milestone-based
+    columns.push(['1st month', 1]);
+    columns.push(['2nd–5th month', 4]);
+    columns.push(['6th month', 1]);
+    columns.push(['7th–11th month', 5]);
+
+    const bulkMonths = totalMonths - 12;
+    if (bulkMonths > 0) {
+      columns.push([`12th–${totalMonths - 1}th month`, bulkMonths]);
+    }
+    columns.push([`${totalMonths}th month (Final)`, 1]);
+  }
+
+  return columns;
+}
+
 function renderDist(c = C()) {
   const t = S.ivaTerm; const net = c.netContrib; const nmf = S.nomMonthly; const gross = c.grossContrib;
   const creds = c.creds; const total = c.totalUnsec; const rate = S.interestRate;
-  
+
   document.getElementById('dist_rateNote').textContent = `***Interest Rate @${rate.toFixed(1)}% per annum adopted. IVA Term: ${t} months.`;
-  
-  const bulkEnd = t - 1;
-  const cols = [
-    ['1st month', 1],
-    ['2nd\u20135th month', 4],
-    ['6th month', 1],
-    ['7th\u201310th month', 4],
-    [`11th\u2013${bulkEnd > 10 ? bulkEnd : '11'}th month`, t > 11 ? t - 11 : 0],
-    [`${t}th month`, 1]
-  ];
+
+  // FIX #2: Use dynamic column generation
+  const cols = generateDistributionColumns(t);
+
+  // Verify columns sum to term
+  const sumMonths = cols.reduce((sum, [_, m]) => sum + m, 0);
+  if (sumMonths !== t) {
+    console.error(`Column calculation error: ${sumMonths} !== ${t}`);
+    alert(`\u26a0\ufe0f Distribution calculation error. Columns sum to ${sumMonths} but term is ${t} months.`);
+    return;
+  }
   
   let h = `<thead><tr><th class="left" style="min-width:160px">Item</th><th>HK$</th><th>%</th>`;
   cols.forEach(([l, m]) => { if(m > 0) h += `<th>${l}</th>`; });
@@ -860,12 +951,30 @@ function filterCredDb(q) {
 function addCreditor() {
   const s = document.getElementById('new_cred_short').value.trim();
   const f = document.getElementById('new_cred_full').value.trim();
-  if(!s || !f) { alert("Please enter both short name and full legal name."); return; }
+
+  if(!s || !f) {
+    alert("Please enter both short name and full legal name.");
+    return;
+  }
+
+  // FIX #3: Check for duplicates
+  if (S.cdb.some(c => c.s.toLowerCase() === s.toLowerCase())) {
+    alert(`⚠️ Creditor "${s}" already exists in database.`);
+    return;
+  }
+
   S.cdb.unshift({s, f});
   saveData();
-  renderAll();
+
+  // FIX #3: Force re-render of creditor rows to refresh dropdowns
+  renderCredDb();
+  renderCreditorRows();
+
   document.getElementById('new_cred_short').value = '';
   document.getElementById('new_cred_full').value = '';
+
+  // Visual feedback
+  alert(`✅ Added creditor: ${s}`);
 }
 function deleteCreditor(index) {
   if(confirm(`Remove ${S.cdb[index].s} from database?`)) {
@@ -879,40 +988,107 @@ function deleteCreditor(index) {
 let activeTab = 0;
 function switchTab(i) {
   activeTab = i;
-  for(let t=0; t<6; t++) {
+  for(let t=0; t<7; t++) {
     document.getElementById('tab'+t).classList.toggle('hidden', t!==i);
     const btn = document.getElementById('tbtn'+t);
     if(t===i){ btn.classList.add('tab-active'); btn.classList.remove('text-slate-400'); }
     else { btn.classList.remove('tab-active'); btn.classList.add('text-slate-400'); }
   }
   const main = document.getElementById('mainContainer');
-  if(i===2 || i===4 || i===5) { main.classList.remove('bg-slate-950','text-slate-100'); main.classList.add('bg-gray-100','text-slate-800'); }
+  if(i===2 || i===4 || i===5 || i===6) { main.classList.remove('bg-slate-950','text-slate-100'); main.classList.add('bg-gray-100','text-slate-800'); }
   else { main.classList.add('bg-slate-950','text-slate-100'); main.classList.remove('bg-gray-100','text-slate-800'); }
-  
+
   if(i===2) renderDist();
   window.scrollTo(0,0);
 }
 
 // PROPOSAL GENERATOR (Formal Typesetting with contenteditable fields)
-const E = (val) => `<span contenteditable="true" class="editable-highlight">${val}</span>`;
+
+// FIX #1: Validation Layer
+function validateRequiredFields() {
+  const required = [
+    {key: 'solName', label: 'Solicitor Name'},
+    {key: 'nomName', label: 'Nominee Name'},
+    {key: 'nameEng', label: 'Debtor Name (English)'},
+    {key: 'hkid', label: 'HKID'},
+    {key: 'address', label: 'Address'}
+  ];
+
+  const errors = [];
+  required.forEach(field => {
+    if (!S[field.key] || S[field.key].trim() === '') {
+      errors.push(field.label);
+    }
+  });
+  return errors;
+}
+
+// FIX #5: Generate Short Form Helper
+function generateShortForm(nameEng) {
+  if (!nameEng) return 'XXX';
+  return nameEng.split(' ').map(w => w[0] || '').join('').toUpperCase();
+}
+
+const E = (val, preserveFormatting = false) => {
+  if (!val) return '';
+
+  let processed = String(val);
+
+  if (preserveFormatting) {
+    // Convert newlines to <br>
+    processed = processed.replace(/\n/g, '<br>');
+
+    // Preserve multiple spaces
+    processed = processed.replace(/  +/g, match => '&nbsp;'.repeat(match.length));
+
+    // Preserve indentation
+    processed = processed.replace(/^(\s+)/gm, match => '&nbsp;'.repeat(match.length));
+  }
+
+  return `<span contenteditable="true" class="editable-highlight">${processed}</span>`;
+};
 
 function renderProposal() {
+  // FIX #1: Pre-generation validation
+  const errors = validateRequiredFields();
+  if (errors.length > 0) {
+    alert(`❌ Cannot generate proposal. Missing required fields:\n\n${errors.join('\n')}`);
+    return;
+  }
+
   const c=C(), s=S;
-  
-  const cy = s.courtYear; 
-  const soaDate = s.soaDate; 
-  const sf = s.shortForm || 'XXX';
-  const nm = s.nameEng || '[Debtor Name]'; 
-  const chi = s.nameChi || '[Chinese Name]';
-  const id = s.hkid || '[HKID]'; 
-  const addr = s.address || '[Address]';
-  
-  const nomName = s.nomName; const nomFirm = s.nomFirm; const nomAddr = s.nomAddr; const nomDesc = s.nomDesc;
-  const solName = s.solName; const solRef = s.solRef;
+
+  // FIX #5: Defensive null checks with fallbacks
+  const cy = s.courtYear || new Date().getFullYear();
+  const soaDate = s.soaDate || 'DD MMM YYYY';
+  const sf = s.shortForm || generateShortForm(s.nameEng);
+  const nm = s.nameEng || '[DEBTOR NAME REQUIRED]';
+  const chi = s.nameChi || '[中文姓名]';
+  const id = s.hkid || '[HKID REQUIRED]';
+  const addr = s.address || '[ADDRESS REQUIRED]';
+
+  const nomName = s.nomName || '[NOMINEE NAME]';
+  const nomFirm = s.nomFirm || '[NOMINEE FIRM]';
+  const nomAddr = s.nomAddr || '[NOMINEE ADDRESS]';
+  const nomDesc = s.nomDesc || '[NOMINEE DESCRIPTION REQUIRED]';
+  const solName = s.solName || '[SOLICITOR NAME]';
+  const solRef = s.solRef || '[REF]';
   const ivaYrs = (s.ivaTerm/12).toFixed(1);
-  const{totalInc,netContrib,grossContrib,totalBankBal,totalAssets,creds,totalUnsec,
+
+  // Validate critical calculations
+  if (c.totalUnsec <= 0) {
+    alert('⚠️ Warning: No unsecured debt entered. Proposal may be incomplete.');
+  }
+
+  if (c.netContrib <= 0) {
+    alert('❌ Error: Net contribution must be greater than zero.');
+    return;
+  }
+
+  // Extract ALL needed variables from C()
+  const{totalInc,mpf,netDisposalBk,netDisposalIva,totalExpBk,totalExpIva,netContrib,grossContrib,totalBankBal,totalAssets,creds,totalUnsec,
     courtFee,nomLumpSum,accountantFee,advFeeFixed,implementationFeesIVA,totalCostsIVA,totalCostsBK,
-    totalVoluntary,totalRealIVA,ivaAvailable,bkReal,bkAvailable,bkDiv,ivaDiv,ivaSurplus,totalExpBk,totalExpIva}=c;
+    totalVoluntary,totalRealIVA,ivaAvailable,bkReal,bkAvailable,bkDiv,ivaDiv,ivaSurplus}=c;
 
   const courtHdr = () => `
     <div class="pg-hdr"><span>HCBI</span><span>/${E(cy)}</span></div>
@@ -1043,8 +1219,8 @@ function renderProposal() {
     <p style="margin-top:6px">(f) &nbsp; the singular includes the plural, the masculine includes the feminine and vice versa.</p>
     <p class="sec-hdr" style="margin-top:14px">2. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Background of the Debtor</p>
     <p>2.1 &nbsp; It is appropriate to set out the circumstances surrounding the presentation of this Proposal.</p>
-    <p style="margin-top:10px">2.2 &nbsp; ${E(s.jobDesc)}</p>
-    <p style="margin-top:10px">2.3 &nbsp; ${E(s.accomDesc)}</p>`));
+    <p style="margin-top:10px">2.2 &nbsp; ${E(s.jobDesc, true)}</p>
+    <p style="margin-top:10px">2.3 &nbsp; ${E(s.accomDesc, true)}</p>`));
 
   // PAGE 12
   pages.push(pg(`
@@ -1109,7 +1285,7 @@ function renderProposal() {
     ${RL('Rule<br>122C<br>(2)(l)','<p style="margin-top:10px">5.14 &nbsp; I am not prepared to obtain further credit during the implementation of my IVA.</p>')}
     ${RL('Rule<br>122C<br>(2)(m)','<p style="margin-top:10px">5.15 &nbsp; The remuneration and the expenses of the Nominee will be borne by me and payable out of the sum made available pursuant to this Proposal and to be paid as set out in paragraph 5.4.</p>')}
     ${RL('Rule<br>122C<br>(2)(n)','<p style="margin-top:10px">5.16 &nbsp; The functions undertaken by the Nominee include:</p><p class="ind1">(a) &nbsp; Agreement of claims lodged by my IVA Creditors in accordance with the provisions outlined herein;</p><p class="ind1">(b) &nbsp; The Nominee shall have no further duties, obligations or liabilities to those IVA Creditors.</p><p class="ind1">(c) &nbsp; Payment and distribution of IVA dividends to IVA Creditors in accordance with the provisions outlined herein;</p><p class="ind1">(d) &nbsp; Monitoring the implementation of the IVA and communicating with the IVA Creditors in case of my default under this Proposal in accordance with the provisions outlined herein;</p><p class="ind1">(e) &nbsp; Presenting a bankruptcy petition against me pursuant to Section 20L of the Ordinance in accordance with the provisions outlined herein; and</p><p class="ind1">(f) &nbsp; Exercise of the functions given by the IVA and under the Ordinance and Rules provided that such exercise of functions given by the IVA shall be within the unfettered discretion of the Nominee who shall be under no obligation to exercise all or any of the functions and powers conferred upon him other than those imposed or implied by law.</p>')}
-    ${RL('Rule<br>122C<br>(2)(o)','<p style="margin-top:10px">5.17 &nbsp; '+E(nomDesc)+'</p>')}`));
+    ${RL('Rule<br>122C<br>(2)(o)','<p style="margin-top:10px">5.17 &nbsp; '+E(nomDesc, true)+'</p>')}`));
 
   // PAGE 22-35 : Boilerplate Clauses
   pages.push(pg(`
@@ -1600,13 +1776,34 @@ function renderProposal() {
 
 // RETAINERS GENERATOR (Tab 6)
 function renderRetainers() {
+  console.log('renderRetainers() called');
+
+  // FIX #6: Add validation
+  const errors = validateRequiredFields();
+  console.log('Validation errors:', errors);
+
+  if (errors.length > 0) {
+    alert(`❌ Cannot generate retainers. Missing required fields:\n\n${errors.join('\n')}`);
+    return;
+  }
+
   const c = C(), s = S;
-  const soaDate = s.soaDate; 
-  const nm = s.nameEng || '[Debtor Name]'; 
+  console.log('Calculation complete, starting document generation');
+
+  const soaDate = s.soaDate || 'DD MMM YYYY';
+  const nm = s.nameEng || '[Debtor Name]';
   const chi = s.nameChi || '[Chinese Name]';
-  const id = s.hkid || '[HKID]'; 
-  const solName = s.solName; 
-  const nomName = s.nomName; 
+  const id = s.hkid || '[HKID]';
+  const solName = s.solName || '[Solicitor Name]';
+  const nomName = s.nomName || '[Nominee Name]';
+  const nomFirm = s.nomFirm || '[Nominee Firm]';
+  const nomAddr = s.nomAddr || '[Nominee Address]';
+  const solAddr1 = s.solAddr1 || '';
+  const solAddr2 = s.solAddr2 || '';
+  const solAddr3 = s.solAddr3 || '';
+  const solTel = s.solTel || '';
+  const solFax = s.solFax || '';
+  const solRef = s.solRef || ''; 
   
   const pg = content => `<div class="legal-page">${content}</div>`;
   const pages = [];
@@ -1776,7 +1973,312 @@ function renderRetainers() {
     </div>
   `));
 
+  // FIX #6: ADD ENGAGEMENT LETTER as Document 5
+  console.log('Adding engagement letter, total pages so far:', pages.length);
+  pages.push(generateEngagementLetter(c, s));
+  console.log('Total pages after engagement letter:', pages.length);
+
   document.getElementById('retainerOut').innerHTML = pages.join('\n');
+  console.log('renderRetainers() completed successfully');
+}
+
+// FIX #6: Generate Engagement Letter
+function generateEngagementLetter(c, s) {
+  const pg = content => `<div class="legal-page">${content}</div>`;
+  const nm = s.nameEng || '[NAME]';
+  const chi = s.nameChi || '[中文姓名]';
+
+  return pg(`
+    <h2 style="text-align:center;font-weight:bold;margin-bottom:20px;">FORMAL LETTER OF ENGAGEMENT</h2>
+    <p style="text-align:right;"><strong>Date:</strong> ${E(s.soaDate)}</p>
+
+    <p><strong>Dear ${E(nm)} (${E(chi)}),</strong></p>
+
+    <p style="margin-top:16px">Re: <strong>Individual Voluntary Arrangement Application</strong></p>
+    <hr class="chr" style="margin: 16px 0;">
+
+    <p>Thank you for instructing <strong>${E(s.solName)}</strong> to act on your behalf in relation to your proposed Individual Voluntary Arrangement ("IVA") under the Bankruptcy Ordinance (Cap. 6).</p>
+
+    <p style="margin-top:12px">This letter confirms the terms of our engagement and sets out our respective obligations.</p>
+
+    <p class="sec-hdr">1. Scope of Work</p>
+    <p>We will:</p>
+    <ul class="ind1" style="list-style-type: disc; margin-top: 8px;">
+      <li>Prepare and file your Interim Order Application with the High Court</li>
+      <li>Draft your IVA Proposal and Statement of Affairs</li>
+      <li>Liaise with your Intended Nominee, <strong>${E(s.nomName)}</strong></li>
+      <li>Attend the creditors' meeting (if required)</li>
+    </ul>
+
+    <p class="sec-hdr">2. Your Responsibilities</p>
+    <p>You must:</p>
+    <ul class="ind1" style="list-style-type: disc;">
+      <li>Provide complete, accurate, and truthful financial information</li>
+      <li>Pay the initial deposit of <strong>HK$${E(F(s.deposit))}</strong></li>
+      <li>Respond promptly to our requests for information</li>
+    </ul>
+
+    <p class="sec-hdr">3. Fees and Costs</p>
+    <p>Our professional fees for preparing your IVA Proposal and Court application are <strong>HK$${E(F(s.solFeeIVA))}</strong>. This amount will be deducted from your deposit.</p>
+
+    <p style="margin-top:40px">If you agree to the terms set out above, please sign and return a copy of this letter.</p>
+
+    <p style="margin-top:40px">Yours sincerely,</p>
+    <p style="margin-top:30px"><span class="sig" style="width:220px"></span><br><strong>${E(s.solName)}</strong></p>
+
+    <hr style="margin: 40px 0; border-top: 1px dashed #ccc;">
+
+    <p>I, <strong>${E(nm)}</strong>, confirm that I have read, understood, and agree to the terms of this engagement.</p>
+
+    <p style="margin-top:50px"><span class="sig" style="width:220px"></span><br>Signature of Client<br>Date: ${E(s.soaDate)}</p>
+  `);
+}
+
+// NEW FEATURE: Step 4 Documents Generator
+function renderStep4Docs() {
+  const errors = validateRequiredFields();
+  if (errors.length > 0) {
+    alert(`❌ Cannot generate Step 4 documents. Missing required fields:\n\n${errors.join('\n')}`);
+    return;
+  }
+
+  const c = C(), s = S;
+  const pages = [];
+  const pg = content => `<div class="legal-page">${content}</div>`;
+
+  // Document 1: Advertisement (Bilingual)
+  pages.push(generateAdvertisement(c, s, pg));
+
+  // Document 2: Proxy Form
+  pages.push(generateProxyForm(c, s, pg));
+
+  // Document 3: Claim Form
+  pages.push(generateClaimForm(c, s, pg));
+
+  document.getElementById('step4Out').innerHTML = pages.join('\n');
+}
+
+function generateAdvertisement(c, s, pg) {
+  const cy = s.courtYear || new Date().getFullYear();
+  const nm = s.nameEng || '[NAME]';
+  const chi = s.nameChi || '[中文姓名]';
+  const id = s.hkid || '[HKID]';
+  const addr = s.address || '[Address]';
+  const meetingDate = s.meetingDate || '[DATE]';
+  const meetingTime = s.meetingTime || '14:00';
+  const venue = s.meetingVenue || '[VENUE]';
+  const nomName = s.nomName || '[NOMINEE]';
+  const nomAddr = s.nomAddr || '[NOMINEE ADDRESS]';
+
+  // Format date for Chinese
+  let year = cy, month = '', day = '';
+  if (meetingDate && meetingDate !== '[DATE]') {
+    const dateObj = new Date(meetingDate);
+    year = dateObj.getFullYear();
+    month = dateObj.getMonth() + 1;
+    day = dateObj.getDate();
+  }
+
+  return pg(`
+    <div style="border: 2px solid #000; padding: 20px; font-size: 10pt;">
+      <h3 style="text-align:center;font-weight:bold;border-bottom:2px solid #000;padding-bottom:8px;">NOTICE OF CREDITORS' MEETING<br>債權人會議通知</h3>
+
+      <p style="margin-top:16px;text-align:center;font-weight:bold;">
+        IN THE HIGH COURT OF THE HONG KONG<br>
+        SPECIAL ADMINISTRATIVE REGION<br>
+        COURT OF FIRST INSTANCE<br>
+        香港特別行政區高等法院原訟法庭
+      </p>
+
+      <p style="margin-top:12px;text-align:center;">
+        <strong>INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}</strong><br>
+        <strong>臨時命令申請編號 <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;</span> / ${E(cy)}</strong>
+      </p>
+
+      <hr style="border:none;border-top:1px solid #000;margin:12px 0;">
+
+      <p style="text-align:center;margin-top:12px;">
+        <strong>IN THE MATTER OF ${E(nm)} (${E(chi)})</strong><br>
+        <strong>關於 ${E(nm)} (${E(chi)}) 事宜</strong><br>
+        (Holder of Hong Kong Identity Card No. ${E(id)})<br>
+        (香港身份證號碼持有人 ${E(id)})
+      </p>
+
+      <hr style="border:none;border-top:1px solid #000;margin:12px 0;">
+
+      <p style="margin-top:14px;"><strong>NOTICE IS HEREBY GIVEN</strong> that a meeting of the creditors of the above-named debtor will be held at:</p>
+      <p style="margin-top:8px;"><strong>現通知</strong>上述債務人之債權人會議將於以下時間及地點舉行：</p>
+
+      <table style="width:100%;margin-top:12px;border-collapse:collapse;">
+        <tr>
+          <td style="padding:4px;border:1px solid #000;width:30%;"><strong>Date 日期:</strong></td>
+          <td style="padding:4px;border:1px solid #000;">${E(meetingDate)}${year && month && day ? ` (${year}年${month}月${day}日)` : ''}</td>
+        </tr>
+        <tr>
+          <td style="padding:4px;border:1px solid #000;"><strong>Time 時間:</strong></td>
+          <td style="padding:4px;border:1px solid #000;">${E(meetingTime)}</td>
+        </tr>
+        <tr>
+          <td style="padding:4px;border:1px solid #000;"><strong>Venue 地點:</strong></td>
+          <td style="padding:4px;border:1px solid #000;">${E(venue)}</td>
+        </tr>
+      </table>
+
+      <p style="margin-top:14px;"><strong>Purpose 目的:</strong> To consider and vote on the debtor's proposal for a voluntary arrangement pursuant to Section 20 and 20A of the Bankruptcy Ordinance (Cap. 6).</p>
+      <p style="margin-top:6px;">根據《破產條例》(第6章) 第20及20A條，考慮及表決債務人之個人自願安排建議書。</p>
+
+      <p style="margin-top:14px;"><strong>Chairman 主席:</strong> ${E(nomName)}</p>
+      <p style="margin-top:6px;font-size:9pt;"><strong>Intended Nominee Address 擬定代名人地址:</strong> ${E(nomAddr)}</p>
+
+      <p style="margin-top:14px;font-size:9pt;">Creditors entitled to attend and vote must lodge their proof of debt with the Chairman not later than 4:00 p.m. on the day before the meeting.</p>
+      <p style="margin-top:4px;font-size:9pt;">有權出席及投票之債權人須於會議舉行前一天下午四時前向主席遞交債權證明。</p>
+
+      <p style="margin-top:16px;text-align:right;font-size:9pt;">Dated 日期: ${E(s.soaDate)}</p>
+      <p style="margin-top:4px;text-align:right;font-size:9pt;">${E(nomName)}<br><em>Intended Nominee 擬定代名人</em></p>
+    </div>
+  `);
+}
+
+function generateProxyForm(c, s, pg) {
+  const cy = s.courtYear || new Date().getFullYear();
+  const nm = s.nameEng || '[NAME]';
+  const chi = s.nameChi || '[中文姓名]';
+  const id = s.hkid || '[HKID]';
+
+  return pg(`
+    <h3 style="text-align:center;font-weight:bold;margin-bottom:20px;text-decoration:underline;">FORM OF PROXY</h3>
+
+    <p style="text-align:center;font-size:11pt;margin-bottom:20px;">
+      IN THE HIGH COURT OF THE<br>
+      HONG KONG SPECIAL ADMINISTRATIVE REGION<br>
+      COURT OF FIRST INSTANCE<br>
+      BANKRUPTCY PROCEEDINGS
+    </p>
+
+    <p style="text-align:center;margin-bottom:16px;">
+      <strong>INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}</strong>
+    </p>
+
+    <hr class="chr">
+
+    <p style="text-align:center;margin:12px 0;">
+      <strong>RE: ${E(nm)} (${E(chi)})</strong><br>
+      (Holder of Hong Kong Identity Card No. ${E(id)})
+    </p>
+
+    <hr class="chr">
+
+    <p style="margin-top:20px;">I / We <span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></p>
+    <p style="margin-top:8px;">of <span contenteditable="true" class="editable-highlight" style="min-width:450px;">&nbsp;</span></p>
+    <p style="margin-top:8px;">a creditor of the above-named debtor, hereby appoint:</p>
+
+    <p style="margin-top:16px;margin-left:1.5cm;">
+      Name: <span contenteditable="true" class="editable-highlight" style="min-width:350px;">&nbsp;</span><br>
+      HKID / Passport No.: <span contenteditable="true" class="editable-highlight" style="min-width:250px;">&nbsp;</span><br>
+      of <span contenteditable="true" class="editable-highlight" style="min-width:400px;">&nbsp;</span>
+    </p>
+
+    <p style="margin-top:16px;">or failing him / her, the Chairman of the meeting, to be my / our proxy to attend and vote on my / our behalf at the meeting of creditors to be held on <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)} and at any adjournment thereof.</p>
+
+    <p style="margin-top:20px;font-weight:bold;text-decoration:underline;">Voting Instructions:</p>
+    <p style="margin-top:10px;">I / We instruct my / our proxy to vote:</p>
+
+    <table style="width:100%;margin-top:10px;border-collapse:collapse;">
+      <tr>
+        <td style="border:1px solid #000;padding:8px;width:50%;"><strong>☐ FOR</strong> the approval of the debtor's proposal</td>
+        <td style="border:1px solid #000;padding:8px;width:50%;"><strong>☐ AGAINST</strong> the approval of the debtor's proposal</td>
+      </tr>
+      <tr>
+        <td colspan="2" style="border:1px solid #000;padding:8px;"><strong>☐ AT THE DISCRETION</strong> of the proxy</td>
+      </tr>
+    </table>
+
+    <p style="margin-top:20px;">Amount of debt: HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></p>
+
+    <p style="margin-top:40px;">
+      <span class="sig" style="width:250px;"></span><br>
+      Signature of Creditor / Authorized Representative<br>
+      Date: <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    </p>
+
+    <p style="margin-top:20px;font-size:10pt;font-style:italic;">
+      <strong>Note:</strong> This proxy form must be lodged with the Chairman not later than 4:00 p.m. on the day before the meeting. A proxy need not be a creditor of the debtor.
+    </p>
+  `);
+}
+
+function generateClaimForm(c, s, pg) {
+  const cy = s.courtYear || new Date().getFullYear();
+  const nm = s.nameEng || '[NAME]';
+  const chi = s.nameChi || '[中文姓名]';
+  const id = s.hkid || '[HKID]';
+
+  return pg(`
+    <h3 style="text-align:center;font-weight:bold;margin-bottom:20px;text-decoration:underline;">NOTICE OF CLAIM</h3>
+
+    <p style="text-align:center;font-size:11pt;margin-bottom:20px;">
+      IN THE HIGH COURT OF THE<br>
+      HONG KONG SPECIAL ADMINISTRATIVE REGION<br>
+      COURT OF FIRST INSTANCE<br>
+      BANKRUPTCY PROCEEDINGS
+    </p>
+
+    <p style="text-align:center;margin-bottom:16px;">
+      <strong>INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}</strong>
+    </p>
+
+    <hr class="chr">
+
+    <p style="text-align:center;margin:12px 0;">
+      <strong>RE: ${E(nm)} (${E(chi)})</strong><br>
+      (Holder of Hong Kong Identity Card No. ${E(id)})
+    </p>
+
+    <hr class="chr">
+
+    <p class="sec-hdr">1. Creditor Information</p>
+    <table class="soa" style="width:100%;margin-top:8px;">
+      <tr><td style="width:40%;">Full Legal Name of Creditor:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+      <tr><td>Registered Address:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+      <tr><td>Contact Person:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+      <tr><td>Telephone:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+    </table>
+
+    <p class="sec-hdr" style="margin-top:16px;">2. Particulars of the Debt</p>
+    <table class="soa" style="width:100%;margin-top:8px;">
+      <tr><td style="width:40%;">Total Claim Amount:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
+      <tr><td>Principal Amount:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
+      <tr><td>Interest:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
+      <tr><td>Late Fees / Legal Costs:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
+      <tr><td>Nature of Debt:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+      <tr><td>Account Number(s):</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+    </table>
+
+    <p class="sec-hdr" style="margin-top:16px;">3. Security</p>
+    <p>Does the creditor hold any security over the debtor's assets?</p>
+    <p style="margin-top:8px;margin-left:1cm;">☐ No &nbsp;&nbsp;&nbsp;&nbsp; ☐ Yes (if yes, provide details below)</p>
+    <table class="soa" style="width:100%;margin-top:8px;">
+      <tr><td style="width:40%;">Description of Security:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+      <tr><td>Estimated Value:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
+    </table>
+
+    <p class="sec-hdr" style="margin-top:16px;">4. Supporting Documents</p>
+    <p>Attached are the following documents substantiating this claim:</p>
+    <p style="margin-top:8px;margin-left:1cm;">☐ Loan agreement / Credit card agreement<br>☐ Recent statement of account<br>☐ Court judgment (if applicable)<br>☐ Other: <span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></p>
+
+    <p class="sec-hdr" style="margin-top:16px;">5. Declaration</p>
+    <p>I declare that to the best of my knowledge and belief, the debtor owes the above-named creditor the sum specified, and the particulars provided are true and accurate.</p>
+
+    <p style="margin-top:40px;">
+      <span class="sig" style="width:250px;"></span><br>
+      Signature of Authorized Officer<br>
+      Name: <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span><br>
+      Position: <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span><br>
+      Date: <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    </p>
+
+    <p style="margin-top:20px;font-size:10pt;">(Company Chop/Stamp)</p>
+  `);
 }
 
 function init() {
