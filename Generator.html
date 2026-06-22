@@ -2146,63 +2146,78 @@ function generateProxyForm(c, s, pg) {
   const id = s.hkid || '[HKID]';
 
   return pg(`
-    <h3 style="text-align:center;font-weight:bold;margin-bottom:20px;text-decoration:underline;">FORM OF PROXY</h3>
+    <h3 style="text-align:center;font-weight:bold;margin-bottom:20px;text-decoration:underline;">FORM OF PROXY<br>授權委託書</h3>
 
     <p style="text-align:center;font-size:11pt;margin-bottom:20px;">
       IN THE HIGH COURT OF THE<br>
       HONG KONG SPECIAL ADMINISTRATIVE REGION<br>
       COURT OF FIRST INSTANCE<br>
-      BANKRUPTCY PROCEEDINGS
+      BANKRUPTCY PROCEEDINGS<br><br>
+      香港特別行政區高等法院<br>
+      原訟法庭<br>
+      破產法律程序
     </p>
 
     <p style="text-align:center;margin-bottom:16px;">
-      <strong>INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}</strong>
+      <strong>INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}</strong><br>
+      <strong>臨時命令申請編號 <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;</span> / ${E(cy)}</strong>
     </p>
 
     <hr class="chr">
 
     <p style="text-align:center;margin:12px 0;">
       <strong>RE: ${E(nm)} (${E(chi)})</strong><br>
-      (Holder of Hong Kong Identity Card No. ${E(id)})
+      <strong>關於：${E(nm)} (${E(chi)})</strong><br>
+      (Holder of Hong Kong Identity Card No. ${E(id)})<br>
+      (香港身份證號碼持有人 ${E(id)})
     </p>
 
     <hr class="chr">
 
     <p style="margin-top:20px;">I / We <span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></p>
+    <p>本人/本公司 <span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></p>
+
     <p style="margin-top:8px;">of <span contenteditable="true" class="editable-highlight" style="min-width:450px;">&nbsp;</span></p>
+    <p>地址 <span contenteditable="true" class="editable-highlight" style="min-width:450px;">&nbsp;</span></p>
+
     <p style="margin-top:8px;">a creditor of the above-named debtor, hereby appoint:</p>
+    <p>為上述債務人之債權人，現委任：</p>
 
     <p style="margin-top:16px;margin-left:1.5cm;">
-      Name: <span contenteditable="true" class="editable-highlight" style="min-width:350px;">&nbsp;</span><br>
-      HKID / Passport No.: <span contenteditable="true" class="editable-highlight" style="min-width:250px;">&nbsp;</span><br>
-      of <span contenteditable="true" class="editable-highlight" style="min-width:400px;">&nbsp;</span>
+      Name 姓名: <span contenteditable="true" class="editable-highlight" style="min-width:350px;">&nbsp;</span><br>
+      HKID / Passport No. 香港身份證/護照號碼: <span contenteditable="true" class="editable-highlight" style="min-width:250px;">&nbsp;</span><br>
+      of 地址: <span contenteditable="true" class="editable-highlight" style="min-width:400px;">&nbsp;</span>
     </p>
 
     <p style="margin-top:16px;">or failing him / her, the Chairman of the meeting, to be my / our proxy to attend and vote on my / our behalf at the meeting of creditors to be held on <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)} and at any adjournment thereof.</p>
+    <p>或如其缺席，則委任會議主席為本人/本公司之代表，代表本人/本公司出席及表決於 <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)} 舉行之債權人會議及其任何續會。</p>
 
-    <p style="margin-top:20px;font-weight:bold;text-decoration:underline;">Voting Instructions:</p>
+    <p style="margin-top:20px;font-weight:bold;text-decoration:underline;">Voting Instructions 投票指示:</p>
     <p style="margin-top:10px;">I / We instruct my / our proxy to vote:</p>
+    <p>本人/本公司指示本人/本公司之代表投票：</p>
 
     <table style="width:100%;margin-top:10px;border-collapse:collapse;">
       <tr>
-        <td style="border:1px solid #000;padding:8px;width:50%;"><strong>☐ FOR</strong> the approval of the debtor's proposal</td>
-        <td style="border:1px solid #000;padding:8px;width:50%;"><strong>☐ AGAINST</strong> the approval of the debtor's proposal</td>
+        <td style="border:1px solid #000;padding:8px;width:50%;"><strong>☐ FOR 贊成</strong> the approval of the debtor's proposal<br>批准債務人之建議書</td>
+        <td style="border:1px solid #000;padding:8px;width:50%;"><strong>☐ AGAINST 反對</strong> the approval of the debtor's proposal<br>批准債務人之建議書</td>
       </tr>
       <tr>
-        <td colspan="2" style="border:1px solid #000;padding:8px;"><strong>☐ AT THE DISCRETION</strong> of the proxy</td>
+        <td colspan="2" style="border:1px solid #000;padding:8px;"><strong>☐ AT THE DISCRETION 由代表酌情決定</strong> of the proxy<br>由代表酌情決定</td>
       </tr>
     </table>
 
-    <p style="margin-top:20px;">Amount of debt: HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></p>
+    <p style="margin-top:20px;">Amount of debt 債務金額: HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></p>
 
     <p style="margin-top:40px;">
       <span class="sig" style="width:250px;"></span><br>
       Signature of Creditor / Authorized Representative<br>
-      Date: <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      債權人/授權代表簽署<br>
+      Date 日期: <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
     </p>
 
     <p style="margin-top:20px;font-size:10pt;font-style:italic;">
-      <strong>Note:</strong> This proxy form must be lodged with the Chairman not later than 4:00 p.m. on the day before the meeting. A proxy need not be a creditor of the debtor.
+      <strong>Note 注意:</strong> This proxy form must be lodged with the Chairman not later than 4:00 p.m. on the day before the meeting. A proxy need not be a creditor of the debtor.<br>
+      本授權委託書須於會議舉行前一天下午四時前交予主席。代表毋須為債務人之債權人。
     </p>
   `);
 }
@@ -2214,70 +2229,84 @@ function generateClaimForm(c, s, pg) {
   const id = s.hkid || '[HKID]';
 
   return pg(`
-    <h3 style="text-align:center;font-weight:bold;margin-bottom:20px;text-decoration:underline;">NOTICE OF CLAIM</h3>
+    <h3 style="text-align:center;font-weight:bold;margin-bottom:20px;text-decoration:underline;">NOTICE OF CLAIM<br>債權證明通知書</h3>
 
     <p style="text-align:center;font-size:11pt;margin-bottom:20px;">
       IN THE HIGH COURT OF THE<br>
       HONG KONG SPECIAL ADMINISTRATIVE REGION<br>
       COURT OF FIRST INSTANCE<br>
-      BANKRUPTCY PROCEEDINGS
+      BANKRUPTCY PROCEEDINGS<br><br>
+      香港特別行政區高等法院<br>
+      原訟法庭<br>
+      破產法律程序
     </p>
 
     <p style="text-align:center;margin-bottom:16px;">
-      <strong>INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}</strong>
+      <strong>INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}</strong><br>
+      <strong>臨時命令申請編號 <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;</span> / ${E(cy)}</strong>
     </p>
 
     <hr class="chr">
 
     <p style="text-align:center;margin:12px 0;">
       <strong>RE: ${E(nm)} (${E(chi)})</strong><br>
-      (Holder of Hong Kong Identity Card No. ${E(id)})
+      <strong>關於：${E(nm)} (${E(chi)})</strong><br>
+      (Holder of Hong Kong Identity Card No. ${E(id)})<br>
+      (香港身份證號碼持有人 ${E(id)})
     </p>
 
     <hr class="chr">
 
-    <p class="sec-hdr">1. Creditor Information</p>
+    <p class="sec-hdr">1. Creditor Information 債權人資料</p>
     <table class="soa" style="width:100%;margin-top:8px;">
-      <tr><td style="width:40%;">Full Legal Name of Creditor:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
-      <tr><td>Registered Address:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
-      <tr><td>Contact Person:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
-      <tr><td>Telephone:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+      <tr><td style="width:40%;">Full Legal Name of Creditor 債權人全稱:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+      <tr><td>Registered Address 註冊地址:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+      <tr><td>Contact Person 聯絡人:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+      <tr><td>Telephone 電話:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
     </table>
 
-    <p class="sec-hdr" style="margin-top:16px;">2. Particulars of the Debt</p>
+    <p class="sec-hdr" style="margin-top:16px;">2. Particulars of the Debt 債務詳情</p>
     <table class="soa" style="width:100%;margin-top:8px;">
-      <tr><td style="width:40%;">Total Claim Amount:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
-      <tr><td>Principal Amount:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
-      <tr><td>Interest:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
-      <tr><td>Late Fees / Legal Costs:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
-      <tr><td>Nature of Debt:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
-      <tr><td>Account Number(s):</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+      <tr><td style="width:40%;">Total Claim Amount 索償總額:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
+      <tr><td>Principal Amount 本金:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
+      <tr><td>Interest 利息:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
+      <tr><td>Late Fees / Legal Costs 逾期費用/法律費用:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
+      <tr><td>Nature of Debt 債務性質:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+      <tr><td>Account Number(s) 帳戶號碼:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
     </table>
 
-    <p class="sec-hdr" style="margin-top:16px;">3. Security</p>
+    <p class="sec-hdr" style="margin-top:16px;">3. Security 抵押</p>
     <p>Does the creditor hold any security over the debtor's assets?</p>
-    <p style="margin-top:8px;margin-left:1cm;">☐ No &nbsp;&nbsp;&nbsp;&nbsp; ☐ Yes (if yes, provide details below)</p>
+    <p>債權人是否持有債務人資產之任何抵押？</p>
+    <p style="margin-top:8px;margin-left:1cm;">☐ No 否 &nbsp;&nbsp;&nbsp;&nbsp; ☐ Yes 是 (if yes, provide details below 如是，請於下方提供詳情)</p>
     <table class="soa" style="width:100%;margin-top:8px;">
-      <tr><td style="width:40%;">Description of Security:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
-      <tr><td>Estimated Value:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
+      <tr><td style="width:40%;">Description of Security 抵押描述:</td><td><span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></td></tr>
+      <tr><td>Estimated Value 估計價值:</td><td>HK$ <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span></td></tr>
     </table>
 
-    <p class="sec-hdr" style="margin-top:16px;">4. Supporting Documents</p>
+    <p class="sec-hdr" style="margin-top:16px;">4. Supporting Documents 支持文件</p>
     <p>Attached are the following documents substantiating this claim:</p>
-    <p style="margin-top:8px;margin-left:1cm;">☐ Loan agreement / Credit card agreement<br>☐ Recent statement of account<br>☐ Court judgment (if applicable)<br>☐ Other: <span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span></p>
+    <p>現隨附以下文件以證明此索償：</p>
+    <p style="margin-top:8px;margin-left:1cm;">
+      ☐ Loan agreement / Credit card agreement 貸款協議/信用卡協議<br>
+      ☐ Recent statement of account 最近之帳戶結單<br>
+      ☐ Court judgment (if applicable) 法庭判決（如適用）<br>
+      ☐ Other 其他: <span contenteditable="true" class="editable-highlight" style="min-width:300px;">&nbsp;</span>
+    </p>
 
-    <p class="sec-hdr" style="margin-top:16px;">5. Declaration</p>
+    <p class="sec-hdr" style="margin-top:16px;">5. Declaration 聲明</p>
     <p>I declare that to the best of my knowledge and belief, the debtor owes the above-named creditor the sum specified, and the particulars provided are true and accurate.</p>
+    <p>本人謹此聲明，就本人所知所信，債務人欠上述債權人所列明之金額，而所提供之詳情均屬真實及準確。</p>
 
     <p style="margin-top:40px;">
       <span class="sig" style="width:250px;"></span><br>
-      Signature of Authorized Officer<br>
-      Name: <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span><br>
-      Position: <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span><br>
-      Date: <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      Signature of Authorized Officer 授權人員簽署<br>
+      Name 姓名: <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span><br>
+      Position 職位: <span contenteditable="true" class="editable-highlight" style="min-width:200px;">&nbsp;</span><br>
+      Date 日期: <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
     </p>
 
-    <p style="margin-top:20px;font-size:10pt;">(Company Chop/Stamp)</p>
+    <p style="margin-top:20px;font-size:10pt;">(Company Chop/Stamp 公司印章)</p>
   `);
 }
 
