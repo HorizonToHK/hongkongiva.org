@@ -110,7 +110,18 @@
 .legal-page table.soa .bt { border-top: 1px solid #000; }
 .legal-page table.soa .bb { border-bottom: 1px solid #000; }
 .legal-page .cert { margin-top: 24px; font-size: 11pt; }
-.legal-page .sig { border-bottom: 1px solid #000; width: 6cm; display: inline-block; margin-bottom: 4px; }
+.legal-page .sig {
+  border-bottom: 1px solid #000;
+  width: 6cm;
+  display: inline-block;
+  margin-bottom: 4px;
+  page-break-inside: avoid;
+}
+
+/* Prevent signature paragraphs from breaking across pages */
+.legal-page p:has(.sig) {
+  page-break-inside: avoid;
+}
 .legal-page .appx-hdr { font-size: 11pt; text-align: right; margin-bottom: 8px; font-weight: bold; }
 .legal-page .appx-court { text-align: center; font-weight: bold; line-height: 1.5; font-size: 12pt; margin: 8px 0; }
 
@@ -1520,36 +1531,33 @@ function renderProposal() {
     <p style="margin-top:10px">21.10 &nbsp; In the event of conflict between the terms contained in my Proposal and any of the modifications accepted in the Creditors&rsquo; meeting, the terms of the modifications shall prevail.</p>
     <p class="sec-hdr" style="margin-top:14px">22. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; My Acknowledgment</p>
     <p>22.1 &nbsp; I, <strong>${E(nm)}</strong> holder of Hong Kong Identity Card No. <strong>${E(id)}</strong>, confirm that this document fairly sets out my Proposal to my Creditors for the IVA and that, to the best of my knowledge and belief, the statements herein are true. Although I have received assistance in drafting the Proposal, its contents remain my sole responsibility and the implications of the Proposal have been carefully explained to me.</p>
-    <p style="margin-top:10px">22.2 &nbsp; I acknowledge that I commit an offence if I make any false representation to the Creditors in this Proposal or at any meeting of creditors for the purpose of obtaining the Creditors&rsquo; approval to this Proposal, and am punishable by a fine at level 2 and imprisonment for 6 months.</p>`));
+    <p style="margin-top:10px">22.2 &nbsp; I acknowledge that I commit an offence if I make any false representation to the Creditors in this Proposal or at any meeting of creditors for the purpose of obtaining the Creditors&rsquo; approval to this Proposal, and am punishable by a fine at level 2 and imprisonment for 6 months.</p>
+    <p style="margin-top:40px;page-break-inside:avoid"><span class="sig" style="width:260px"></span></p>
+    <p style="margin-top:6px;page-break-inside:avoid">Signed this <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)}</p>`));
 
-  // PAGE 36: Signature
-  pages.push(pg(`
-    <p style="margin-top:60px"><span class="sig" style="width:260px"></span></p>
-    <p style="margin-top:6px">Signed this <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> day of <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> ${E(cy)}</p>`));
-
-  // PAGE 37: Appendix 1 (SOA)
+  // PAGE 36: Appendix 1 (SOA)
   pages.push(pg(`${appxHdr(1,'STATEMENT OF AFFAIRS','AS AT '+E(soaDate))}
-    <table class="soa" style="margin-top:16px">
-      <tr><td>List Reference</td><td>Particulars</td><td>Rule</td><td class="r">Estimated Value (HK$)</td></tr>
-      <tr><td colspan="4" class="b">ASSETS</td></tr>
-      <tr><td>A</td><td>Various assets</td><td>122H(3)(a)</td><td class="r">${E(F(totalAssets))}</td></tr>
-      <tr><td>B</td><td>Excess value of assets pledged to secured creditors</td><td>122H(3)(b)</td><td class="r">Nil</td></tr>
-      <tr class="bt bb"><td colspan="3" style="text-align:right;font-weight:bold">Total amount of assets</td><td class="r b">${E(F(totalAssets))}</td></tr>
-      <tr><td colspan="4" style="height:12px"></td></tr>
-      <tr><td>List Reference</td><td>Particulars</td><td>Rule</td><td class="r">Estimated Value (HK$)</td></tr>
-      <tr><td colspan="4" class="b">LIABILITIES</td></tr>
-      <tr><td>B</td><td>Deficiency due to secured creditors</td><td>122H(3)(a)</td><td class="r">Nil</td></tr>
-      <tr><td>C</td><td>Prioritized claims under Section 38 of the Ordinance</td><td>122H(3)(c)</td><td class="r">Nil</td></tr>
-      <tr><td>D</td><td>Unsecured creditors and contingent liabilities</td><td>122H(3)(d)</td><td class="r">${E(F(totalUnsec))}</td></tr>
-      <tr><td>E</td><td>Associate creditors</td><td>122H(3)(e)</td><td class="r">Nil</td></tr>
-      <tr class="bt bb"><td colspan="3" style="text-align:right;font-weight:bold">Total amount of liabilities</td><td class="r b">${E(F(totalUnsec))}</td></tr>
-      <tr class="bt"><td colspan="3" style="text-align:right;font-weight:bold">SURPLUS / (DEFICIENCY)</td><td class="r b">(${E(F(totalUnsec-totalAssets))})</td></tr>
-      <tr><td colspan="4" style="height:10px"></td></tr>
-      <tr><td>F</td><td>OTHER INFORMATION — Additional information requested by the Nominee</td><td>122H(3)(f)</td><td></td></tr>
+    <table class="soa" style="margin-top:12px">
+      <tr><td style="padding:2px 4px">List Reference</td><td style="padding:2px 4px">Particulars</td><td style="padding:2px 4px">Rule</td><td class="r" style="padding:2px 4px">Estimated Value (HK$)</td></tr>
+      <tr><td colspan="4" class="b" style="padding:3px 4px">ASSETS</td></tr>
+      <tr><td style="padding:2px 4px">A</td><td style="padding:2px 4px">Various assets</td><td style="padding:2px 4px">122H(3)(a)</td><td class="r" style="padding:2px 4px">${E(F(totalAssets))}</td></tr>
+      <tr><td style="padding:2px 4px">B</td><td style="padding:2px 4px">Excess value of assets pledged to secured creditors</td><td style="padding:2px 4px">122H(3)(b)</td><td class="r" style="padding:2px 4px">Nil</td></tr>
+      <tr class="bt bb"><td colspan="3" style="text-align:right;font-weight:bold;padding:3px 4px">Total amount of assets</td><td class="r b" style="padding:3px 4px">${E(F(totalAssets))}</td></tr>
+      <tr><td colspan="4" style="height:4px"></td></tr>
+      <tr><td style="padding:2px 4px">List Reference</td><td style="padding:2px 4px">Particulars</td><td style="padding:2px 4px">Rule</td><td class="r" style="padding:2px 4px">Estimated Value (HK$)</td></tr>
+      <tr><td colspan="4" class="b" style="padding:3px 4px">LIABILITIES</td></tr>
+      <tr><td style="padding:2px 4px">B</td><td style="padding:2px 4px">Deficiency due to secured creditors</td><td style="padding:2px 4px">122H(3)(a)</td><td class="r" style="padding:2px 4px">Nil</td></tr>
+      <tr><td style="padding:2px 4px">C</td><td style="padding:2px 4px">Prioritized claims under Section 38 of the Ordinance</td><td style="padding:2px 4px">122H(3)(c)</td><td class="r" style="padding:2px 4px">Nil</td></tr>
+      <tr><td style="padding:2px 4px">D</td><td style="padding:2px 4px">Unsecured creditors and contingent liabilities</td><td style="padding:2px 4px">122H(3)(d)</td><td class="r" style="padding:2px 4px">${E(F(totalUnsec))}</td></tr>
+      <tr><td style="padding:2px 4px">E</td><td style="padding:2px 4px">Associate creditors</td><td style="padding:2px 4px">122H(3)(e)</td><td class="r" style="padding:2px 4px">Nil</td></tr>
+      <tr class="bt bb"><td colspan="3" style="text-align:right;font-weight:bold;padding:3px 4px">Total amount of liabilities</td><td class="r b" style="padding:3px 4px">${E(F(totalUnsec))}</td></tr>
+      <tr class="bt"><td colspan="3" style="text-align:right;font-weight:bold;padding:3px 4px">SURPLUS / (DEFICIENCY)</td><td class="r b" style="padding:3px 4px">(${E(F(totalUnsec-totalAssets))})</td></tr>
+      <tr><td colspan="4" style="height:4px"></td></tr>
+      <tr><td style="padding:2px 4px">F</td><td style="padding:2px 4px">OTHER INFORMATION — Additional information requested by the Nominee</td><td style="padding:2px 4px">122H(3)(f)</td><td style="padding:2px 4px"></td></tr>
     </table>
     ${soaCert()}`));
 
-  // PAGE 38: List A
+  // PAGE 37: List A
   const bankRows = s.bank.map(b=>`<tr><td>- ${b.name||'[Bank Name]'} A/C #${b.ac||'xxxxxxxxx'}</td><td class="r">${E(F(b.bal))}</td><td class="r">${b.ex?'**':''}</td></tr>`).join('');
   pages.push(pg(`${appxHdr(1,'STATEMENT OF AFFAIRS — LIST A','VARIOUS ASSETS')}
     <p style="text-align:center;font-size:11pt">AS AT ${E(soaDate)}</p>
@@ -1738,60 +1746,64 @@ function renderProposal() {
     </div>
     ${soaCert()}`));
 
-  // PAGE 49: Distribution Table (LANDSCAPE)
+  // PAGE 48: Distribution Table (ROTATED on Portrait page - better solution!)
   const t = s.ivaTerm;
   const bulkEnd2 = t - 1;
   const colHdrs = ['1<sup>st</sup> mo','2<sup>nd</sup>-5<sup>th</sup> mo','6<sup>th</sup> mo','7<sup>th</sup>-10<sup>th</sup> mo',`11<sup>th</sup>-${bulkEnd2 > 10 ? bulkEnd2 : '11'}<sup>th</sup> mo`,`${t}<sup>th</sup> mo`,'Total','Accum. Int'];
   const colMults = [1,4,1,4, t > 11 ? t - 11 : 0, 1];
 
-  let distHtml = `<table style="font-size:7pt;border-collapse:collapse;width:100%;margin-top:8px;border:1px solid #000">
+  let distHtml = `<table style="font-size:8pt;border-collapse:collapse;width:100%;margin-top:8px;border:1px solid #000">
     <thead><tr style="background:#f0f0f0">
-      <th style="border:1px solid #000;padding:2px 3px;text-align:left;font-size:7pt">Creditor</th>
-      <th style="border:1px solid #000;padding:2px;font-size:7pt">HK$</th>
-      <th style="border:1px solid #000;padding:2px;font-size:7pt">%</th>`;
+      <th style="border:1px solid #000;padding:3px;text-align:left;font-size:8pt">Creditor</th>
+      <th style="border:1px solid #000;padding:3px;font-size:8pt">HK$</th>
+      <th style="border:1px solid #000;padding:3px;font-size:8pt">%</th>`;
       
-  colHdrs.forEach((h, i) => { if(colMults[i] > 0 || i >= 6) distHtml += `<th style="border:1px solid #000;padding:2px;font-size:7pt">${h}</th>`; });
+  colHdrs.forEach((h, i) => { if(colMults[i] > 0 || i >= 6) distHtml += `<th style="border:1px solid #000;padding:3px;font-size:8pt">${h}</th>`; });
   distHtml += `</tr></thead><tbody>`;
 
   const activeCols = colMults.filter(m => m > 0);
-  const dash9 = activeCols.map(()=>'<td style="border:1px solid #000;padding:2px;text-align:center;font-size:7pt">-</td>').join('');
+  const dash9 = activeCols.map(()=>'<td style="border:1px solid #000;padding:3px;text-align:center;font-size:8pt">-</td>').join('');
 
-  distHtml += `<tr><td style="border:1px solid #000;padding:2px;font-size:7pt">Opening Balance</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${dash9}<td style="border:1px solid #000;text-align:center;font-size:7pt">-</td><td style="border:1px solid #000;"></td></tr>`;
-  distHtml += `<tr><td style="border:1px solid #000;padding:2px;font-size:7pt">Realisation of assets</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${dash9}<td style="border:1px solid #000;text-align:center;font-size:7pt">-</td><td style="border:1px solid #000;"></td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px;font-size:8pt">Opening Balance</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${dash9}<td style="border:1px solid #000;text-align:center;font-size:8pt">-</td><td style="border:1px solid #000;"></td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px;font-size:8pt">Realisation of assets</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${dash9}<td style="border:1px solid #000;text-align:center;font-size:8pt">-</td><td style="border:1px solid #000;"></td></tr>`;
 
-  const grossCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(c.grossContrib*m))}</td>`).join('');
-  distHtml += `<tr><td style="border:1px solid #000;padding:2px;font-size:7pt">Monthly contribution</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${grossCols}<td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(c.grossContrib*t))}</td><td style="border:1px solid #000;"></td></tr>`;
-  distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:2px;font-size:7pt">Sub-total / Balance available</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${grossCols}<td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(c.grossContrib*t))}</td><td style="border:1px solid #000;"></td></tr>`;
-  distHtml += `<tr><td style="border:1px solid #000;padding:2px;font-weight:bold;font-size:7pt" colspan="${activeCols.length+5}">Less: IVA expenses</td></tr>`;
+  const grossCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(c.grossContrib*m))}</td>`).join('');
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px;font-size:8pt">Monthly contribution</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${grossCols}<td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(c.grossContrib*t))}</td><td style="border:1px solid #000;"></td></tr>`;
+  distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:3px;font-size:8pt">Sub-total / Balance available</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${grossCols}<td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(c.grossContrib*t))}</td><td style="border:1px solid #000;"></td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px;font-weight:bold;font-size:8pt" colspan="${activeCols.length+5}">Less: IVA expenses</td></tr>`;
 
-  const nmfCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(s.nomMonthly*m))}</td>`).join('');
-  distHtml += `<tr><td style="border:1px solid #000;padding:2px;font-size:7pt">Nominees fees and expenses</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${nmfCols}<td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(s.nomMonthly*t))}</td><td style="border:1px solid #000;"></td></tr>`;
-  distHtml += `<tr><td style="border:1px solid #000;padding:2px;font-size:7pt">Contingency expenses</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${dash9}<td style="border:1px solid #000;text-align:center;font-size:7pt">-</td><td style="border:1px solid #000;"></td></tr>`;
+  const nmfCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(s.nomMonthly*m))}</td>`).join('');
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px;font-size:8pt">Nominees fees and expenses</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${nmfCols}<td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(s.nomMonthly*t))}</td><td style="border:1px solid #000;"></td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px;font-size:8pt">Contingency expenses</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${dash9}<td style="border:1px solid #000;text-align:center;font-size:8pt">-</td><td style="border:1px solid #000;"></td></tr>`;
 
-  const netCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(c.netContrib*m))}</td>`).join('');
-  distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:2px;font-size:7pt">Balance available for distribution</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${netCols}<td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(c.netContrib*t))}</td><td style="border:1px solid #000;"></td></tr>`;
-  distHtml += `<tr><td style="border:1px solid #000;padding:2px;font-weight:bold;font-size:7pt" colspan="${activeCols.length+5}">Unsecured Claims</td></tr>`;
+  const netCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(c.netContrib*m))}</td>`).join('');
+  distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:3px;font-size:8pt">Balance available for distribution</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${netCols}<td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(c.netContrib*t))}</td><td style="border:1px solid #000;"></td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px;font-weight:bold;font-size:8pt" colspan="${activeCols.length+5}">Unsecured Claims</td></tr>`;
   
   let totInterest4 = 0;
   creds.forEach((cr,i)=>{
     const ratio=totalUnsec>0?cr.amount/totalUnsec:0;
     const mPay=c.netContrib*ratio; const totPay=mPay*t;
     const estInt=cr.amount*(s.interestRate/100)*(t/12)*0.55; totInterest4+=estInt;
-    const credCols=activeCols.map(m=>`<td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(mPay*m))}</td>`).join('');
-    distHtml += `<tr><td style="border:1px solid #000;padding:2px;font-size:7pt">${i+1}. ${E(cr.key)}</td><td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(cr.amount))}</td><td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${(ratio*100).toFixed(0)}%</td>${credCols}<td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(totPay))}</td><td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(estInt))}</td></tr>`;
+    const credCols=activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(mPay*m))}</td>`).join('');
+    distHtml += `<tr><td style="border:1px solid #000;padding:3px;font-size:8pt">${i+1}. ${E(cr.key)}</td><td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(cr.amount))}</td><td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${(ratio*100).toFixed(0)}%</td>${credCols}<td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(totPay))}</td><td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(estInt))}</td></tr>`;
   });
   
-  const subCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:2px;text-align:right;font-weight:bold;font-size:7pt">${E(F(c.netContrib*m))}</td>`).join('');
-  distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:2px;font-size:7pt">Sub-total</td><td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(totalUnsec))}</td><td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">100%</td>${subCols}<td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(c.netContrib*t))}</td><td style="border:1px solid #000;padding:2px;text-align:right;font-size:7pt">${E(F(totInterest4))}</td></tr>`;
-  distHtml += `<tr><td style="border:1px solid #000;padding:2px;font-size:7pt">Closing Balance</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${dash9}<td style="border:1px solid #000;text-align:center;font-size:7pt">-</td><td style="border:1px solid #000;"></td></tr>`;
+  const subCols = activeCols.map(m=>`<td style="border:1px solid #000;padding:3px;text-align:right;font-weight:bold;font-size:8pt">${E(F(c.netContrib*m))}</td>`).join('');
+  distHtml += `<tr style="font-weight:bold;background:#f8f8f8"><td style="border:1px solid #000;padding:3px;font-size:8pt">Sub-total</td><td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(totalUnsec))}</td><td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">100%</td>${subCols}<td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(c.netContrib*t))}</td><td style="border:1px solid #000;padding:3px;text-align:right;font-size:8pt">${E(F(totInterest4))}</td></tr>`;
+  distHtml += `<tr><td style="border:1px solid #000;padding:3px;font-size:8pt">Closing Balance</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>${dash9}<td style="border:1px solid #000;text-align:center;font-size:8pt">-</td><td style="border:1px solid #000;"></td></tr>`;
   distHtml += `</tbody></table>`;
-  distHtml += `<p style="font-size:8pt;margin-top:6px">***Interest Rate @${E(s.interestRate.toFixed(1))}% per annum is adopted for above calculation</p>`;
-  
-  // Notice the pg_landscape wrapper below - NO overflow wrapper
-  pages.push(pg_landscape(`${appxHdr(4,'ESTIMATED DISTRIBUTION OF IVA DIVIDENDS','')}
+  distHtml += `<p style="font-size:9pt;margin-top:8px">***Interest Rate @${E(s.interestRate.toFixed(1))}% per annum is adopted for above calculation</p>`;
+
+  // Use proper landscape page with scale to fit if needed
+  pages.push(pg_landscape(`<div style="width:100%;overflow:hidden">
+    ${appxHdr(4,'ESTIMATED DISTRIBUTION OF IVA DIVIDENDS','')}
     <p style="text-align:center;font-size:10pt;margin-bottom:8px">INTERIM ORDER APPLICATION NO. <span contenteditable="true" class="editable-highlight">&nbsp;&nbsp;&nbsp;</span> OF ${E(cy)}<br>RE: <strong>${E(nm)} (${E(chi)})</strong><br>(Holder of Hong Kong Identity Card No. <strong>${E(id)}</strong>)</p>
-    ${distHtml}
-    <p style="margin-top:10px;font-size:10pt"><span class="sig" style="width:180px"></span><br>Date: ${E(soaDate)}</p>`));
+    <div style="transform-origin:top left;transform:scale(0.95)">
+      ${distHtml}
+    </div>
+    <p style="margin-top:10px;font-size:10pt"><span class="sig" style="width:200px"></span><br>Date: ${E(soaDate)}</p>
+  </div>`));
 
   // PAGE 50: Exhibit Dctm-2
   pages.push(pg(`${courtHdr()}
